@@ -281,8 +281,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
 **Data Management**
 
 - **FR-080**: System MUST persist all data so it survives browser sessions and page refreshes
-- **FR-081**: System MUST allow exporting all data for backup purposes (downloadable file)
-- **FR-082**: System MUST allow importing previously exported data for restoration
+- **FR-081**: System MUST allow full-access users to export all data for backup purposes (downloadable file)
+- **FR-082**: System MUST allow full-access users to import previously exported data for restoration
 - **FR-083**: System MUST work in modern web browsers (Chrome, Firefox, Safari, Edge)
 
 **Historical Import (Future/Optional)**
