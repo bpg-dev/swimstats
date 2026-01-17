@@ -11,7 +11,7 @@ Build a web application to track competitive swimming progress for a Canadian sw
 
 ## Technical Context
 
-**Language/Version**: Go 1.22+ (backend), TypeScript 5.x (frontend)
+**Language/Version**: Go 1.25+ (backend), TypeScript 5.x (frontend)
 **Frontend Framework**: React 18 with Vite, TailwindCSS, React Query
 **Backend Framework**: Go standard library + chi router, sqlc for type-safe SQL
 **Storage**: PostgreSQL 16

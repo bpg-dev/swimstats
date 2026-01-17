@@ -10,6 +10,7 @@
 **Decision**: React 18 with Vite
 
 **Rationale**:
+
 - Widely adopted with extensive ecosystem and community support
 - Vite provides fast development experience and optimized production builds
 - React Query handles server state management elegantly
@@ -17,6 +18,7 @@
 - Abundant charting libraries (Recharts, Chart.js) for progress visualization
 
 **Alternatives Considered**:
+
 - Vue 3: Excellent option, slightly smaller ecosystem for charting
 - Svelte: Smaller bundle but less mature ecosystem for enterprise patterns
 - Next.js: SSR not needed for this authenticated SPA; adds complexity
@@ -26,6 +28,7 @@
 **Decision**: TailwindCSS
 
 **Rationale**:
+
 - Utility-first approach enables rapid UI development
 - Built-in design tokens ensure consistency (Constitution Principle III)
 - Small production bundle with purging
@@ -33,6 +36,7 @@
 - Works seamlessly with React component patterns
 
 **Alternatives Considered**:
+
 - Chakra UI: Good accessibility but larger bundle
 - Material UI: Heavier, opinionated design may conflict with custom branding
 - CSS Modules: More flexibility but requires more design system work
@@ -42,11 +46,13 @@
 **Decision**: React Query + Zustand
 
 **Rationale**:
+
 - React Query: Server state caching, automatic refetching, optimistic updates
 - Zustand: Minimal client state (course filter, UI preferences) - simple API
 - Separation of server vs client state prevents complexity
 
 **Alternatives Considered**:
+
 - Redux Toolkit: Overkill for this scale; more boilerplate
 - Jotai: Good alternative to Zustand, similar simplicity
 
@@ -55,6 +61,7 @@
 **Decision**: Go standard library + chi router
 
 **Rationale**:
+
 - Go provides excellent performance and type safety
 - chi is lightweight, idiomatic, and middleware-friendly
 - Standard library HTTP handling is production-ready
@@ -62,6 +69,7 @@
 - Strong OIDC library support (coreos/go-oidc)
 
 **Alternatives Considered**:
+
 - Gin: Popular but chi is more idiomatic
 - Echo: Similar to chi, personal preference
 - Fiber: Express-like but less idiomatic Go
@@ -71,6 +79,7 @@
 **Decision**: sqlc for type-safe SQL
 
 **Rationale**:
+
 - Generates type-safe Go code from SQL queries
 - No ORM magic; explicit SQL control
 - Prevents N+1 queries by design (Constitution Principle IV)
@@ -78,6 +87,7 @@
 - Excellent PostgreSQL support
 
 **Alternatives Considered**:
+
 - GORM: ORM abstraction can hide performance issues
 - pgx directly: Works but loses type generation benefits
 - ent: Good but heavier for this use case
@@ -87,6 +97,7 @@
 **Decision**: OIDC with coreos/go-oidc
 
 **Rationale**:
+
 - Industry-standard protocol for authentication
 - Authentik compatibility confirmed
 - Well-maintained Go library
@@ -94,6 +105,7 @@
 - Session management via secure HTTP-only cookies
 
 **Alternatives Considered**:
+
 - Custom JWT handling: More work, same result
 - Auth0 SDK: Vendor-specific, OIDC is more portable
 
@@ -102,6 +114,7 @@
 **Decision**: Recharts
 
 **Rationale**:
+
 - React-native, declarative API
 - Good performance for moderate data sizes (500 points)
 - Responsive and accessible
@@ -109,6 +122,7 @@
 - Customizable tooltips for meet details
 
 **Alternatives Considered**:
+
 - Chart.js + react-chartjs-2: Good but less React-idiomatic
 - Victory: More complex API
 - D3 directly: Overkill for standard chart types
@@ -118,12 +132,14 @@
 **Decision**: golang-migrate
 
 **Rationale**:
+
 - SQL-based migrations (no Go code dependencies)
 - CLI and library modes
 - PostgreSQL native support
 - Versioned, reversible migrations
 
 **Alternatives Considered**:
+
 - goose: Similar capability, personal preference
 - Atlas: More features but heavier
 
@@ -132,12 +148,14 @@
 **Decision**: Multi-stage Docker builds
 
 **Rationale**:
+
 - Minimal production images (distroless/static for Go)
 - Build reproducibility
 - Separate builder and runtime stages
 - Frontend served via nginx or Go embed
 
 **Alternatives Considered**:
+
 - Buildpacks: Good but Docker is more familiar
 - ko (for Go): Excellent for Go but frontend needs standard Docker
 
@@ -146,6 +164,7 @@
 ### Swimming Time Format
 
 **Standard Format**: `MM:SS.ss` (minutes:seconds.hundredths)
+
 - Times under 1 minute: `SS.ss` (e.g., `28.45`)
 - Times 1+ minutes: `M:SS.ss` (e.g., `1:05.32`)
 - Times 10+ minutes: `MM:SS.ss` (e.g., `16:42.18`)
@@ -167,6 +186,7 @@
 ### Standard Competitive Events
 
 **Short Course (25m) and Long Course (50m)**:
+
 - Freestyle: 50, 100, 200, 400, 800, 1500
 - Backstroke: 50, 100, 200
 - Breaststroke: 50, 100, 200
@@ -178,6 +198,7 @@
 ### Time Standards Data Source
 
 Swimming Canada publishes time standards annually:
+
 - Format: PDF and sometimes Excel
 - Will pre-load as JSON seed data
 - User can import updated standards via structured data (CSV/JSON)

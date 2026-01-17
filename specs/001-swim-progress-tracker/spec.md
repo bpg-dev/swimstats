@@ -10,6 +10,13 @@
 **Scope**: Single swimmer initially, designed for easy expansion to multiple swimmers  
 **Organization**: Course-centric (25m short course and 50m long course as primary data separation)
 
+## Clarifications
+
+### Session 2026-01-17
+
+- Q: What threshold defines "almost there" for qualification status? → A: Within 3% of qualifying time (default), user-configurable
+- Q: How do time standards handle gender differences? → A: Standards are gender-specific; system auto-filters to match swimmer's gender
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 0 - User Authentication (Priority: P1)
@@ -149,7 +156,7 @@ As a swim parent, I want to see a dashboard showing my daughter's overall standi
 **Acceptance Scenarios**:
 
 1. **Given** a time standard is selected, **When** I view the standing dashboard, **Then** I see all events with indicators showing qualified/not-yet-qualified status
-2. **Given** I am viewing the standing dashboard, **When** events are close to qualification (within a defined threshold), **Then** they are highlighted as "almost there"
+2. **Given** I am viewing the standing dashboard, **When** events are close to qualification (within 3% of qualifying time, configurable), **Then** they are highlighted as "almost there"
 3. **Given** I am viewing the standing dashboard, **When** I want details on a specific event, **Then** I can drill down to see the full comparison and history
 
 ---
@@ -261,6 +268,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
   - Swimming Canada national standards (Provincial, Western/Eastern Canadian, Junior National, Senior National)
   - Swim Ontario provincial standards
 - **FR-057**: System MUST display only standards applicable to the current course context in comparisons
+- **FR-058**: System MUST store time standards with gender designation (female/male)
+- **FR-059**: System MUST automatically filter available standards to match the swimmer's gender
 
 **Comparisons**
 
@@ -269,6 +278,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
 - **FR-062**: System MUST visually indicate when a standard has been achieved
 - **FR-063**: System MUST use age-appropriate standard times based on swimmer's age at time of swim
 - **FR-064**: System MUST allow switching between different standards for comparison (within current course)
+- **FR-065**: System MUST highlight times within a configurable threshold of qualifying (default: 3%) as "almost there"
+- **FR-066**: System MUST allow full-access users to configure the "almost there" threshold percentage
 
 **Progress Visualization**
 
@@ -300,8 +311,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
 - **Time Entry**: A recorded swim performance; attributes include event, time value, optional notes; linked to Swimmer and Meet; inherits course type from Meet
 - **Event**: A swimming discipline; attributes include stroke (Freestyle, Backstroke, Breaststroke, Butterfly, IM) and distance (50m, 100m, 200m, etc.)
 - **Course Type**: The pool length; either 25m (short course) or 50m (long course); stored on Meet, inherited by Time Entries
-- **Time Standard**: A named collection of qualifying times; attributes include name, description, course type applicability
-- **Standard Time**: A qualifying time within a standard; attributes include event, time value, age group (min/max age); linked to Time Standard
+- **Time Standard**: A named collection of qualifying times; attributes include name, description, course type applicability, gender (female/male)
+- **Standard Time**: A qualifying time within a standard; attributes include event, time value, age group (min/max age); linked to Time Standard; filtered by swimmer's gender automatically
 - **Personal Best**: Derived from Time Entries; the fastest time for each event/course combination
 
 ### Assumptions
