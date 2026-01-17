@@ -94,7 +94,7 @@ export function MeetList({
       <CardHeader>
         <CardTitle>
           Recent Meets
-          {data?.total !== undefined && (
+          {data?.total !== undefined && data.total > 0 && (
             <span className="ml-2 text-sm font-normal text-slate-500">
               ({data.total} total)
             </span>
