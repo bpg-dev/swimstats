@@ -26,16 +26,16 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project directory structure per plan.md in repository root
-- [ ] T002 [P] Initialize Go module in backend/go.mod with dependencies (chi, sqlc, go-oidc, testify)
-- [ ] T003 [P] Initialize frontend with Vite + React + TypeScript in frontend/package.json
-- [ ] T004 [P] Configure TailwindCSS in frontend/tailwind.config.js
-- [ ] T005 [P] Configure ESLint and Prettier in frontend/.eslintrc.js
-- [ ] T006 [P] Configure golangci-lint in backend/.golangci.yml
-- [ ] T007 Create docker-compose.yaml with PostgreSQL 16 service
-- [ ] T008 [P] Create GitHub Actions CI workflow in .github/workflows/ci.yaml
-- [ ] T009 [P] Create backend Dockerfile in backend/Dockerfile (multi-stage build)
-- [ ] T010 [P] Create frontend Dockerfile in frontend/Dockerfile (nginx serving static)
+- [X] T001 Create project directory structure per plan.md in repository root
+- [X] T002 [P] Initialize Go module in backend/go.mod with dependencies (chi, sqlc, go-oidc, testify)
+- [X] T003 [P] Initialize frontend with Vite + React + TypeScript in frontend/package.json
+- [X] T004 [P] Configure TailwindCSS in frontend/tailwind.config.js
+- [X] T005 [P] Configure ESLint and Prettier in frontend/.eslintrc.js
+- [X] T006 [P] Configure golangci-lint in backend/.golangci.yml
+- [X] T007 Create docker-compose.yaml with PostgreSQL 16 service
+- [X] T008 [P] Create GitHub Actions CI workflow in .github/workflows/ci.yaml
+- [X] T009 [P] Create backend Dockerfile in backend/Dockerfile (multi-stage build)
+- [X] T010 [P] Create frontend Dockerfile in frontend/Dockerfile (nginx serving static)
 
 **Checkpoint**: Project scaffolding complete, ready for foundational work
 

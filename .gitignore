@@ -17,23 +17,29 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Node.js
+# Node.js / Frontend
 node_modules/
 npm-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+frontend/dist/
+frontend/build/
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.Python
-venv/
-.venv/
-env/
-*.egg-info/
-dist/
-build/
+# Go / Backend
+backend/bin/
+backend/tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+# sqlc generated (keep in repo, but can regenerate)
+# backend/internal/store/queries/*.sql.go
 
 # Build outputs
 *.log
