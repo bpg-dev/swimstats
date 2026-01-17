@@ -12,7 +12,26 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 0 - Filter by Course Type (Priority: P1)
+### User Story 0 - User Authentication (Priority: P1)
+
+As a user, I want to log in using my identity provider so that my data is secure and I can share view-only access with others.
+
+**Why this priority**: Authentication is foundational for data security and enables sharing the app with others (e.g., coaches, other parents) without giving them edit access.
+
+**Independent Test**: Can be fully tested by logging in via OIDC provider and verifying access is granted with correct permissions.
+
+**Acceptance Scenarios**:
+
+1. **Given** I am not logged in, **When** I access the application, **Then** I am redirected to the OIDC login flow
+2. **Given** I complete OIDC authentication successfully, **When** I am redirected back, **Then** I am logged in and can access the application
+3. **Given** I am logged in with full access, **When** I use the application, **Then** I can view, add, edit, and delete all data
+4. **Given** I am logged in with view-only access, **When** I use the application, **Then** I can view all data but cannot add, edit, or delete anything
+5. **Given** I am logged in, **When** I want to end my session, **Then** I can log out and must re-authenticate to access the application again
+6. **Given** my session has expired, **When** I try to perform an action, **Then** I am prompted to re-authenticate
+
+---
+
+### User Story 0b - Filter by Course Type (Priority: P1)
 
 As a swim parent, I want to filter data by 25m (short course) or 50m (long course) so that I can focus on times relevant to the current competitive season.
 
@@ -168,18 +187,32 @@ As a swim parent, I want to import my daughter's historical swim results from on
 - How are tied times handled for personal bests? Display the most recent occurrence as the personal best
 - What happens if historical import retrieves hundreds of times? Show progress indicator and allow cancellation; process in batches to avoid browser timeouts
 - What happens when user changes the course filter while viewing data? Filter updates immediately; any unsaved data entry remains tied to its original meet
+- What happens when OIDC provider is unavailable? Display clear error message; user cannot access application until provider is restored
+- What happens when a view-only user tries to access an edit function directly (e.g., via URL)? Display "access denied" message and redirect to view
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
+**Authentication & Access Control**
+
+- **FR-001**: System MUST authenticate users via OIDC (OpenID Connect) protocol
+- **FR-002**: System MUST support two access levels: full access and view-only
+- **FR-003**: System MUST enforce access levels on all operations:
+  - Full access: view, add, edit, delete all data
+  - View-only: view all data; add, edit, delete operations are hidden/disabled
+- **FR-004**: System MUST maintain user session and handle session expiry gracefully
+- **FR-005**: System MUST provide logout functionality
+- **FR-006**: System MUST redirect unauthenticated users to OIDC login
+- **FR-007**: System MUST map OIDC claims/groups to application access levels
+
 **Course Filtering**
 
-- **FR-001**: System MUST provide clear filtering between 25m (short course) and 50m (long course) data
-- **FR-002**: System MUST maintain the selected course filter across views until explicitly changed
-- **FR-003**: System MUST filter all displayed data (times, personal bests, comparisons, graphs) by course type when a filter is active
-- **FR-004**: System MUST clearly indicate when a course filter is active and which course is selected
-- **FR-005**: System MUST allow viewing all data (both courses) with clear course type labels when no filter is active
+- **FR-010**: System MUST provide clear filtering between 25m (short course) and 50m (long course) data
+- **FR-011**: System MUST maintain the selected course filter across views until explicitly changed
+- **FR-012**: System MUST filter all displayed data (times, personal bests, comparisons, graphs) by course type when a filter is active
+- **FR-013**: System MUST clearly indicate when a course filter is active and which course is selected
+- **FR-014**: System MUST allow viewing all data (both courses) with clear course type labels when no filter is active
 
 **Swimmer Profile**
 
@@ -261,6 +294,7 @@ As a swim parent, I want to import my daughter's historical swim results from on
 
 ### Key Entities
 
+- **User**: An authenticated user; attributes include identity (from OIDC), access level (full or view-only)
 - **Swimmer**: The athlete being tracked; attributes include name, birth date, gender
 - **Meet**: A competition event; attributes include name, city, country (default: Canada), date, course type (25m or 50m)
 - **Time Entry**: A recorded swim performance; attributes include event, time value, optional notes; linked to Swimmer and Meet; inherits course type from Meet
@@ -272,6 +306,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
 
 ### Assumptions
 
+- Authentication via OIDC with Authentik as the identity provider
+- Access levels (full/view-only) are managed in Authentik and communicated via OIDC claims or group membership
 - Web-based application accessed via browser, optimized for laptop/desktop use
 - Course type is a property of the meet (a meet happens at a specific pool which is 25m or 50m)
 - Times inherit course type from their associated meet
