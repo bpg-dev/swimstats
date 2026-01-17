@@ -142,7 +142,7 @@ docker-compose.yaml           # Local development
 
 **Current State**: MVP core (US1) is complete and tested. App can:
 - Create and manage swimmer profile
-- Create and manage meets
+- Create and manage meets (with inline quick-add from time entry)
 - Record swim times with batch entry
 - View time history with filtering
 - Filter by course type (25m/50m)
@@ -151,6 +151,10 @@ docker-compose.yaml           # Local development
 - Base64 encoded `X-Mock-User` header to fix proxy errors
 - Added Settings button to navigation
 - Added swimmer profile editing to Settings page
+- Fixed "Recent Meets0" / "Time History0" display bug (React rendering numeric 0)
+
+**UX Enhancements**:
+- Quick Add Meet: Create meets inline from time entry form (FR-037)
 
 ## Complexity Tracking
 

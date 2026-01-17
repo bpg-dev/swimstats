@@ -248,6 +248,7 @@ As a swim parent, I want to import my daughter's historical swim results from on
 - **FR-034**: System MUST validate time format and reject invalid entries
 - **FR-035**: System MUST allow optional notes/context for each time entry (e.g., "heat", "final", "PB")
 - **FR-036**: System MUST support quick entry workflow: select/create meet once, then enter multiple times for that meet in succession
+- **FR-037**: System SHOULD allow creating a new meet inline during time entry without navigating away from the entry form
 
 **Personal Bests**
 
