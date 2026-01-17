@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"net/http"
+
 	"github.com/go-chi/cors"
 )
 
@@ -27,7 +29,7 @@ func DefaultCORSConfig() CORSConfig {
 }
 
 // CORSMiddleware returns a configured CORS handler.
-func CORSMiddleware(cfg CORSConfig) func(next interface{}) interface{} {
+func CORSMiddleware(cfg CORSConfig) func(next http.Handler) http.Handler {
 	return cors.Handler(cors.Options{
 		AllowedOrigins:   cfg.AllowedOrigins,
 		AllowedMethods:   cfg.AllowedMethods,

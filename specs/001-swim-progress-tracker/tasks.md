@@ -59,40 +59,40 @@
 - [X] T015 [P] Create time formatting utilities in backend/internal/domain/timeformat.go (FormatTime, ParseTime)
 - [X] T016 [P] Create age calculation utilities in backend/internal/domain/age.go (AgeAtCompetition, AgeGroupFromAge)
 - [X] T017 Create database connection pool in backend/internal/store/postgres/db.go
-- [ ] T018 Create API router skeleton in backend/internal/api/router.go
+- [X] T018 Create API router skeleton in backend/internal/api/router.go
 - [X] T019 [P] Create error handling middleware in backend/internal/api/middleware/errors.go
 - [X] T020 [P] Create logging middleware in backend/internal/api/middleware/logging.go
 - [X] T021 [P] Create CORS middleware in backend/internal/api/middleware/cors.go
-- [ ] T022 Create health check handler in backend/internal/api/handlers/health.go
-- [ ] T023 Create server entrypoint in backend/cmd/server/main.go
+- [X] T022 Create health check handler in backend/internal/api/handlers/health.go
+- [X] T023 Create server entrypoint in backend/cmd/server/main.go
 
 ### Authentication (US0)
 
-- [ ] T024 Create OIDC configuration in backend/internal/auth/config.go
-- [ ] T025 Create OIDC provider client in backend/internal/auth/oidc.go
-- [ ] T026 Create auth middleware in backend/internal/api/middleware/auth.go (token validation, access level extraction)
-- [ ] T027 Create current user handler in backend/internal/api/handlers/auth.go (GET /auth/me)
-- [ ] T028 [P] Create auth types in frontend/src/types/auth.ts (User, AccessLevel)
-- [ ] T029 [P] Create auth service in frontend/src/services/auth.ts (OIDC flow, token management)
-- [ ] T030 Create auth store in frontend/src/stores/authStore.ts (Zustand)
-- [ ] T031 Create ProtectedRoute component in frontend/src/components/layout/ProtectedRoute.tsx
-- [ ] T032 Create login callback page in frontend/src/pages/AuthCallback.tsx
+- [X] T024 Create OIDC configuration in backend/internal/auth/config.go
+- [X] T025 Create OIDC provider client in backend/internal/auth/oidc.go
+- [X] T026 Create auth middleware in backend/internal/api/middleware/auth.go (token validation, access level extraction)
+- [X] T027 Create current user handler in backend/internal/api/handlers/auth.go (GET /auth/me)
+- [X] T028 [P] Create auth types in frontend/src/types/auth.ts (User, AccessLevel)
+- [X] T029 [P] Create auth service in frontend/src/services/auth.ts (OIDC flow, token management)
+- [X] T030 Create auth store in frontend/src/stores/authStore.ts (Zustand)
+- [X] T031 Create ProtectedRoute component in frontend/src/components/layout/ProtectedRoute.tsx
+- [X] T032 Create login callback page in frontend/src/pages/AuthCallback.tsx
 
 ### Frontend Core
 
-- [ ] T033 [P] Create base UI components in frontend/src/components/ui/ (Button, Input, Select, Card, Loading, ErrorBanner)
-- [ ] T034 [P] Create API client in frontend/src/services/api.ts (axios instance with auth interceptor)
-- [ ] T035 Create app shell layout in frontend/src/components/layout/AppShell.tsx (navigation, header)
-- [ ] T036 Create course filter store in frontend/src/stores/courseFilterStore.ts (Zustand for 25m/50m filter state)
-- [ ] T037 Create CourseFilterToggle component in frontend/src/components/layout/CourseFilterToggle.tsx
-- [ ] T038 Configure React Query in frontend/src/main.tsx
-- [ ] T039 Configure React Router in frontend/src/App.tsx
+- [X] T033 [P] Create base UI components in frontend/src/components/ui/ (Button, Input, Select, Card, Loading, ErrorBanner)
+- [X] T034 [P] Create API client in frontend/src/services/api.ts (axios instance with auth interceptor)
+- [X] T035 Create app shell layout in frontend/src/components/layout/AppShell.tsx (navigation, header)
+- [X] T036 Create course filter store in frontend/src/stores/courseFilterStore.ts (Zustand for 25m/50m filter state)
+- [X] T037 Create CourseFilterToggle component in frontend/src/components/layout/CourseFilterToggle.tsx
+- [X] T038 Configure React Query in frontend/src/main.tsx
+- [X] T039 Configure React Router in frontend/src/App.tsx
 
 ### Integration Tests Setup
 
-- [ ] T040 [P] Create test database setup in backend/tests/integration/testdb.go (testcontainers)
-- [ ] T041 [P] Create API test client in backend/tests/integration/client.go
-- [ ] T042 [P] Create MSW handlers setup in frontend/tests/mocks/handlers.ts
+- [X] T040 [P] Create test database setup in backend/tests/integration/testdb.go (testcontainers)
+- [X] T041 [P] Create API test client in backend/tests/integration/client.go
+- [X] T042 [P] Create MSW handlers setup in frontend/tests/mocks/handlers.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 

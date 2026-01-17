@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-cyan-500 ring-offset-2;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  /* Swimstats brand gradient */
+  .swimstats-gradient {
+    @apply bg-gradient-to-br from-cyan-500 to-blue-600;
+  }
+
+  /* Form field group */
+  .form-group {
+    @apply space-y-1.5;
+  }
+
+  /* Time display formatting */
+  .time-display {
+    @apply font-mono tabular-nums;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  /* Hide scrollbar while maintaining scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
