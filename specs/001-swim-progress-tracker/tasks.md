@@ -49,20 +49,20 @@
 
 ### Database & Migrations
 
-- [ ] T011 Create initial database migration in backend/migrations/001_initial_schema.up.sql (all tables from data-model.md)
-- [ ] T012 Create down migration in backend/migrations/001_initial_schema.down.sql
-- [ ] T013 Configure sqlc in backend/sqlc.yaml
+- [X] T011 Create initial database migration in backend/migrations/001_initial_schema.up.sql (all tables from data-model.md)
+- [X] T012 Create down migration in backend/migrations/001_initial_schema.down.sql
+- [X] T013 Configure sqlc in backend/sqlc.yaml
 
 ### Backend Core
 
-- [ ] T014 [P] Create base types in backend/internal/domain/types.go (CourseType, EventCode, AgeGroup enums)
-- [ ] T015 [P] Create time formatting utilities in backend/internal/domain/timeformat.go (FormatTime, ParseTime)
-- [ ] T016 [P] Create age calculation utilities in backend/internal/domain/age.go (AgeAtCompetition, AgeGroupFromAge)
-- [ ] T017 Create database connection pool in backend/internal/store/postgres/db.go
+- [X] T014 [P] Create base types in backend/internal/domain/types.go (CourseType, EventCode, AgeGroup enums)
+- [X] T015 [P] Create time formatting utilities in backend/internal/domain/timeformat.go (FormatTime, ParseTime)
+- [X] T016 [P] Create age calculation utilities in backend/internal/domain/age.go (AgeAtCompetition, AgeGroupFromAge)
+- [X] T017 Create database connection pool in backend/internal/store/postgres/db.go
 - [ ] T018 Create API router skeleton in backend/internal/api/router.go
-- [ ] T019 [P] Create error handling middleware in backend/internal/api/middleware/errors.go
-- [ ] T020 [P] Create logging middleware in backend/internal/api/middleware/logging.go
-- [ ] T021 [P] Create CORS middleware in backend/internal/api/middleware/cors.go
+- [X] T019 [P] Create error handling middleware in backend/internal/api/middleware/errors.go
+- [X] T020 [P] Create logging middleware in backend/internal/api/middleware/logging.go
+- [X] T021 [P] Create CORS middleware in backend/internal/api/middleware/cors.go
 - [ ] T022 Create health check handler in backend/internal/api/handlers/health.go
 - [ ] T023 Create server entrypoint in backend/cmd/server/main.go
 
