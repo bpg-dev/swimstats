@@ -120,7 +120,7 @@ function AuthenticatedApp() {
 
 // App for development mode (no OIDC)
 function DevModeApp() {
-  const { isAuthenticated, setUser, setLoading } = useAuthStore();
+  const { isAuthenticated, setLoading } = useAuthStore();
 
   // Auto-authenticate in dev mode on mount
   useEffect(() => {
@@ -153,7 +153,7 @@ function DevModeApp() {
 // App with OIDC authentication
 function OidcApp() {
   const auth = useAuth();
-  const { setUser, setLoading, setError, isAuthenticated } = useAuthStore();
+  const { setUser, setLoading } = useAuthStore();
 
   // Handle OIDC auth state changes
   useEffect(() => {
