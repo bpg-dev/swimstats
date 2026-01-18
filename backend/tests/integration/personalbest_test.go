@@ -31,6 +31,9 @@ func TestPersonalBestsAPI(t *testing.T) {
 	ctx := context.Background()
 	testDB := SetupTestDB(ctx, t)
 	defer testDB.TeardownTestDB(ctx, t)
+	
+	// Clean tables for a fresh start
+	testDB.CleanTables(t)
 
 	handler := setupTestHandler(t, testDB)
 	client := NewAPIClient(t, handler)
@@ -66,7 +69,17 @@ func TestPersonalBestsAPI(t *testing.T) {
 	}
 
 	t.Run("GET /personal-bests requires course_type parameter", func(t *testing.T) {
-		rr := client.Get("/api/v1/personal-bests")
+		// First ensure swimmer exists
+		swimmerInput := SwimmerInput{
+			Name:      "Course Type Test Swimmer",
+			BirthDate: "2012-05-15",
+			Gender:    "female",
+		}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		// Now test that course_type is required
+		rr = client.Get("/api/v1/personal-bests")
 		assert.Equal(t, http.StatusBadRequest, rr.Code)
 	})
 

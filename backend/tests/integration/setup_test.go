@@ -35,6 +35,11 @@ func (c *APIClient) SetMockUser(accessLevel string) {
 	c.accessLevel = accessLevel
 }
 
+// ClearMockUser removes the mock user (for testing unauthenticated access).
+func (c *APIClient) ClearMockUser() {
+	c.accessLevel = ""
+}
+
 // Get performs a GET request.
 func (c *APIClient) Get(path string) *httptest.ResponseRecorder {
 	return c.doRequest("GET", path, nil)
@@ -79,13 +84,15 @@ func (c *APIClient) doRequest(method, path string, body interface{}) *httptest.R
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	// Send mock user as JSON so the auth provider can parse it
-	mockUserJSON, _ := json.Marshal(map[string]string{
-		"email":  "test@swimstats.local",
-		"name":   "Test User",
-		"access": c.accessLevel,
-	})
-	req.Header.Set("X-Mock-User", string(mockUserJSON))
+	// Send mock user as JSON so the auth provider can parse it (unless cleared)
+	if c.accessLevel != "" {
+		mockUserJSON, _ := json.Marshal(map[string]string{
+			"email":  "test@swimstats.local",
+			"name":   "Test User",
+			"access": c.accessLevel,
+		})
+		req.Header.Set("X-Mock-User", string(mockUserJSON))
+	}
 
 	rr := httptest.NewRecorder()
 	c.handler.ServeHTTP(rr, req)

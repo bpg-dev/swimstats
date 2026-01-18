@@ -3,6 +3,7 @@ package middleware
 import (
 	"log/slog"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -80,5 +81,5 @@ var requestCounter uint64
 
 func generateRequestID() string {
 	requestCounter++
-	return time.Now().Format("20060102150405") + "-" + string(rune(requestCounter%1000000))
+	return time.Now().Format("20060102150405") + "-" + strconv.FormatUint(requestCounter%1000000, 10)
 }
