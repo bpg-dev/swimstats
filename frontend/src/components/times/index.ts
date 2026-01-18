@@ -9,3 +9,5 @@ export type { QuickEntryFormProps } from './QuickEntryForm';
 
 export { TimeHistory } from './TimeHistory';
 export type { TimeHistoryProps } from './TimeHistory';
+
+export { NewPBBadge } from './NewPBBadge';

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { timeService } from '@/services/times';
 import { TimeRecord, TimeInput, TimeBatchInput, TimeListParams } from '@/types/time';
+import { personalBestKeys } from './usePersonalBests';
 
 export const timeKeys = {
   all: ['times'] as const,
@@ -32,6 +33,7 @@ export function useCreateTime() {
     mutationFn: (input: TimeInput) => timeService.createTime(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: timeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: personalBestKeys.all });
     },
   });
 }
@@ -43,6 +45,7 @@ export function useCreateBatchTimes() {
     mutationFn: (input: TimeBatchInput) => timeService.createBatch(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: timeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: personalBestKeys.all });
     },
   });
 }
@@ -56,6 +59,7 @@ export function useUpdateTime() {
     onSuccess: (time: TimeRecord) => {
       queryClient.setQueryData(timeKeys.detail(time.id), time);
       queryClient.invalidateQueries({ queryKey: timeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: personalBestKeys.all });
     },
   });
 }
@@ -68,6 +72,7 @@ export function useDeleteTime() {
     onSuccess: (_, id) => {
       queryClient.removeQueries({ queryKey: timeKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: timeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: personalBestKeys.all });
     },
   });
 }

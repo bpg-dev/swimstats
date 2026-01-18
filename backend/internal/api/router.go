@@ -11,6 +11,7 @@ import (
 	"github.com/bpg/swimstats/backend/internal/api/handlers"
 	"github.com/bpg/swimstats/backend/internal/api/middleware"
 	"github.com/bpg/swimstats/backend/internal/auth"
+	"github.com/bpg/swimstats/backend/internal/domain/comparison"
 	"github.com/bpg/swimstats/backend/internal/domain/meet"
 	"github.com/bpg/swimstats/backend/internal/domain/swimmer"
 	timeservice "github.com/bpg/swimstats/backend/internal/domain/time"
@@ -28,12 +29,14 @@ type Router struct {
 	swimmerService *swimmer.Service
 	meetService    *meet.Service
 	timeService    *timeservice.Service
+	pbService      *comparison.PersonalBestService
 
 	// Handlers
 	authHandler    *handlers.AuthHandler
 	swimmerHandler *handlers.SwimmerHandler
 	meetHandler    *handlers.MeetHandler
 	timeHandler    *handlers.TimeHandler
+	pbHandler      *handlers.PersonalBestHandler
 }
 
 // NewRouter creates a new API router with all dependencies.
@@ -50,12 +53,14 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 	swimmerService := swimmer.NewService(swimmerRepo)
 	meetService := meet.NewService(meetRepo)
 	timeService := timeservice.NewService(timeRepo, meetRepo)
+	pbService := comparison.NewPersonalBestService(timeRepo)
 
 	// Create handlers
 	authHandler := handlers.NewAuthHandler(authProvider)
 	swimmerHandler := handlers.NewSwimmerHandler(swimmerService)
 	meetHandler := handlers.NewMeetHandler(meetService)
 	timeHandler := handlers.NewTimeHandler(timeService, swimmerService)
+	pbHandler := handlers.NewPersonalBestHandler(pbService, swimmerService)
 
 	return &Router{
 		logger:         logger,
@@ -64,10 +69,12 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 		swimmerService: swimmerService,
 		meetService:    meetService,
 		timeService:    timeService,
+		pbService:      pbService,
 		authHandler:    authHandler,
 		swimmerHandler: swimmerHandler,
 		meetHandler:    meetHandler,
 		timeHandler:    timeHandler,
+		pbHandler:      pbHandler,
 	}
 }
 
@@ -118,8 +125,8 @@ func (rt *Router) Handler() http.Handler {
 			r.Put("/times/{id}", rt.timeHandler.UpdateTime)
 			r.Delete("/times/{id}", rt.timeHandler.DeleteTime)
 
-			// Personal Bests (to be implemented in US2)
-			r.Get("/personal-bests", handlers.NotImplemented)
+			// Personal Bests
+			r.Get("/personal-bests", rt.pbHandler.GetPersonalBests)
 
 			// Standards (to be implemented in US3)
 			r.Get("/standards", handlers.NotImplemented)

@@ -180,27 +180,27 @@
 
 ### Tests for User Story 2
 
-- [ ] T085 [P] [US2] Create personal bests API tests in backend/tests/integration/personalbest_test.go
-- [ ] T086 [P] [US2] Create personal bests component tests in frontend/tests/components/personalbests.test.tsx
+- [X] T085 [P] [US2] Create personal bests API tests in backend/tests/integration/personalbest_test.go
+- [X] T086 [P] [US2] Create personal bests component tests in frontend/tests/components/personalbests.test.tsx
 
 ### Backend Implementation for US2
 
-- [ ] T087 [US2] Create personal bests query in backend/internal/store/queries/personalbest.sql
-- [ ] T088 [US2] Run sqlc generate for personal bests
-- [ ] T089 [US2] Create personal bests service in backend/internal/domain/comparison/personalbest.go
-- [ ] T090 [US2] Create personal bests handler in backend/internal/api/handlers/personalbest.go (GET /personal-bests)
-- [ ] T091 [US2] Update time service to detect new PBs in backend/internal/domain/time/service.go
+- [X] T087 [US2] Create personal bests query in backend/internal/store/queries/personalbest.sql (already existed from US1)
+- [X] T088 [US2] Run sqlc generate for personal bests (already generated)
+- [X] T089 [US2] Create personal bests service in backend/internal/domain/comparison/personalbest.go
+- [X] T090 [US2] Create personal bests handler in backend/internal/api/handlers/personalbest.go (GET /personal-bests)
+- [X] T091 [US2] Update time service to detect new PBs in backend/internal/domain/time/service.go (already implemented in US1)
 
 ### Frontend Implementation for US2
 
-- [ ] T092 [P] [US2] Create personal best types in frontend/src/types/personalbest.ts
-- [ ] T093 [US2] Create personal bests API service in frontend/src/services/personalBests.ts
-- [ ] T094 [US2] Create usePersonalBests hook in frontend/src/hooks/usePersonalBests.ts
-- [ ] T095 [US2] Create PersonalBestCard component in frontend/src/components/comparison/PersonalBestCard.tsx
-- [ ] T096 [US2] Create PersonalBestGrid component in frontend/src/components/comparison/PersonalBestGrid.tsx
-- [ ] T097 [US2] Create NewPBBadge component in frontend/src/components/times/NewPBBadge.tsx
-- [ ] T098 [US2] Create PersonalBests page in frontend/src/pages/PersonalBests.tsx
-- [ ] T099 [US2] Update QuickEntryForm to show new PB indicator in frontend/src/components/times/QuickEntryForm.tsx
+- [X] T092 [P] [US2] Create personal best types in frontend/src/types/personalbest.ts
+- [X] T093 [US2] Create personal bests API service in frontend/src/services/personalBests.ts
+- [X] T094 [US2] Create usePersonalBests hook in frontend/src/hooks/usePersonalBests.ts
+- [X] T095 [US2] Create PersonalBestCard component in frontend/src/components/comparison/PersonalBestCard.tsx
+- [X] T096 [US2] Create PersonalBestGrid component in frontend/src/components/comparison/PersonalBestGrid.tsx
+- [X] T097 [US2] Create NewPBBadge component in frontend/src/components/times/NewPBBadge.tsx
+- [X] T098 [US2] Create PersonalBests page in frontend/src/pages/PersonalBests.tsx
+- [X] T099 [US2] Update QuickEntryForm to show new PB indicator in frontend/src/components/times/QuickEntryForm.tsx (already implemented in US1)
 
 **Checkpoint**: User Story 2 complete - can view personal bests by event
 
