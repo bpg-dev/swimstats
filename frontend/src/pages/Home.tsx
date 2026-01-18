@@ -159,7 +159,7 @@ export function Home() {
                 </div>
               </Link>
               <Link
-                to="/times"
+                to="/all-times"
                 className="block p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
               >
                 <div className="flex items-center gap-3">
@@ -169,7 +169,7 @@ export function Home() {
                     </svg>
                   </div>
                   <div>
-                    <div className="font-medium text-slate-900">View All Times</div>
+                    <div className="font-medium text-slate-900">All Times</div>
                     <div className="text-sm text-slate-500">Browse your time history</div>
                   </div>
                 </div>

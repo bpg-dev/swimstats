@@ -13,7 +13,6 @@ const Home = lazy(() => import('@/pages/Home'));
 const Meets = lazy(() => import('@/pages/Meets'));
 const AddTimes = lazy(() => import('@/pages/AddTimes'));
 const AllTimes = lazy(() => import('@/pages/AllTimes'));
-const TimeHistory = lazy(() => import('@/pages/TimeHistory'));
 const PersonalBests = lazy(() => import('@/pages/PersonalBests'));
 const Progress = lazy(() => import('@/pages/Progress'));
 const Standards = lazy(() => import('@/pages/Standards'));
@@ -107,8 +106,6 @@ function AuthenticatedApp() {
           <Route path="/meets" element={<Meets />} />
           <Route path="/add-times" element={<AddTimes />} />
           <Route path="/all-times" element={<AllTimes />} />
-          <Route path="/times" element={<TimeHistory />} />
-          <Route path="/time-history" element={<TimeHistory />} />
           <Route path="/personal-bests" element={<PersonalBests />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/standards" element={<Standards />} />
