@@ -7,8 +7,8 @@ function cn(...inputs: (string | undefined | null | false)[]) {
 }
 
 interface EventFilterProps {
-  value: EventCode | '';
-  onChange: (event: EventCode | '') => void;
+  value: EventCode;
+  onChange: (event: EventCode) => void;
   className?: string;
 }
 
@@ -33,7 +33,7 @@ export function EventFilter({ value, onChange, className = '' }: EventFilterProp
   return (
     <select
       value={value}
-      onChange={(e) => onChange(e.target.value as EventCode | '')}
+      onChange={(e) => onChange(e.target.value as EventCode)}
       className={cn(
         'flex h-10 w-full rounded-lg border bg-white px-3 py-2 text-sm',
         'focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent',
@@ -45,7 +45,6 @@ export function EventFilter({ value, onChange, className = '' }: EventFilterProp
         className
       )}
     >
-      <option value="">All Events</option>
       {STROKE_ORDER.map((stroke) => (
         <optgroup key={stroke} label={stroke}>
           {eventsByStroke[stroke]?.map((event) => (

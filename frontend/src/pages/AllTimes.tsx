@@ -4,20 +4,23 @@ import { useTimes } from '@/hooks/useTimes';
 import { usePersonalBests } from '@/hooks/usePersonalBests';
 import { EventFilter, SortToggle, AllTimesList, SortBy } from '@/components/times';
 import { Loading, ErrorBanner } from '@/components/ui';
-import { EventCode } from '@/types/time';
+import { EventCode, EVENTS, getEventInfo } from '@/types/time';
+
+// Default to first event (50m Freestyle)
+const DEFAULT_EVENT: EventCode = EVENTS[0].code;
 
 /**
  * All Times page - view all recorded times for a selected event.
  */
 export function AllTimes() {
   const courseType = useCourseType();
-  const [selectedEvent, setSelectedEvent] = useState<EventCode | ''>('');
+  const [selectedEvent, setSelectedEvent] = useState<EventCode>(DEFAULT_EVENT);
   const [sortBy, setSortBy] = useState<SortBy>('date');
 
   // Fetch times for the selected event
   const { data: timeData, isLoading: timesLoading, error: timesError, refetch: refetchTimes } = useTimes({
     course_type: courseType,
-    event: selectedEvent || undefined,
+    event: selectedEvent,
     limit: 100, // Get all times for the event
   });
 
@@ -25,11 +28,10 @@ export function AllTimes() {
   const { data: pbData, isLoading: pbLoading } = usePersonalBests(courseType);
 
   // Find the PB time ID for the selected event
-  const pbTimeId = selectedEvent
-    ? pbData?.personal_bests.find((pb) => pb.event === selectedEvent)?.time_id
-    : undefined;
+  const pbTimeId = pbData?.personal_bests.find((pb) => pb.event === selectedEvent)?.time_id;
 
   const isLoading = timesLoading || pbLoading;
+  const eventInfo = getEventInfo(selectedEvent);
 
   return (
     <div className="space-y-6">
@@ -78,8 +80,7 @@ export function AllTimes() {
         <>
           <div className="flex items-center justify-between">
             <p className="text-sm text-slate-600">
-              {timeData.total} time{timeData.total !== 1 ? 's' : ''} recorded
-              {selectedEvent && ` for ${selectedEvent}`}
+              {timeData.total} time{timeData.total !== 1 ? 's' : ''} recorded for {eventInfo?.name || selectedEvent}
             </p>
           </div>
           <AllTimesList
