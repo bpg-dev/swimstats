@@ -146,12 +146,19 @@ func TestTimeAPI(t *testing.T) {
 
 	t.Run("GET /times filters by event", func(t *testing.T) {
 		testDB.ClearTables(ctx, t)
-		_, meetID := setupSwimmerAndMeet(t, "25m")
+		_, meetID1 := setupSwimmerAndMeet(t, "25m")
+
+		// Create second meet for same event
+		meetInput := MeetInput{Name: "Meet 2", City: "Ottawa", Date: "2026-04-15", CourseType: "25m"}
+		rr := client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var meet2 Meet
+		AssertJSONBody(t, rr, &meet2)
 
 		times := []TimeInput{
-			{MeetID: meetID, Event: "100FR", TimeMS: 65320},
-			{MeetID: meetID, Event: "100FR", TimeMS: 64000},
-			{MeetID: meetID, Event: "200FR", TimeMS: 145000},
+			{MeetID: meetID1, Event: "100FR", TimeMS: 65320},
+			{MeetID: meet2.ID, Event: "100FR", TimeMS: 64000}, // Same event, different meet
+			{MeetID: meetID1, Event: "200FR", TimeMS: 145000},
 		}
 
 		for _, ti := range times {
@@ -159,7 +166,7 @@ func TestTimeAPI(t *testing.T) {
 			require.Equal(t, http.StatusCreated, rr.Code)
 		}
 
-		rr := client.Get("/api/v1/times?event=100FR")
+		rr = client.Get("/api/v1/times?event=100FR")
 		
 		var list TimeList
 		AssertJSONBody(t, rr, &list)
@@ -312,6 +319,46 @@ func TestTimeAPI(t *testing.T) {
 		
 		assert.Equal(t, http.StatusForbidden, rr.Code)
 	})
+
+	t.Run("POST /times rejects duplicate event for same meet", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID := setupSwimmerAndMeet(t, "25m")
+
+		// Create first time
+		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320}
+		rr := client.Post("/api/v1/times", input)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Try to create second time for same event at same meet
+		input.TimeMS = 64000 // Different time, same event
+		rr = client.Post("/api/v1/times", input)
+		
+		assert.Equal(t, http.StatusConflict, rr.Code)
+		AssertJSONError(t, rr, "DUPLICATE_EVENT")
+	})
+
+	t.Run("POST /times allows same event at different meets", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID1 := setupSwimmerAndMeet(t, "25m")
+
+		// Create second meet
+		meetInput := MeetInput{Name: "Meet 2", City: "Ottawa", Date: "2026-04-15", CourseType: "25m"}
+		rr := client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var meet2 Meet
+		AssertJSONBody(t, rr, &meet2)
+
+		// Create time at first meet
+		input := TimeInput{MeetID: meetID1, Event: "100FR", TimeMS: 65320}
+		rr = client.Post("/api/v1/times", input)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Create same event at second meet - should succeed
+		input.MeetID = meet2.ID
+		rr = client.Post("/api/v1/times", input)
+		
+		assert.Equal(t, http.StatusCreated, rr.Code)
+	})
 }
 
 func TestTimeBatchAPI(t *testing.T) {
@@ -390,12 +437,11 @@ func TestTimeBatchAPI(t *testing.T) {
 		var meet2 Meet
 		AssertJSONBody(t, rr, &meet2)
 
-		// Batch create: one faster (new PB), one slower (not PB), one new event (PB)
+		// Batch create: one faster (new PB), one new event (PB)
 		input := map[string]interface{}{
 			"meet_id": meet2.ID,
 			"times": []map[string]interface{}{
 				{"event": "100FR", "time_ms": 64000},  // Faster - new PB
-				{"event": "100FR", "time_ms": 66000},  // Slower - not PB
 				{"event": "200FR", "time_ms": 145000}, // New event - PB
 			},
 		}
@@ -405,11 +451,72 @@ func TestTimeBatchAPI(t *testing.T) {
 
 		var response BatchResponse
 		AssertJSONBody(t, rr, &response)
-		assert.Len(t, response.Times, 3)
+		assert.Len(t, response.Times, 2)
 		// Should have 2 new PBs: faster 100FR and first 200FR
 		assert.Len(t, response.NewPBs, 2)
 		assert.Contains(t, response.NewPBs, "100FR")
 		assert.Contains(t, response.NewPBs, "200FR")
+	})
+
+	t.Run("POST /times/batch rejects duplicate events in batch", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+
+		// Setup
+		swimmerInput := SwimmerInput{Name: "Test", BirthDate: "2012-05-15", Gender: "female"}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		meetInput := MeetInput{Name: "Meet", City: "Toronto", Date: "2026-03-15", CourseType: "25m"}
+		rr = client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var meet Meet
+		AssertJSONBody(t, rr, &meet)
+
+		// Try to batch create with duplicate events in the same batch
+		input := map[string]interface{}{
+			"meet_id": meet.ID,
+			"times": []map[string]interface{}{
+				{"event": "100FR", "time_ms": 65320},
+				{"event": "100FR", "time_ms": 64000}, // Duplicate event
+				{"event": "200FR", "time_ms": 145000},
+			},
+		}
+
+		rr = client.Post("/api/v1/times/batch", input)
+		assert.Equal(t, http.StatusBadRequest, rr.Code, "got %d: %s", rr.Code, rr.Body.String())
+	})
+
+	t.Run("POST /times/batch rejects events already in meet", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+
+		// Setup
+		swimmerInput := SwimmerInput{Name: "Test", BirthDate: "2012-05-15", Gender: "female"}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		meetInput := MeetInput{Name: "Meet", City: "Toronto", Date: "2026-03-15", CourseType: "25m"}
+		rr = client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var meet Meet
+		AssertJSONBody(t, rr, &meet)
+
+		// Create first time
+		timeInput := TimeInput{MeetID: meet.ID, Event: "100FR", TimeMS: 65320}
+		rr = client.Post("/api/v1/times", timeInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Try to batch create with an event that already exists
+		input := map[string]interface{}{
+			"meet_id": meet.ID,
+			"times": []map[string]interface{}{
+				{"event": "100FR", "time_ms": 64000}, // Already exists
+				{"event": "200FR", "time_ms": 145000},
+			},
+		}
+
+		rr = client.Post("/api/v1/times/batch", input)
+		assert.Equal(t, http.StatusConflict, rr.Code)
+		AssertJSONError(t, rr, "DUPLICATE_EVENT")
 	})
 }
 

@@ -191,6 +191,19 @@
 - [x] **Tests**: Add delete time tests to meets.test.tsx
 - [x] **Mocks**: Add DELETE /times/:id handler to MSW handlers
 
+### US1 Enhancement: One Event Per Meet Validation
+
+- [x] **Spec**: Add FR-03A and FR-03B requirements (one event per meet rule)
+- [x] **Backend**: Add `EventExistsForMeet` query in time.sql
+- [x] **Backend**: Add `ErrDuplicateEvent` error in postgres/db.go
+- [x] **Backend**: Add duplicate event validation in time service (Create and CreateBatch)
+- [x] **Backend**: Return 409 Conflict with DUPLICATE_EVENT code in handlers
+- [x] **Backend**: Add integration tests for duplicate event validation
+- [x] **Frontend**: Add `ApiRequestError` class with error code support
+- [x] **Frontend**: Add client-side duplicate event validation in QuickEntryForm
+- [x] **Frontend**: Handle DUPLICATE_EVENT error in TimeEntryForm and QuickEntryForm
+- [x] **Docs**: Update tasks.md with this enhancement
+
 ---
 
 ## Phase 4: User Story 2 - View Personal Bests (Priority: P1)

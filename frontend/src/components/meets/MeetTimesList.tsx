@@ -48,8 +48,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
   if (error) {
     return (
       <ErrorBanner
-        message="Failed to load times"
-        error={error}
+        message={error.message || "Failed to load times"}
         onRetry={() => refetch()}
       />
     );
@@ -77,12 +76,12 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
   }
 
   // Group times by event
-  const timesByEvent: Record<EventCode, TimeRecord[]> = {};
+  const timesByEvent: Partial<Record<EventCode, TimeRecord[]>> = {};
   data.times.forEach((time) => {
     if (!timesByEvent[time.event]) {
       timesByEvent[time.event] = [];
     }
-    timesByEvent[time.event].push(time);
+    timesByEvent[time.event]!.push(time);
   });
 
   // Sort events in order
@@ -120,7 +119,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
           </thead>
           <tbody className="divide-y divide-slate-100">
             {sortedEvents.flatMap((event) =>
-              timesByEvent[event].map((time) => {
+              (timesByEvent[event] || []).map((time) => {
                 const isPB = pbTimeIds.has(time.id);
                 const eventInfo = getEventInfo(time.event);
 

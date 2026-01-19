@@ -162,3 +162,10 @@ WHERE swimmer_id = $1;
 -- name: GetTotalMeetCount :one
 SELECT COUNT(DISTINCT meet_id)::int FROM times
 WHERE swimmer_id = $1;
+
+-- name: EventExistsForMeet :one
+-- Check if an event already exists for a specific meet
+SELECT EXISTS (
+    SELECT 1 FROM times
+    WHERE meet_id = $1 AND event = $2
+) AS exists;

@@ -150,6 +150,7 @@ docker-compose.yaml           # Local development
 - View all times per event with PB indicators and sorting (by date or time)
 - View meet details page with all times from that meet
 - Delete individual times from the meet details page
+- Enforce one-event-per-meet rule (prevents duplicate events at the same meet)
 
 **Known Issues Resolved**:
 - Base64 encoded `X-Mock-User` header to fix proxy errors

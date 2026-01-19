@@ -184,6 +184,15 @@ func (s *Service) Create(ctx context.Context, swimmerID uuid.UUID, input Input) 
 		return nil, fmt.Errorf("get meet: %w", err)
 	}
 
+	// Check for duplicate event in the same meet
+	exists, err := s.timeRepo.EventExistsForMeet(ctx, input.MeetID, input.Event)
+	if err != nil {
+		return nil, fmt.Errorf("check duplicate event: %w", err)
+	}
+	if exists {
+		return nil, postgres.ErrDuplicateEvent
+	}
+
 	var notes pgtype.Text
 	if input.Notes != "" {
 		notes = pgtype.Text{String: input.Notes, Valid: true}
@@ -232,6 +241,15 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 		return nil, errors.New("at least one time is required")
 	}
 
+	// Check for duplicate events within the batch
+	seenEvents := make(map[string]bool)
+	for _, t := range input.Times {
+		if seenEvents[t.Event] {
+			return nil, fmt.Errorf("duplicate event in batch: %s", t.Event)
+		}
+		seenEvents[t.Event] = true
+	}
+
 	// Verify meet exists and get course type
 	meet, err := s.meetRepo.Get(ctx, input.MeetID)
 	if err != nil {
@@ -239,6 +257,17 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 			return nil, fmt.Errorf("meet not found")
 		}
 		return nil, fmt.Errorf("get meet: %w", err)
+	}
+
+	// Check for duplicate events already in the meet
+	for event := range seenEvents {
+		exists, err := s.timeRepo.EventExistsForMeet(ctx, input.MeetID, event)
+		if err != nil {
+			return nil, fmt.Errorf("check duplicate event: %w", err)
+		}
+		if exists {
+			return nil, fmt.Errorf("%w: %s", postgres.ErrDuplicateEvent, event)
+		}
 	}
 
 	// Get existing PBs for comparison

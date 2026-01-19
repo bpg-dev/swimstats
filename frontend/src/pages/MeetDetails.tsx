@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardContent, Button, Loading, ErrorBanner } from '@/components/ui';
+import { Card, CardContent, Button, Loading, ErrorBanner } from '@/components/ui';
 import { MeetTimesList } from '@/components/meets/MeetTimesList';
 import { useMeet, useDeleteMeet } from '@/hooks/useMeets';
 
@@ -31,8 +31,7 @@ export function MeetDetails() {
     return (
       <div className="max-w-2xl mx-auto">
         <ErrorBanner
-          message="Meet not found"
-          error={error}
+          message={error?.message || "Meet not found"}
           onRetry={() => refetch()}
         />
         <div className="mt-4">

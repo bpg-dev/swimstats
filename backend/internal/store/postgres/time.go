@@ -222,3 +222,15 @@ func (r *TimeRepository) GetTotalMeetCount(ctx context.Context, swimmerID uuid.U
 	}
 	return count, nil
 }
+
+// EventExistsForMeet checks if an event already exists for a specific meet.
+func (r *TimeRepository) EventExistsForMeet(ctx context.Context, meetID uuid.UUID, event string) (bool, error) {
+	exists, err := r.queries.EventExistsForMeet(ctx, db.EventExistsForMeetParams{
+		MeetID: meetID,
+		Event:  event,
+	})
+	if err != nil {
+		return false, fmt.Errorf("check event exists for meet: %w", err)
+	}
+	return exists, nil
+}

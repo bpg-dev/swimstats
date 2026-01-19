@@ -138,6 +138,26 @@ func (q *Queries) DeleteTimesByMeet(ctx context.Context, meetID uuid.UUID) error
 	return err
 }
 
+const eventExistsForMeet = `-- name: EventExistsForMeet :one
+SELECT EXISTS (
+    SELECT 1 FROM times
+    WHERE meet_id = $1 AND event = $2
+) AS exists
+`
+
+type EventExistsForMeetParams struct {
+	MeetID uuid.UUID `json:"meet_id"`
+	Event  string    `json:"event"`
+}
+
+// Check if an event already exists for a specific meet
+func (q *Queries) EventExistsForMeet(ctx context.Context, arg EventExistsForMeetParams) (bool, error) {
+	row := q.db.QueryRow(ctx, eventExistsForMeet, arg.MeetID, arg.Event)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const getPersonalBestForEvent = `-- name: GetPersonalBestForEvent :one
 SELECT 
     t.id,

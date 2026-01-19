@@ -254,6 +254,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
 - **FR-037**: System SHOULD allow creating a new meet inline during time entry without navigating away from the entry form
 - **FR-038**: System MUST provide clear feedback after saving times: show success message with count of times saved
 - **FR-039**: System MUST offer navigation options after saving: "View Meet" to see all times for the meet, "Add More" to continue adding times
+- **FR-03A**: System MUST prevent recording more than one time for the same event at the same meet (one event per meet rule)
+- **FR-03B**: System MUST display a clear error message when attempting to add a duplicate event for a meet
 
 **Personal Bests**
 

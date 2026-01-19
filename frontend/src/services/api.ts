@@ -13,6 +13,19 @@ export interface ApiError {
 }
 
 /**
+ * Custom error class that includes the error code from the API.
+ */
+export class ApiRequestError extends Error {
+  code?: string;
+
+  constructor(message: string, code?: string) {
+    super(message);
+    this.name = 'ApiRequestError';
+    this.code = code;
+  }
+}
+
+/**
  * Create configured axios instance.
  */
 function createApiClient(): AxiosInstance {
@@ -56,13 +69,14 @@ function createApiClient(): AxiosInstance {
         // Don't redirect here - let the ProtectedRoute handle it
       }
 
-      // Extract error message
+      // Extract error message and code
       const message =
         error.response?.data?.error ||
         error.message ||
         'An unexpected error occurred';
+      const code = error.response?.data?.code;
 
-      return Promise.reject(new Error(message));
+      return Promise.reject(new ApiRequestError(message, code));
     }
   );
 

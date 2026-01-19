@@ -66,8 +66,7 @@ export function AllTimes() {
       {/* Error */}
       {timesError && (
         <ErrorBanner
-          message="Failed to load times"
-          error={timesError}
+          message={timesError.message || "Failed to load times"}
           onRetry={() => refetchTimes()}
         />
       )}

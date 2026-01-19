@@ -8,6 +8,7 @@ import { CourseType, MeetInput } from '@/types/meet';
 import { useCreateBatchTimes } from '@/hooks/useTimes';
 import { useCreateMeet } from '@/hooks/useMeets';
 import { parseTime } from '@/utils/timeFormat';
+import { ApiRequestError } from '@/services/api';
 
 interface TimeEntry {
   id: string;
@@ -84,9 +85,16 @@ export function QuickEntryForm({
       newErrors.entries = 'Add at least one time entry';
     }
 
+    // Check for duplicate events in the batch
+    const seenEvents = new Set<string>();
     validEntries.forEach((entry) => {
       if (!entry.event) {
         newErrors[`${entry.id}_event`] = 'Select event';
+      } else if (seenEvents.has(entry.event)) {
+        newErrors[`${entry.id}_event`] = 'Duplicate event';
+        newErrors.form = 'Each event can only be entered once per meet';
+      } else {
+        seenEvents.add(entry.event);
       }
       if (!entry.time_str.trim()) {
         newErrors[`${entry.id}_time`] = 'Enter time';
@@ -119,8 +127,13 @@ export function QuickEntryForm({
       setSavedCount(result.times.length);
       setShowSuccess(true);
       onSuccess?.(result);
-    } catch (error: any) {
-      setErrors({ form: error.message || 'Failed to save times' });
+    } catch (error: unknown) {
+      if (error instanceof ApiRequestError && error.code === 'DUPLICATE_EVENT') {
+        setErrors({ form: 'This event already has a time recorded for this meet. Each event can only be entered once per meet.' });
+      } else {
+        const message = error instanceof Error ? error.message : 'Failed to save times';
+        setErrors({ form: message });
+      }
     }
   };
 

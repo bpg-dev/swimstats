@@ -14,6 +14,8 @@ import (
 var (
 	// ErrNotFound is returned when a requested resource is not found.
 	ErrNotFound = errors.New("not found")
+	// ErrDuplicateEvent is returned when trying to add a duplicate event to a meet.
+	ErrDuplicateEvent = errors.New("event already exists for this meet")
 )
 
 // Config holds database connection configuration.

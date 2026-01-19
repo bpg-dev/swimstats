@@ -241,6 +241,12 @@ paths:
                 $ref: '#/components/schemas/TimeRecord'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Duplicate event - this event already has a time recorded for this meet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /times/batch:
     post:
@@ -268,8 +274,20 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/EventCode'
+        '400':
+          description: Validation error (including duplicate events in batch)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Duplicate event - one of the events already has a time recorded for this meet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /times/{id}:
     parameters:

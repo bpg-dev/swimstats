@@ -23,6 +23,8 @@ type Querier interface {
 	DeleteSwimmer(ctx context.Context, id uuid.UUID) error
 	DeleteTime(ctx context.Context, id uuid.UUID) error
 	DeleteTimesByMeet(ctx context.Context, meetID uuid.UUID) error
+	// Check if an event already exists for a specific meet
+	EventExistsForMeet(ctx context.Context, arg EventExistsForMeetParams) (bool, error)
 	GetMeet(ctx context.Context, id uuid.UUID) (Meet, error)
 	GetMeetWithTimeCount(ctx context.Context, id uuid.UUID) (GetMeetWithTimeCountRow, error)
 	// Returns the fastest time for a specific event

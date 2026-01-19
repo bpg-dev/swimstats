@@ -107,6 +107,20 @@ func AssertJSONBody(t *testing.T, rr *httptest.ResponseRecorder, target interfac
 	}
 }
 
+// AssertJSONError checks that the response contains an error with the expected code.
+func AssertJSONError(t *testing.T, rr *httptest.ResponseRecorder, expectedCode string) {
+	t.Helper()
+	var errResp struct {
+		Code string `json:"code"`
+	}
+	if err := json.Unmarshal(rr.Body.Bytes(), &errResp); err != nil {
+		t.Fatalf("Failed to unmarshal error response: %v\nBody: %s", err, rr.Body.String())
+	}
+	if errResp.Code != expectedCode {
+		t.Errorf("Expected error code %q, got %q\nBody: %s", expectedCode, errResp.Code, rr.Body.String())
+	}
+}
+
 // SetupTestDB creates a test database connection.
 // Uses the local Docker PostgreSQL instance.
 func SetupTestDB(ctx interface{}, t *testing.T) *TestDB {

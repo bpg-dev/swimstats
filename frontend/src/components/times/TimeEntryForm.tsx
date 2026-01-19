@@ -6,6 +6,7 @@ import { TimeInput, TimeRecord, EventCode } from '@/types/time';
 import { CourseType } from '@/types/meet';
 import { useCreateTime, useUpdateTime } from '@/hooks/useTimes';
 import { parseTime, formatTime } from '@/utils/timeFormat';
+import { ApiRequestError } from '@/services/api';
 
 export interface TimeEntryFormProps {
   initialData?: TimeRecord;
@@ -80,8 +81,13 @@ export function TimeEntryForm({
         time = await createMutation.mutateAsync(input);
       }
       onSuccess?.(time);
-    } catch (error: any) {
-      setErrors({ form: error.message || 'Failed to save time' });
+    } catch (error: unknown) {
+      if (error instanceof ApiRequestError && error.code === 'DUPLICATE_EVENT') {
+        setErrors({ form: 'This event already has a time recorded for this meet. Each event can only be entered once per meet.' });
+      } else {
+        const message = error instanceof Error ? error.message : 'Failed to save time';
+        setErrors({ form: message });
+      }
     }
   };
 

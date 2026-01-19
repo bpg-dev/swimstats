@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
@@ -14,6 +15,11 @@ import (
 	timeservice "github.com/bpg/swimstats/backend/internal/domain/time"
 	"github.com/bpg/swimstats/backend/internal/store/postgres"
 )
+
+// isDuplicateEventInBatchError checks if the error is about duplicate events in a batch.
+func isDuplicateEventInBatchError(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "duplicate event in batch")
+}
 
 // TimeHandler handles time API requests.
 type TimeHandler struct {
@@ -136,6 +142,10 @@ func (h *TimeHandler) CreateTime(w http.ResponseWriter, r *http.Request) {
 
 	t, err := h.timeService.Create(ctx, sw.ID, input)
 	if err != nil {
+		if errors.Is(err, postgres.ErrDuplicateEvent) {
+			middleware.WriteError(w, http.StatusConflict, "event already exists for this meet", "DUPLICATE_EVENT")
+			return
+		}
 		if isValidationError(err) || errors.Is(err, errors.New("meet not found")) {
 			status := http.StatusBadRequest
 			if errors.Is(err, errors.New("meet not found")) {
@@ -180,7 +190,11 @@ func (h *TimeHandler) CreateBatchTimes(w http.ResponseWriter, r *http.Request) {
 
 	result, err := h.timeService.CreateBatch(ctx, sw.ID, input)
 	if err != nil {
-		if isValidationError(err) || errors.Is(err, errors.New("meet not found")) {
+		if errors.Is(err, postgres.ErrDuplicateEvent) {
+			middleware.WriteError(w, http.StatusConflict, err.Error(), "DUPLICATE_EVENT")
+			return
+		}
+		if isDuplicateEventInBatchError(err) || isValidationError(err) || errors.Is(err, errors.New("meet not found")) {
 			status := http.StatusBadRequest
 			if errors.Is(err, errors.New("meet not found")) {
 				status = http.StatusNotFound
