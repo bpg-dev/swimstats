@@ -148,6 +148,8 @@ docker-compose.yaml           # Local development
 - Filter by course type (25m/50m)
 - View personal bests by stroke
 - View all times per event with PB indicators and sorting (by date or time)
+- View meet details page with all times from that meet
+- Delete individual times from the meet details page
 
 **Known Issues Resolved**:
 - Base64 encoded `X-Mock-User` header to fix proxy errors
@@ -164,6 +166,9 @@ docker-compose.yaml           # Local development
 - Consolidated "All Times" and "Time History" into single compact table view
 - Removed "All Events" option from All Times (must select specific event for meaningful ranking)
 - All Times shows rank badges (gold/silver/bronze) when sorting by fastest
+- Meet Details page: View all times from a meet with "Add Times" and "View Meet" navigation
+- Save feedback: Success state after saving times with count and navigation options
+- Delete times: Remove individual time entries from meet details page with confirmation
 
 **Navigation Order**: Add Times → All Times → Personal Bests → Meets → Progress → Standards
 
