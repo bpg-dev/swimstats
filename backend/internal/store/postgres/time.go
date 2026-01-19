@@ -22,7 +22,7 @@ func NewTimeRepository(queries *db.Queries) *TimeRepository {
 }
 
 // Get retrieves a time by ID.
-func (r *TimeRepository) Get(ctx context.Context, id uuid.UUID) (*db.Time, error) {
+func (r *TimeRepository) Get(ctx context.Context, id uuid.UUID) (*db.GetTimeRow, error) {
 	time, err := r.queries.GetTime(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -120,7 +120,7 @@ func (r *TimeRepository) Count(ctx context.Context, params ListTimesParams) (int
 }
 
 // Create creates a new time.
-func (r *TimeRepository) Create(ctx context.Context, params db.CreateTimeParams) (*db.Time, error) {
+func (r *TimeRepository) Create(ctx context.Context, params db.CreateTimeParams) (*db.CreateTimeRow, error) {
 	time, err := r.queries.CreateTime(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("create time: %w", err)
@@ -129,7 +129,7 @@ func (r *TimeRepository) Create(ctx context.Context, params db.CreateTimeParams)
 }
 
 // Update updates an existing time.
-func (r *TimeRepository) Update(ctx context.Context, params db.UpdateTimeParams) (*db.Time, error) {
+func (r *TimeRepository) Update(ctx context.Context, params db.UpdateTimeParams) (*db.UpdateTimeRow, error) {
 	time, err := r.queries.UpdateTime(ctx, params)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -149,7 +149,7 @@ func (r *TimeRepository) Delete(ctx context.Context, id uuid.UUID) error {
 }
 
 // ListByMeet lists all times for a specific meet.
-func (r *TimeRepository) ListByMeet(ctx context.Context, meetID uuid.UUID) ([]db.Time, error) {
+func (r *TimeRepository) ListByMeet(ctx context.Context, meetID uuid.UUID) ([]db.ListTimesByMeetRow, error) {
 	times, err := r.queries.ListTimesByMeet(ctx, meetID)
 	if err != nil {
 		return nil, fmt.Errorf("list times by meet: %w", err)
@@ -223,11 +223,12 @@ func (r *TimeRepository) GetTotalMeetCount(ctx context.Context, swimmerID uuid.U
 	return count, nil
 }
 
-// EventExistsForMeet checks if an event already exists for a specific meet.
-func (r *TimeRepository) EventExistsForMeet(ctx context.Context, meetID uuid.UUID, event string) (bool, error) {
+// EventExistsForMeet checks if an event already exists for a specific meet and swimmer.
+func (r *TimeRepository) EventExistsForMeet(ctx context.Context, swimmerID, meetID uuid.UUID, event string) (bool, error) {
 	exists, err := r.queries.EventExistsForMeet(ctx, db.EventExistsForMeetParams{
-		MeetID: meetID,
-		Event:  event,
+		SwimmerID: swimmerID,
+		MeetID:    meetID,
+		Event:     event,
 	})
 	if err != nil {
 		return false, fmt.Errorf("check event exists for meet: %w", err)

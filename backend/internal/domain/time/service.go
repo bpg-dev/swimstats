@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	gotime "time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -35,6 +36,7 @@ type TimeRecord struct {
 	Event         string    `json:"event"`
 	TimeMS        int       `json:"time_ms"`
 	TimeFormatted string    `json:"time_formatted"`
+	EventDate     string    `json:"event_date,omitempty"`
 	Notes         string    `json:"notes,omitempty"`
 	IsPB          bool      `json:"is_pb,omitempty"`
 	Meet          *Meet     `json:"meet,omitempty"`
@@ -45,7 +47,8 @@ type Meet struct {
 	ID         uuid.UUID `json:"id"`
 	Name       string    `json:"name"`
 	City       string    `json:"city"`
-	Date       string    `json:"date"`
+	StartDate  string    `json:"start_date"`
+	EndDate    string    `json:"end_date"`
 	CourseType string    `json:"course_type"`
 }
 
@@ -63,20 +66,25 @@ type BatchResult struct {
 
 // Input represents input for creating/updating a time.
 type Input struct {
-	MeetID uuid.UUID `json:"meet_id"`
-	Event  string    `json:"event"`
-	TimeMS int       `json:"time_ms"`
-	Notes  string    `json:"notes,omitempty"`
+	MeetID    uuid.UUID `json:"meet_id"`
+	Event     string    `json:"event"`
+	TimeMS    int       `json:"time_ms"`
+	EventDate string    `json:"event_date,omitempty"`
+	Notes     string    `json:"notes,omitempty"`
+}
+
+// BatchTimeInput represents a single time in a batch.
+type BatchTimeInput struct {
+	Event     string `json:"event"`
+	TimeMS    int    `json:"time_ms"`
+	EventDate string `json:"event_date,omitempty"`
+	Notes     string `json:"notes,omitempty"`
 }
 
 // BatchInput represents input for batch time creation.
 type BatchInput struct {
-	MeetID uuid.UUID `json:"meet_id"`
-	Times  []struct {
-		Event  string `json:"event"`
-		TimeMS int    `json:"time_ms"`
-		Notes  string `json:"notes,omitempty"`
-	} `json:"times"`
+	MeetID uuid.UUID        `json:"meet_id"`
+	Times  []BatchTimeInput `json:"times"`
 }
 
 // Validate validates the time input.
@@ -93,6 +101,35 @@ func (i Input) Validate() error {
 	if len(i.Notes) > 1000 {
 		return errors.New("notes must be at most 1000 characters")
 	}
+	if i.EventDate != "" {
+		if _, err := gotime.Parse("2006-01-02", i.EventDate); err != nil {
+			return errors.New("event_date must be a valid date in YYYY-MM-DD format")
+		}
+	}
+	return nil
+}
+
+// ValidateEventDate validates that the event date is within the meet's date range.
+func ValidateEventDate(eventDate string, meetStartDate, meetEndDate gotime.Time) error {
+	if eventDate == "" {
+		return nil // Event date is optional
+	}
+
+	ed, err := gotime.Parse("2006-01-02", eventDate)
+	if err != nil {
+		return errors.New("event_date must be a valid date in YYYY-MM-DD format")
+	}
+
+	// Normalize to date-only comparison
+	startDate := gotime.Date(meetStartDate.Year(), meetStartDate.Month(), meetStartDate.Day(), 0, 0, 0, 0, gotime.UTC)
+	endDate := gotime.Date(meetEndDate.Year(), meetEndDate.Month(), meetEndDate.Day(), 0, 0, 0, 0, gotime.UTC)
+	eventDateNorm := gotime.Date(ed.Year(), ed.Month(), ed.Day(), 0, 0, 0, 0, gotime.UTC)
+
+	if eventDateNorm.Before(startDate) || eventDateNorm.After(endDate) {
+		return fmt.Errorf("event_date must be within meet dates (%s to %s)",
+			startDate.Format("2006-01-02"), endDate.Format("2006-01-02"))
+	}
+
 	return nil
 }
 
@@ -146,18 +183,25 @@ func (s *Service) List(ctx context.Context, params ListParams) (*TimeList, error
 
 	times := make([]TimeRecord, len(rows))
 	for i, row := range rows {
+		var eventDate string
+		if row.EventDate.Valid {
+			eventDate = row.EventDate.Time.Format("2006-01-02")
+		}
+
 		times[i] = TimeRecord{
 			ID:            row.ID,
 			MeetID:        row.MeetID,
 			Event:         row.Event,
 			TimeMS:        int(row.TimeMs),
 			TimeFormatted: domain.FormatTime(int(row.TimeMs)),
+			EventDate:     eventDate,
 			Notes:         row.Notes.String,
 			Meet: &Meet{
 				ID:         row.MeetID,
 				Name:       row.MeetName,
 				City:       row.MeetCity,
-				Date:       row.MeetDate.Time.Format("2006-01-02"),
+				StartDate:  row.MeetStartDate.Time.Format("2006-01-02"),
+				EndDate:    row.MeetEndDate.Time.Format("2006-01-02"),
 				CourseType: row.MeetCourseType,
 			},
 		}
@@ -184,8 +228,13 @@ func (s *Service) Create(ctx context.Context, swimmerID uuid.UUID, input Input) 
 		return nil, fmt.Errorf("get meet: %w", err)
 	}
 
+	// Validate event date is within meet range
+	if err := ValidateEventDate(input.EventDate, meet.StartDate.Time, meet.EndDate.Time); err != nil {
+		return nil, fmt.Errorf("validation: %w", err)
+	}
+
 	// Check for duplicate event in the same meet
-	exists, err := s.timeRepo.EventExistsForMeet(ctx, input.MeetID, input.Event)
+	exists, err := s.timeRepo.EventExistsForMeet(ctx, swimmerID, input.MeetID, input.Event)
 	if err != nil {
 		return nil, fmt.Errorf("check duplicate event: %w", err)
 	}
@@ -198,11 +247,18 @@ func (s *Service) Create(ctx context.Context, swimmerID uuid.UUID, input Input) 
 		notes = pgtype.Text{String: input.Notes, Valid: true}
 	}
 
+	var eventDate pgtype.Date
+	if input.EventDate != "" {
+		ed, _ := gotime.Parse("2006-01-02", input.EventDate)
+		eventDate = pgtype.Date{Time: ed, Valid: true}
+	}
+
 	params := db.CreateTimeParams{
 		SwimmerID: swimmerID,
 		MeetID:    input.MeetID,
 		Event:     input.Event,
 		TimeMs:    int32(input.TimeMS),
+		EventDate: eventDate,
 		Notes:     notes,
 	}
 
@@ -214,19 +270,26 @@ func (s *Service) Create(ctx context.Context, swimmerID uuid.UUID, input Input) 
 	// Check if this is a PB
 	isPB, _ := s.timeRepo.IsPersonalBest(ctx, swimmerID, meet.CourseType, input.Event, int32(input.TimeMS), &dbTime.ID)
 
+	var eventDateStr string
+	if dbTime.EventDate.Valid {
+		eventDateStr = dbTime.EventDate.Time.Format("2006-01-02")
+	}
+
 	return &TimeRecord{
 		ID:            dbTime.ID,
 		MeetID:        dbTime.MeetID,
 		Event:         dbTime.Event,
 		TimeMS:        int(dbTime.TimeMs),
 		TimeFormatted: domain.FormatTime(int(dbTime.TimeMs)),
+		EventDate:     eventDateStr,
 		Notes:         dbTime.Notes.String,
 		IsPB:          isPB,
 		Meet: &Meet{
 			ID:         meet.ID,
 			Name:       meet.Name,
 			City:       meet.City,
-			Date:       meet.Date.Time.Format("2006-01-02"),
+			StartDate:  meet.StartDate.Time.Format("2006-01-02"),
+			EndDate:    meet.EndDate.Time.Format("2006-01-02"),
 			CourseType: meet.CourseType,
 		},
 	}, nil
@@ -259,9 +322,16 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 		return nil, fmt.Errorf("get meet: %w", err)
 	}
 
+	// Validate event dates are within meet range
+	for _, t := range input.Times {
+		if err := ValidateEventDate(t.EventDate, meet.StartDate.Time, meet.EndDate.Time); err != nil {
+			return nil, fmt.Errorf("validation for %s: %w", t.Event, err)
+		}
+	}
+
 	// Check for duplicate events already in the meet
 	for event := range seenEvents {
-		exists, err := s.timeRepo.EventExistsForMeet(ctx, input.MeetID, event)
+		exists, err := s.timeRepo.EventExistsForMeet(ctx, swimmerID, input.MeetID, event)
 		if err != nil {
 			return nil, fmt.Errorf("check duplicate event: %w", err)
 		}
@@ -293,11 +363,18 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 			notes = pgtype.Text{String: t.Notes, Valid: true}
 		}
 
+		var eventDate pgtype.Date
+		if t.EventDate != "" {
+			ed, _ := gotime.Parse("2006-01-02", t.EventDate)
+			eventDate = pgtype.Date{Time: ed, Valid: true}
+		}
+
 		params := db.CreateTimeParams{
 			SwimmerID: swimmerID,
 			MeetID:    input.MeetID,
 			Event:     t.Event,
 			TimeMs:    int32(t.TimeMS),
+			EventDate: eventDate,
 			Notes:     notes,
 		}
 
@@ -317,12 +394,18 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 			}
 		}
 
+		var eventDateStr string
+		if dbTime.EventDate.Valid {
+			eventDateStr = dbTime.EventDate.Time.Format("2006-01-02")
+		}
+
 		times = append(times, TimeRecord{
 			ID:            dbTime.ID,
 			MeetID:        dbTime.MeetID,
 			Event:         dbTime.Event,
 			TimeMS:        int(dbTime.TimeMs),
 			TimeFormatted: domain.FormatTime(int(dbTime.TimeMs)),
+			EventDate:     eventDateStr,
 			Notes:         dbTime.Notes.String,
 			IsPB:          isPB,
 		})
@@ -355,22 +438,39 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*TimeR
 		return nil, fmt.Errorf("get meet: %w", err)
 	}
 
+	// Validate event date is within meet range
+	if err := ValidateEventDate(input.EventDate, meet.StartDate.Time, meet.EndDate.Time); err != nil {
+		return nil, fmt.Errorf("validation: %w", err)
+	}
+
 	var notes pgtype.Text
 	if input.Notes != "" {
 		notes = pgtype.Text{String: input.Notes, Valid: true}
 	}
 
+	var eventDate pgtype.Date
+	if input.EventDate != "" {
+		ed, _ := gotime.Parse("2006-01-02", input.EventDate)
+		eventDate = pgtype.Date{Time: ed, Valid: true}
+	}
+
 	params := db.UpdateTimeParams{
-		ID:     id,
-		MeetID: input.MeetID,
-		Event:  input.Event,
-		TimeMs: int32(input.TimeMS),
-		Notes:  notes,
+		ID:        id,
+		MeetID:    input.MeetID,
+		Event:     input.Event,
+		TimeMs:    int32(input.TimeMS),
+		EventDate: eventDate,
+		Notes:     notes,
 	}
 
 	dbTime, err := s.timeRepo.Update(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("update time: %w", err)
+	}
+
+	var eventDateStr string
+	if dbTime.EventDate.Valid {
+		eventDateStr = dbTime.EventDate.Time.Format("2006-01-02")
 	}
 
 	return &TimeRecord{
@@ -379,12 +479,14 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*TimeR
 		Event:         dbTime.Event,
 		TimeMS:        int(dbTime.TimeMs),
 		TimeFormatted: domain.FormatTime(int(dbTime.TimeMs)),
+		EventDate:     eventDateStr,
 		Notes:         dbTime.Notes.String,
 		Meet: &Meet{
 			ID:         meet.ID,
 			Name:       meet.Name,
 			City:       meet.City,
-			Date:       meet.Date.Time.Format("2006-01-02"),
+			StartDate:  meet.StartDate.Time.Format("2006-01-02"),
+			EndDate:    meet.EndDate.Time.Format("2006-01-02"),
 			CourseType: meet.CourseType,
 		},
 	}, nil
@@ -405,18 +507,25 @@ func (s *Service) Delete(ctx context.Context, id uuid.UUID) error {
 }
 
 func toTimeRecordFromRow(row *db.GetTimeWithMeetRow) *TimeRecord {
+	var eventDate string
+	if row.EventDate.Valid {
+		eventDate = row.EventDate.Time.Format("2006-01-02")
+	}
+
 	return &TimeRecord{
 		ID:            row.ID,
 		MeetID:        row.MeetID,
 		Event:         row.Event,
 		TimeMS:        int(row.TimeMs),
 		TimeFormatted: domain.FormatTime(int(row.TimeMs)),
+		EventDate:     eventDate,
 		Notes:         row.Notes.String,
 		Meet: &Meet{
 			ID:         row.MeetID,
 			Name:       row.MeetName,
 			City:       row.MeetCity,
-			Date:       row.MeetDate.Time.Format("2006-01-02"),
+			StartDate:  row.MeetStartDate.Time.Format("2006-01-02"),
+			EndDate:    row.MeetEndDate.Time.Format("2006-01-02"),
 			CourseType: row.MeetCourseType,
 		},
 	}

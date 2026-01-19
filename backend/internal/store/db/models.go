@@ -16,10 +16,11 @@ type Meet struct {
 	Name       string      `json:"name"`
 	City       string      `json:"city"`
 	Country    string      `json:"country"`
-	Date       pgtype.Date `json:"date"`
+	StartDate  pgtype.Date `json:"start_date"`
 	CourseType string      `json:"course_type"`
 	CreatedAt  time.Time   `json:"created_at"`
 	UpdatedAt  time.Time   `json:"updated_at"`
+	EndDate    pgtype.Date `json:"end_date"`
 }
 
 type StandardTime struct {
@@ -50,6 +51,7 @@ type Time struct {
 	Notes     pgtype.Text `json:"notes"`
 	CreatedAt time.Time   `json:"created_at"`
 	UpdatedAt time.Time   `json:"updated_at"`
+	EventDate pgtype.Date `json:"event_date"`
 }
 
 type TimeStandard struct {

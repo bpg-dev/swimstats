@@ -26,7 +26,8 @@ export const mockMeet = {
   name: 'Test Championship',
   city: 'Toronto',
   country: 'Canada',
-  date: '2026-01-15',
+  start_date: '2026-01-15',
+  end_date: '2026-01-15',  // Single-day meet for tests
   course_type: '25m' as const,
   time_count: 5,
 };
@@ -136,7 +137,8 @@ export const handlers = [
             name: mockMeet.name,
             city: mockMeet.city,
             country: mockMeet.country,
-            date: mockMeet.date,
+            start_date: mockMeet.start_date,
+            end_date: mockMeet.end_date,
             course_type: mockMeet.course_type,
           },
         }];

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Select, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
 import { EventSelector } from './EventSelector';
@@ -6,14 +6,15 @@ import { MeetSelector } from '@/components/meets/MeetSelector';
 import { TimeBatchInput, EventCode, BatchResult } from '@/types/time';
 import { CourseType, MeetInput } from '@/types/meet';
 import { useCreateBatchTimes, useTimes } from '@/hooks/useTimes';
-import { useCreateMeet } from '@/hooks/useMeets';
-import { parseTime } from '@/utils/timeFormat';
+import { useCreateMeet, useMeets } from '@/hooks/useMeets';
+import { parseTime, getDateRange } from '@/utils/timeFormat';
 import { ApiRequestError } from '@/services/api';
 
 interface TimeEntry {
   id: string;
   event: EventCode | '';
   time_str: string;
+  event_date?: string;
   notes: string;
 }
 
@@ -49,7 +50,8 @@ export function QuickEntryForm({
     name: '',
     city: '',
     country: 'Canada',
-    date: new Date().toISOString().split('T')[0],
+    start_date: new Date().toISOString().split('T')[0],
+    end_date: new Date().toISOString().split('T')[0],
     course_type: courseType || '25m',
   });
   const [quickMeetError, setQuickMeetError] = useState('');
@@ -61,6 +63,26 @@ export function QuickEntryForm({
   const { data: existingTimesData } = useTimes(
     meetId ? { meet_id: meetId, limit: 100 } : undefined
   );
+
+  // Fetch meets to get the selected meet's date range
+  const { data: meetsData } = useMeets({ course_type: courseType, limit: 100 });
+  
+  // Get selected meet's info
+  const selectedMeet = useMemo(() => {
+    if (!meetId || !meetsData?.meets) return null;
+    return meetsData.meets.find(m => m.id === meetId) || null;
+  }, [meetId, meetsData]);
+  
+  // Check if selected meet is multi-day
+  const isMultiDayMeet = useMemo(() => {
+    return selectedMeet ? selectedMeet.start_date !== selectedMeet.end_date : false;
+  }, [selectedMeet]);
+  
+  // Get available dates for the meet
+  const availableDates = useMemo(() => {
+    if (!selectedMeet) return [];
+    return getDateRange(selectedMeet.start_date, selectedMeet.end_date);
+  }, [selectedMeet]);
   
   // For each entry, compute which events to exclude (exclude other entries' events, but not its own)
   const getExcludedEventsForEntry = (entryId: string): EventCode[] => {
@@ -145,6 +167,7 @@ export function QuickEntryForm({
       times: validEntries.map(entry => ({
         event: entry.event as EventCode,
         time_ms: parseTime(entry.time_str)!,
+        event_date: entry.event_date || undefined,
         notes: entry.notes || undefined,
       })),
     };
@@ -186,6 +209,14 @@ export function QuickEntryForm({
       setQuickMeetError('City is required');
       return;
     }
+    if (!quickMeet.end_date) {
+      setQuickMeetError('End date is required');
+      return;
+    }
+    if (quickMeet.end_date < quickMeet.start_date) {
+      setQuickMeetError('End date cannot be before start date');
+      return;
+    }
     
     try {
       const meet = await createMeetMutation.mutateAsync(quickMeet);
@@ -195,7 +226,8 @@ export function QuickEntryForm({
         name: '',
         city: '',
         country: 'Canada',
-        date: new Date().toISOString().split('T')[0],
+        start_date: new Date().toISOString().split('T')[0],
+        end_date: new Date().toISOString().split('T')[0],
         course_type: courseType || '25m',
       });
       setQuickMeetError('');
@@ -338,12 +370,28 @@ export function QuickEntryForm({
                     />
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <Input
-                      label="Date"
+                      label="Start Date"
                       type="date"
-                      value={quickMeet.date}
-                      onChange={(e) => setQuickMeet(prev => ({ ...prev, date: e.target.value }))}
+                      value={quickMeet.start_date}
+                      onChange={(e) => {
+                        const newStart = e.target.value;
+                        setQuickMeet(prev => ({
+                          ...prev,
+                          start_date: newStart,
+                          // If end_date is before new start_date, update it
+                          end_date: prev.end_date && prev.end_date < newStart ? newStart : prev.end_date,
+                        }));
+                      }}
+                      required
+                    />
+                    <Input
+                      label="End Date"
+                      type="date"
+                      value={quickMeet.end_date}
+                      onChange={(e) => setQuickMeet(prev => ({ ...prev, end_date: e.target.value }))}
+                      min={quickMeet.start_date}
                       required
                     />
                     <Select
@@ -360,6 +408,7 @@ export function QuickEntryForm({
                       required
                     />
                   </div>
+                  <p className="text-xs text-slate-500">For single-day meets, set start and end date to the same day.</p>
                   
                   <div className="flex gap-2 pt-2">
                     <Button
@@ -392,20 +441,21 @@ export function QuickEntryForm({
           )}
 
           <div className="space-y-3">
-            {/* Column headers - visible on sm+ screens */}
-            <div className="hidden sm:flex gap-3 items-end px-4">
-              <div className="flex-1 grid grid-cols-3 gap-3">
-                <label className="block text-sm font-medium text-slate-700">Event</label>
-                <label className="block text-sm font-medium text-slate-700">Time</label>
-                <label className="block text-sm font-medium text-slate-700">Notes</label>
+            {/* Column headers - visible on sm+ screens, matches form row padding structure */}
+            <div className="hidden sm:block px-4 pb-1">
+              <div className={`grid gap-3 ${isMultiDayMeet ? 'grid-cols-4' : 'grid-cols-3'}`}>
+                <label className="text-sm font-medium text-slate-700">Event</label>
+                {isMultiDayMeet && (
+                  <label className="text-sm font-medium text-slate-700">Event Date</label>
+                )}
+                <label className="text-sm font-medium text-slate-700">Time</label>
+                <label className="text-sm font-medium text-slate-700">Notes</label>
               </div>
-              {/* Spacer for delete button column */}
-              <div className="w-7" />
             </div>
             
             {entries.map((entry) => (
-              <div key={entry.id} className="flex gap-3 items-center p-4 bg-slate-50 rounded-lg">
-                <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div key={entry.id} className="relative p-4 bg-slate-50 rounded-lg">
+                <div className={`grid grid-cols-1 gap-3 ${isMultiDayMeet ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} ${entries.length > 1 ? 'sm:pr-8' : ''}`}>
                   <EventSelector
                     value={entry.event as EventCode}
                     onChange={(e) => updateEntry(entry.id, 'event', e.target.value)}
@@ -415,6 +465,23 @@ export function QuickEntryForm({
                     error={errors[`${entry.id}_event`]}
                     excludeEvents={getExcludedEventsForEntry(entry.id)}
                   />
+                  {isMultiDayMeet && (
+                    <Select
+                      label="Event Date"
+                      labelClassName="sm:hidden"
+                      value={entry.event_date || ''}
+                      onChange={(e) => updateEntry(entry.id, 'event_date', e.target.value)}
+                      placeholder="Select date"
+                      options={availableDates.map(date => ({
+                        value: date,
+                        label: new Date(date + 'T00:00:00').toLocaleDateString('en-CA', { 
+                          weekday: 'short',
+                          month: 'short', 
+                          day: 'numeric' 
+                        }),
+                      }))}
+                    />
+                  )}
                   <Input
                     label="Time"
                     labelClassName="sm:hidden"
@@ -435,10 +502,10 @@ export function QuickEntryForm({
                   <button
                     type="button"
                     onClick={() => removeEntry(entry.id)}
-                    className="p-1 text-slate-400 hover:text-red-500 transition-colors"
+                    className="absolute top-1/2 -translate-y-1/2 right-2 p-1 text-slate-400 hover:text-red-500 transition-colors"
                     aria-label="Remove entry"
                   >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>

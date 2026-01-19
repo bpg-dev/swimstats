@@ -85,7 +85,8 @@ describe('MeetForm', () => {
 
     expect(screen.getByText('Meet Name')).toBeInTheDocument();
     expect(screen.getByText('City')).toBeInTheDocument();
-    expect(screen.getByText('Date')).toBeInTheDocument();
+    expect(screen.getByText('Start Date')).toBeInTheDocument();
+    expect(screen.getByText('End Date')).toBeInTheDocument();
     expect(screen.getByText('Course Type')).toBeInTheDocument();
   });
 

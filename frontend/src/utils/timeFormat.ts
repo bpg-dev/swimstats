@@ -92,3 +92,57 @@ export function timeDifferencePercent(time1Ms: number, time2Ms: number): number 
 export function isValidTimeString(timeStr: string): boolean {
   return parseTime(timeStr) !== null;
 }
+
+/**
+ * Format a meet date range for display.
+ * @param startDate - Start date string (YYYY-MM-DD)
+ * @param endDate - End date string (YYYY-MM-DD)
+ * @returns Formatted date range (e.g., "Jan 15, 2026" or "Jan 15-17, 2026")
+ */
+export function formatDateRange(startDate: string, endDate: string): string {
+  const start = new Date(startDate + 'T00:00:00');
+  const end = new Date(endDate + 'T00:00:00');
+  
+  const options: Intl.DateTimeFormatOptions = { 
+    month: 'short', 
+    day: 'numeric',
+    year: 'numeric'
+  };
+  
+  // Single day meet
+  if (startDate === endDate) {
+    return start.toLocaleDateString('en-CA', options);
+  }
+  
+  // Multi-day meet
+  const startFormatted = start.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+  const endFormatted = end.toLocaleDateString('en-CA', options);
+  
+  // Same month/year - show "Jan 15-17, 2026"
+  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+    const endDay = end.getDate();
+    return `${startFormatted}-${endDay}, ${end.getFullYear()}`;
+  }
+  
+  // Different months or years - show "Jan 15 - Feb 2, 2026"
+  return `${startFormatted} - ${endFormatted}`;
+}
+
+/**
+ * Get an array of dates between start and end (inclusive).
+ * @param startDate - Start date string (YYYY-MM-DD)
+ * @param endDate - End date string (YYYY-MM-DD)
+ * @returns Array of date strings
+ */
+export function getDateRange(startDate: string, endDate: string): string[] {
+  const dates: string[] = [];
+  const current = new Date(startDate + 'T00:00:00');
+  const end = new Date(endDate + 'T00:00:00');
+  
+  while (current <= end) {
+    dates.push(current.toISOString().split('T')[0]);
+    current.setDate(current.getDate() + 1);
+  }
+  
+  return dates;
+}

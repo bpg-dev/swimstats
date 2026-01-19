@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
-import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { Button, Input, Select, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { EventSelector } from './EventSelector';
 import { MeetSelector } from '@/components/meets/MeetSelector';
 import { TimeInput, TimeRecord, EventCode } from '@/types/time';
 import { CourseType } from '@/types/meet';
 import { useCreateTime, useUpdateTime, useTimes } from '@/hooks/useTimes';
-import { parseTime, formatTime } from '@/utils/timeFormat';
+import { useMeets } from '@/hooks/useMeets';
+import { parseTime, formatTime, getDateRange } from '@/utils/timeFormat';
 import { ApiRequestError } from '@/services/api';
 
 export interface TimeEntryFormProps {
@@ -27,6 +28,7 @@ export function TimeEntryForm({
     meet_id: initialData?.meet_id || defaultMeetId || '',
     event: initialData?.event || '' as EventCode | '',
     time_str: initialData ? formatTime(initialData.time_ms) : '',
+    event_date: initialData?.event_date || '',
     notes: initialData?.notes || '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -38,6 +40,26 @@ export function TimeEntryForm({
   const { data: existingTimesData } = useTimes(
     formData.meet_id ? { meet_id: formData.meet_id, limit: 100 } : undefined
   );
+
+  // Fetch meets to get the selected meet's date range
+  const { data: meetsData } = useMeets({ course_type: courseType, limit: 100 });
+  
+  // Get selected meet's info
+  const selectedMeet = useMemo(() => {
+    if (!formData.meet_id || !meetsData?.meets) return null;
+    return meetsData.meets.find(m => m.id === formData.meet_id) || null;
+  }, [formData.meet_id, meetsData]);
+  
+  // Check if selected meet is multi-day
+  const isMultiDayMeet = useMemo(() => {
+    return selectedMeet ? selectedMeet.start_date !== selectedMeet.end_date : false;
+  }, [selectedMeet]);
+  
+  // Get available dates for the meet
+  const availableDates = useMemo(() => {
+    if (!selectedMeet) return [];
+    return getDateRange(selectedMeet.start_date, selectedMeet.end_date);
+  }, [selectedMeet]);
   
   // Compute events to exclude (already in meet, but allow current event when editing)
   const excludedEvents = useMemo(() => {
@@ -90,6 +112,7 @@ export function TimeEntryForm({
       meet_id: formData.meet_id,
       event: formData.event as EventCode,
       time_ms: timeMs,
+      event_date: formData.event_date || undefined,
       notes: formData.notes || undefined,
     };
 
@@ -128,7 +151,7 @@ export function TimeEntryForm({
             <MeetSelector
               name="meet_id"
               value={formData.meet_id}
-              onChange={(e) => setFormData(prev => ({ ...prev, meet_id: e.target.value }))}
+              onChange={(e) => setFormData(prev => ({ ...prev, meet_id: e.target.value, event_date: '' }))}
               courseType={courseType}
               error={errors.meet_id}
               required
@@ -144,6 +167,25 @@ export function TimeEntryForm({
             excludeEvents={excludedEvents}
             required
           />
+
+          {isMultiDayMeet && (
+            <Select
+              label="Event Date"
+              name="event_date"
+              value={formData.event_date}
+              onChange={(e) => setFormData(prev => ({ ...prev, event_date: e.target.value }))}
+              placeholder="Select date (optional)"
+              options={availableDates.map(date => ({
+                value: date,
+                label: new Date(date + 'T00:00:00').toLocaleDateString('en-CA', { 
+                  weekday: 'long',
+                  month: 'short', 
+                  day: 'numeric' 
+                }),
+              }))}
+              hint="Which day of the meet was this event swum?"
+            />
+          )}
 
           <Input
             label="Time"

@@ -16,14 +16,17 @@ CREATE TABLE meets (
     name VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     country VARCHAR(100) NOT NULL DEFAULT 'Canada',
-    date DATE NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
     course_type VARCHAR(3) NOT NULL CHECK (course_type IN ('25m', '50m')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT meets_date_range_valid CHECK (end_date >= start_date)
 );
 
 CREATE INDEX idx_meets_course_type ON meets(course_type);
-CREATE INDEX idx_meets_date ON meets(date);
+CREATE INDEX idx_meets_start_date ON meets(start_date);
+CREATE INDEX idx_meets_end_date ON meets(end_date);
 
 CREATE TABLE times (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -31,6 +34,7 @@ CREATE TABLE times (
     meet_id UUID NOT NULL REFERENCES meets(id) ON DELETE CASCADE,
     event VARCHAR(50) NOT NULL,
     time_ms INTEGER NOT NULL CHECK (time_ms > 0),
+    event_date DATE,
     notes TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -40,6 +44,7 @@ CREATE INDEX idx_times_swimmer_id ON times(swimmer_id);
 CREATE INDEX idx_times_meet_id ON times(meet_id);
 CREATE INDEX idx_times_event ON times(event);
 CREATE INDEX idx_times_swimmer_event ON times(swimmer_id, event);
+CREATE INDEX idx_times_event_date ON times(event_date);
 
 CREATE TABLE time_standards (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

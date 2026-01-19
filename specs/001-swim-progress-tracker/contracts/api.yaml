@@ -750,9 +750,14 @@ components:
           type: string
         country:
           type: string
-        date:
+        start_date:
           type: string
           format: date
+          description: Start date of the meet
+        end_date:
+          type: string
+          format: date
+          description: End date of the meet (same as start_date for single-day meets)
         course_type:
           $ref: '#/components/schemas/CourseType'
         time_count:
@@ -761,7 +766,7 @@ components:
 
     MeetInput:
       type: object
-      required: [name, city, date, course_type]
+      required: [name, city, start_date, end_date, course_type]
       properties:
         name:
           type: string
@@ -775,9 +780,14 @@ components:
           type: string
           maxLength: 100
           default: Canada
-        date:
+        start_date:
           type: string
           format: date
+          description: Start date of the meet
+        end_date:
+          type: string
+          format: date
+          description: End date of the meet (must be >= start_date)
         course_type:
           $ref: '#/components/schemas/CourseType'
 
@@ -794,7 +804,7 @@ components:
 
     TimeRecord:
       type: object
-      required: [id, meet_id, event, time_ms, time_formatted]
+      required: [id, meet_id, event, time_ms, time_formatted, event_date]
       properties:
         id:
           type: string
@@ -812,6 +822,10 @@ components:
         time_formatted:
           type: string
           description: Formatted time (e.g., "1:05.32")
+        event_date:
+          type: string
+          format: date
+          description: The specific date this event was swum (within the meet's date range)
         notes:
           type: string
         is_pb:
@@ -820,7 +834,7 @@ components:
 
     TimeInput:
       type: object
-      required: [meet_id, event, time_ms]
+      required: [meet_id, event, time_ms, event_date]
       properties:
         meet_id:
           type: string
@@ -830,6 +844,10 @@ components:
         time_ms:
           type: integer
           minimum: 1
+        event_date:
+          type: string
+          format: date
+          description: The date this event was swum (must be within the meet's start_date and end_date)
         notes:
           type: string
           maxLength: 1000
@@ -846,13 +864,17 @@ components:
           minItems: 1
           items:
             type: object
-            required: [event, time_ms]
+            required: [event, time_ms, event_date]
             properties:
               event:
                 $ref: '#/components/schemas/EventCode'
               time_ms:
                 type: integer
                 minimum: 1
+              event_date:
+                type: string
+                format: date
+                description: The date this event was swum
               notes:
                 type: string
 
@@ -883,9 +905,10 @@ components:
         meet:
           type: string
           description: Meet name
-        date:
+        event_date:
           type: string
           format: date
+          description: The date the PB was achieved
 
     PersonalBestList:
       type: object
@@ -1037,11 +1060,12 @@ components:
 
     ProgressDataPoint:
       type: object
-      required: [date, time_ms, time_formatted, meet]
+      required: [event_date, time_ms, time_formatted, meet]
       properties:
-        date:
+        event_date:
           type: string
           format: date
+          description: The date the time was recorded
         time_ms:
           type: integer
         time_formatted:

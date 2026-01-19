@@ -16,16 +16,16 @@ type Querier interface {
 	CountTimes(ctx context.Context, arg CountTimesParams) (int64, error)
 	// Returns count of times per event for a swimmer
 	CountTimesByEvent(ctx context.Context, arg CountTimesByEventParams) ([]CountTimesByEventRow, error)
-	CreateMeet(ctx context.Context, arg CreateMeetParams) (Meet, error)
+	CreateMeet(ctx context.Context, arg CreateMeetParams) (CreateMeetRow, error)
 	CreateSwimmer(ctx context.Context, arg CreateSwimmerParams) (Swimmer, error)
-	CreateTime(ctx context.Context, arg CreateTimeParams) (Time, error)
+	CreateTime(ctx context.Context, arg CreateTimeParams) (CreateTimeRow, error)
 	DeleteMeet(ctx context.Context, id uuid.UUID) error
 	DeleteSwimmer(ctx context.Context, id uuid.UUID) error
 	DeleteTime(ctx context.Context, id uuid.UUID) error
 	DeleteTimesByMeet(ctx context.Context, meetID uuid.UUID) error
-	// Check if an event already exists for a specific meet
+	// Check if an event already exists for a specific meet and swimmer
 	EventExistsForMeet(ctx context.Context, arg EventExistsForMeetParams) (bool, error)
-	GetMeet(ctx context.Context, id uuid.UUID) (Meet, error)
+	GetMeet(ctx context.Context, id uuid.UUID) (GetMeetRow, error)
 	GetMeetWithTimeCount(ctx context.Context, id uuid.UUID) (GetMeetWithTimeCountRow, error)
 	// Returns the fastest time for a specific event
 	GetPersonalBestForEvent(ctx context.Context, arg GetPersonalBestForEventParams) (GetPersonalBestForEventRow, error)
@@ -36,7 +36,7 @@ type Querier interface {
 	// In a multi-user scenario, this would filter by user_id
 	// For single-user MVP, just return the first swimmer
 	GetSwimmerByUserID(ctx context.Context) (Swimmer, error)
-	GetTime(ctx context.Context, id uuid.UUID) (Time, error)
+	GetTime(ctx context.Context, id uuid.UUID) (GetTimeRow, error)
 	GetTimeWithMeet(ctx context.Context, id uuid.UUID) (GetTimeWithMeetRow, error)
 	GetTotalMeetCount(ctx context.Context, swimmerID uuid.UUID) (int32, error)
 	GetTotalTimeCount(ctx context.Context, swimmerID uuid.UUID) (int32, error)
@@ -45,10 +45,10 @@ type Querier interface {
 	ListMeets(ctx context.Context, arg ListMeetsParams) ([]ListMeetsRow, error)
 	ListSwimmers(ctx context.Context) ([]Swimmer, error)
 	ListTimes(ctx context.Context, arg ListTimesParams) ([]ListTimesRow, error)
-	ListTimesByMeet(ctx context.Context, meetID uuid.UUID) ([]Time, error)
-	UpdateMeet(ctx context.Context, arg UpdateMeetParams) (Meet, error)
+	ListTimesByMeet(ctx context.Context, meetID uuid.UUID) ([]ListTimesByMeetRow, error)
+	UpdateMeet(ctx context.Context, arg UpdateMeetParams) (UpdateMeetRow, error)
 	UpdateSwimmer(ctx context.Context, arg UpdateSwimmerParams) (Swimmer, error)
-	UpdateTime(ctx context.Context, arg UpdateTimeParams) (Time, error)
+	UpdateTime(ctx context.Context, arg UpdateTimeParams) (UpdateTimeRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

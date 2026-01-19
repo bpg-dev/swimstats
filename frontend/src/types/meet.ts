@@ -5,7 +5,8 @@ export interface Meet {
   name: string;
   city: string;
   country: string;
-  date: string;
+  start_date: string;
+  end_date: string;
   course_type: CourseType;
   time_count?: number;
 }
@@ -14,7 +15,8 @@ export interface MeetInput {
   name: string;
   city: string;
   country?: string;
-  date: string;
+  start_date: string;
+  end_date?: string;  // Optional - defaults to start_date for single-day meets
   course_type: CourseType;
 }
 

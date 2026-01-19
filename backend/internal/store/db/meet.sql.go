@@ -26,34 +26,49 @@ func (q *Queries) CountMeets(ctx context.Context, dollar_1 string) (int64, error
 }
 
 const createMeet = `-- name: CreateMeet :one
-INSERT INTO meets (name, city, country, date, course_type)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING id, name, city, country, date, course_type, created_at, updated_at
+INSERT INTO meets (name, city, country, start_date, end_date, course_type)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, name, city, country, start_date, end_date, course_type, created_at, updated_at
 `
 
 type CreateMeetParams struct {
 	Name       string      `json:"name"`
 	City       string      `json:"city"`
 	Country    string      `json:"country"`
-	Date       pgtype.Date `json:"date"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
 	CourseType string      `json:"course_type"`
 }
 
-func (q *Queries) CreateMeet(ctx context.Context, arg CreateMeetParams) (Meet, error) {
+type CreateMeetRow struct {
+	ID         uuid.UUID   `json:"id"`
+	Name       string      `json:"name"`
+	City       string      `json:"city"`
+	Country    string      `json:"country"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
+	CourseType string      `json:"course_type"`
+	CreatedAt  time.Time   `json:"created_at"`
+	UpdatedAt  time.Time   `json:"updated_at"`
+}
+
+func (q *Queries) CreateMeet(ctx context.Context, arg CreateMeetParams) (CreateMeetRow, error) {
 	row := q.db.QueryRow(ctx, createMeet,
 		arg.Name,
 		arg.City,
 		arg.Country,
-		arg.Date,
+		arg.StartDate,
+		arg.EndDate,
 		arg.CourseType,
 	)
-	var i Meet
+	var i CreateMeetRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.City,
 		&i.Country,
-		&i.Date,
+		&i.StartDate,
+		&i.EndDate,
 		&i.CourseType,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -72,20 +87,33 @@ func (q *Queries) DeleteMeet(ctx context.Context, id uuid.UUID) error {
 }
 
 const getMeet = `-- name: GetMeet :one
-SELECT id, name, city, country, date, course_type, created_at, updated_at
+SELECT id, name, city, country, start_date, end_date, course_type, created_at, updated_at
 FROM meets
 WHERE id = $1
 `
 
-func (q *Queries) GetMeet(ctx context.Context, id uuid.UUID) (Meet, error) {
+type GetMeetRow struct {
+	ID         uuid.UUID   `json:"id"`
+	Name       string      `json:"name"`
+	City       string      `json:"city"`
+	Country    string      `json:"country"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
+	CourseType string      `json:"course_type"`
+	CreatedAt  time.Time   `json:"created_at"`
+	UpdatedAt  time.Time   `json:"updated_at"`
+}
+
+func (q *Queries) GetMeet(ctx context.Context, id uuid.UUID) (GetMeetRow, error) {
 	row := q.db.QueryRow(ctx, getMeet, id)
-	var i Meet
+	var i GetMeetRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.City,
 		&i.Country,
-		&i.Date,
+		&i.StartDate,
+		&i.EndDate,
 		&i.CourseType,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -99,7 +127,8 @@ SELECT
     m.name, 
     m.city, 
     m.country, 
-    m.date, 
+    m.start_date,
+    m.end_date,
     m.course_type, 
     m.created_at, 
     m.updated_at,
@@ -115,7 +144,8 @@ type GetMeetWithTimeCountRow struct {
 	Name       string      `json:"name"`
 	City       string      `json:"city"`
 	Country    string      `json:"country"`
-	Date       pgtype.Date `json:"date"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
 	CourseType string      `json:"course_type"`
 	CreatedAt  time.Time   `json:"created_at"`
 	UpdatedAt  time.Time   `json:"updated_at"`
@@ -130,7 +160,8 @@ func (q *Queries) GetMeetWithTimeCount(ctx context.Context, id uuid.UUID) (GetMe
 		&i.Name,
 		&i.City,
 		&i.Country,
-		&i.Date,
+		&i.StartDate,
+		&i.EndDate,
 		&i.CourseType,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -145,7 +176,8 @@ SELECT
     m.name, 
     m.city, 
     m.country, 
-    m.date, 
+    m.start_date,
+    m.end_date,
     m.course_type, 
     m.created_at, 
     m.updated_at,
@@ -154,7 +186,7 @@ FROM meets m
 LEFT JOIN times t ON t.meet_id = m.id
 WHERE ($1::varchar = '' OR m.course_type = $1)
 GROUP BY m.id
-ORDER BY m.date DESC
+ORDER BY m.start_date DESC
 LIMIT $2
 `
 
@@ -168,7 +200,8 @@ type GetRecentMeetsRow struct {
 	Name       string      `json:"name"`
 	City       string      `json:"city"`
 	Country    string      `json:"country"`
-	Date       pgtype.Date `json:"date"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
 	CourseType string      `json:"course_type"`
 	CreatedAt  time.Time   `json:"created_at"`
 	UpdatedAt  time.Time   `json:"updated_at"`
@@ -189,7 +222,8 @@ func (q *Queries) GetRecentMeets(ctx context.Context, arg GetRecentMeetsParams) 
 			&i.Name,
 			&i.City,
 			&i.Country,
-			&i.Date,
+			&i.StartDate,
+			&i.EndDate,
 			&i.CourseType,
 			&i.CreatedAt,
 			&i.UpdatedAt,
@@ -211,7 +245,8 @@ SELECT
     m.name, 
     m.city, 
     m.country, 
-    m.date, 
+    m.start_date,
+    m.end_date,
     m.course_type, 
     m.created_at, 
     m.updated_at,
@@ -220,7 +255,7 @@ FROM meets m
 LEFT JOIN times t ON t.meet_id = m.id
 WHERE ($1::varchar = '' OR m.course_type = $1)
 GROUP BY m.id
-ORDER BY m.date DESC
+ORDER BY m.start_date DESC
 LIMIT $2 OFFSET $3
 `
 
@@ -235,7 +270,8 @@ type ListMeetsRow struct {
 	Name       string      `json:"name"`
 	City       string      `json:"city"`
 	Country    string      `json:"country"`
-	Date       pgtype.Date `json:"date"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
 	CourseType string      `json:"course_type"`
 	CreatedAt  time.Time   `json:"created_at"`
 	UpdatedAt  time.Time   `json:"updated_at"`
@@ -256,7 +292,8 @@ func (q *Queries) ListMeets(ctx context.Context, arg ListMeetsParams) ([]ListMee
 			&i.Name,
 			&i.City,
 			&i.Country,
-			&i.Date,
+			&i.StartDate,
+			&i.EndDate,
 			&i.CourseType,
 			&i.CreatedAt,
 			&i.UpdatedAt,
@@ -274,9 +311,9 @@ func (q *Queries) ListMeets(ctx context.Context, arg ListMeetsParams) ([]ListMee
 
 const updateMeet = `-- name: UpdateMeet :one
 UPDATE meets
-SET name = $2, city = $3, country = $4, date = $5, course_type = $6
+SET name = $2, city = $3, country = $4, start_date = $5, end_date = $6, course_type = $7
 WHERE id = $1
-RETURNING id, name, city, country, date, course_type, created_at, updated_at
+RETURNING id, name, city, country, start_date, end_date, course_type, created_at, updated_at
 `
 
 type UpdateMeetParams struct {
@@ -284,26 +321,41 @@ type UpdateMeetParams struct {
 	Name       string      `json:"name"`
 	City       string      `json:"city"`
 	Country    string      `json:"country"`
-	Date       pgtype.Date `json:"date"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
 	CourseType string      `json:"course_type"`
 }
 
-func (q *Queries) UpdateMeet(ctx context.Context, arg UpdateMeetParams) (Meet, error) {
+type UpdateMeetRow struct {
+	ID         uuid.UUID   `json:"id"`
+	Name       string      `json:"name"`
+	City       string      `json:"city"`
+	Country    string      `json:"country"`
+	StartDate  pgtype.Date `json:"start_date"`
+	EndDate    pgtype.Date `json:"end_date"`
+	CourseType string      `json:"course_type"`
+	CreatedAt  time.Time   `json:"created_at"`
+	UpdatedAt  time.Time   `json:"updated_at"`
+}
+
+func (q *Queries) UpdateMeet(ctx context.Context, arg UpdateMeetParams) (UpdateMeetRow, error) {
 	row := q.db.QueryRow(ctx, updateMeet,
 		arg.ID,
 		arg.Name,
 		arg.City,
 		arg.Country,
-		arg.Date,
+		arg.StartDate,
+		arg.EndDate,
 		arg.CourseType,
 	)
-	var i Meet
+	var i UpdateMeetRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.City,
 		&i.Country,
-		&i.Date,
+		&i.StartDate,
+		&i.EndDate,
 		&i.CourseType,
 		&i.CreatedAt,
 		&i.UpdatedAt,

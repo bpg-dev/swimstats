@@ -207,6 +207,33 @@
 - [x] **Tests**: Add test for excluded events in dropdown
 - [x] **Docs**: Update tasks.md with this enhancement
 
+### US1 Enhancement: Multi-Day Meets and Event Dates
+
+- [x] **Spec**: Update spec.md with multi-day meet requirements (FR-020, FR-03C)
+- [x] **Backend**: Add migration for `end_date` to `meets` table and `event_date` to `times` table
+- [x] **Backend**: Update meet/time models and SQL queries to use `start_date`, `end_date`, and `event_date`
+- [x] **Backend**: Update meet/time services with date validation (end_date >= start_date, event_date within range)
+- [x] **Backend**: Update API handlers for new date fields
+- [x] **Backend**: Update integration tests for new date fields
+- [x] **Frontend**: Update `Meet` and `TimeRecord` types with new date fields
+- [x] **Frontend**: Update `MeetForm` with date range picker (start_date, end_date)
+- [x] **Frontend**: Add `formatDateRange` utility function
+- [x] **Frontend**: Update `MeetList`, `MeetDetails`, `MeetSelector` to display date ranges
+- [x] **Frontend**: Add event date selector to `TimeEntryForm` (for multi-day meets)
+- [x] **Frontend**: Add event date selector to `QuickEntryForm` (for multi-day meets)
+- [x] **Frontend**: Update `AllTimesList` and `TimeHistory` to show event dates
+- [x] **Frontend**: Update MSW mock handlers with new date fields
+- [x] **Tests**: All frontend tests passing (58 tests)
+- [x] **Tests**: All backend integration tests passing
+
+### US1 Enhancement: Quick Entry Form UI Fixes
+
+- [x] **Frontend**: Fix Quick Entry form header alignment for multi-day and single-day meets
+- [x] **Frontend**: Fix delete button (X) vertical alignment in Quick Entry form
+- [x] **Frontend**: Add multi-day meet support to "Quick Add Meet" form (start_date, end_date fields)
+- [x] **Frontend**: Add validation for end_date >= start_date in Quick Add Meet
+- [x] **Tests**: All frontend tests passing (58 tests)
+
 ---
 
 ## Phase 4: User Story 2 - View Personal Bests (Priority: P1)

@@ -2,6 +2,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, Button, Loading, ErrorBanner } from '@/components/ui';
 import { MeetTimesList } from '@/components/meets/MeetTimesList';
 import { useMeet, useDeleteMeet } from '@/hooks/useMeets';
+import { formatDateRange } from '@/utils/timeFormat';
 
 /**
  * Meet details page - shows meet info and all recorded times.
@@ -46,14 +47,6 @@ export function MeetDetails() {
     );
   }
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('en-CA', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   return (
     <div className="space-y-6">
@@ -84,7 +77,7 @@ export function MeetDetails() {
               <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span className="text-slate-700">{formatDate(meet.date)}</span>
+              <span className="text-slate-700">{formatDateRange(meet.start_date, meet.end_date)}</span>
             </div>
             <div className="flex items-center gap-2">
               <span

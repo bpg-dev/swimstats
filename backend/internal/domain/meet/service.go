@@ -30,7 +30,8 @@ type Meet struct {
 	Name       string    `json:"name"`
 	City       string    `json:"city"`
 	Country    string    `json:"country"`
-	Date       string    `json:"date"`
+	StartDate  string    `json:"start_date"`
+	EndDate    string    `json:"end_date"`
 	CourseType string    `json:"course_type"`
 	TimeCount  int       `json:"time_count,omitempty"`
 }
@@ -46,7 +47,8 @@ type Input struct {
 	Name       string `json:"name"`
 	City       string `json:"city"`
 	Country    string `json:"country,omitempty"`
-	Date       string `json:"date"`
+	StartDate  string `json:"start_date"`
+	EndDate    string `json:"end_date,omitempty"`
 	CourseType string `json:"course_type"`
 }
 
@@ -64,12 +66,28 @@ func (i Input) Validate() error {
 	if len(i.City) > 255 {
 		return errors.New("city must be at most 255 characters")
 	}
-	if i.Date == "" {
-		return errors.New("date is required")
+	if i.StartDate == "" {
+		return errors.New("start_date is required")
 	}
-	if _, err := time.Parse("2006-01-02", i.Date); err != nil {
-		return errors.New("date must be a valid date in YYYY-MM-DD format")
+	startDate, err := time.Parse("2006-01-02", i.StartDate)
+	if err != nil {
+		return errors.New("start_date must be a valid date in YYYY-MM-DD format")
 	}
+
+	// If no end_date provided, use start_date (single-day meet)
+	endDateStr := i.EndDate
+	if endDateStr == "" {
+		endDateStr = i.StartDate
+	}
+	endDate, err := time.Parse("2006-01-02", endDateStr)
+	if err != nil {
+		return errors.New("end_date must be a valid date in YYYY-MM-DD format")
+	}
+
+	if endDate.Before(startDate) {
+		return errors.New("end_date cannot be before start_date")
+	}
+
 	if i.CourseType != "25m" && i.CourseType != "50m" {
 		return errors.New("course_type must be '25m' or '50m'")
 	}
@@ -120,7 +138,8 @@ func (s *Service) List(ctx context.Context, params ListParams) (*MeetList, error
 			Name:       row.Name,
 			City:       row.City,
 			Country:    row.Country,
-			Date:       row.Date.Time.Format("2006-01-02"),
+			StartDate:  row.StartDate.Time.Format("2006-01-02"),
+			EndDate:    row.EndDate.Time.Format("2006-01-02"),
 			CourseType: row.CourseType,
 			TimeCount:  int(row.TimeCount),
 		}
@@ -143,13 +162,21 @@ func (s *Service) Create(ctx context.Context, input Input) (*Meet, error) {
 		country = "Canada"
 	}
 
-	date, _ := time.Parse("2006-01-02", input.Date)
+	startDate, _ := time.Parse("2006-01-02", input.StartDate)
+	
+	// Default end_date to start_date if not provided
+	endDateStr := input.EndDate
+	if endDateStr == "" {
+		endDateStr = input.StartDate
+	}
+	endDate, _ := time.Parse("2006-01-02", endDateStr)
 
 	params := db.CreateMeetParams{
 		Name:       input.Name,
 		City:       input.City,
 		Country:    country,
-		Date:       pgtype.Date{Time: date, Valid: true},
+		StartDate:  pgtype.Date{Time: startDate, Valid: true},
+		EndDate:    pgtype.Date{Time: endDate, Valid: true},
 		CourseType: input.CourseType,
 	}
 
@@ -157,7 +184,7 @@ func (s *Service) Create(ctx context.Context, input Input) (*Meet, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create meet: %w", err)
 	}
-	return toMeet(dbMeet), nil
+	return toMeetFromCreateRow(dbMeet), nil
 }
 
 // Update updates an existing meet.
@@ -171,14 +198,22 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Meet,
 		country = "Canada"
 	}
 
-	date, _ := time.Parse("2006-01-02", input.Date)
+	startDate, _ := time.Parse("2006-01-02", input.StartDate)
+	
+	// Default end_date to start_date if not provided
+	endDateStr := input.EndDate
+	if endDateStr == "" {
+		endDateStr = input.StartDate
+	}
+	endDate, _ := time.Parse("2006-01-02", endDateStr)
 
 	params := db.UpdateMeetParams{
 		ID:         id,
 		Name:       input.Name,
 		City:       input.City,
 		Country:    country,
-		Date:       pgtype.Date{Time: date, Valid: true},
+		StartDate:  pgtype.Date{Time: startDate, Valid: true},
+		EndDate:    pgtype.Date{Time: endDate, Valid: true},
 		CourseType: input.CourseType,
 	}
 
@@ -186,7 +221,7 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Meet,
 	if err != nil {
 		return nil, fmt.Errorf("update meet: %w", err)
 	}
-	return toMeet(dbMeet), nil
+	return toMeetFromUpdateRow(dbMeet), nil
 }
 
 // Delete deletes a meet.
@@ -217,7 +252,8 @@ func (s *Service) GetRecent(ctx context.Context, courseType *string, limit int) 
 			Name:       row.Name,
 			City:       row.City,
 			Country:    row.Country,
-			Date:       row.Date.Time.Format("2006-01-02"),
+			StartDate:  row.StartDate.Time.Format("2006-01-02"),
+			EndDate:    row.EndDate.Time.Format("2006-01-02"),
 			CourseType: row.CourseType,
 			TimeCount:  int(row.TimeCount),
 		}
@@ -225,13 +261,26 @@ func (s *Service) GetRecent(ctx context.Context, courseType *string, limit int) 
 	return meets, nil
 }
 
-func toMeet(dbMeet *db.Meet) *Meet {
+func toMeetFromCreateRow(dbMeet *db.CreateMeetRow) *Meet {
 	return &Meet{
 		ID:         dbMeet.ID,
 		Name:       dbMeet.Name,
 		City:       dbMeet.City,
 		Country:    dbMeet.Country,
-		Date:       dbMeet.Date.Time.Format("2006-01-02"),
+		StartDate:  dbMeet.StartDate.Time.Format("2006-01-02"),
+		EndDate:    dbMeet.EndDate.Time.Format("2006-01-02"),
+		CourseType: dbMeet.CourseType,
+	}
+}
+
+func toMeetFromUpdateRow(dbMeet *db.UpdateMeetRow) *Meet {
+	return &Meet{
+		ID:         dbMeet.ID,
+		Name:       dbMeet.Name,
+		City:       dbMeet.City,
+		Country:    dbMeet.Country,
+		StartDate:  dbMeet.StartDate.Time.Format("2006-01-02"),
+		EndDate:    dbMeet.EndDate.Time.Format("2006-01-02"),
 		CourseType: dbMeet.CourseType,
 	}
 }
@@ -242,7 +291,8 @@ func toMeetFromRow(row *db.GetMeetWithTimeCountRow) *Meet {
 		Name:       row.Name,
 		City:       row.City,
 		Country:    row.Country,
-		Date:       row.Date.Time.Format("2006-01-02"),
+		StartDate:  row.StartDate.Time.Format("2006-01-02"),
+		EndDate:    row.EndDate.Time.Format("2006-01-02"),
 		CourseType: row.CourseType,
 		TimeCount:  int(row.TimeCount),
 	}

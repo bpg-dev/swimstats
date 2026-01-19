@@ -229,7 +229,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
 
 **Meets**
 
-- **FR-020**: System MUST allow creating a meet record with: meet name, city, country (defaults to Canada), date, and course type (25m or 50m)
+- **FR-020**: System MUST allow creating a meet record with: meet name, city, country (defaults to Canada), start date, end date (for multi-day meets), and course type (25m or 50m)
+- **FR-020a**: System MUST support single-day meets (start_date = end_date) and multi-day meets (start_date < end_date)
 - **FR-021**: System MUST associate all recorded times with a meet; times inherit course type from their meet
 - **FR-022**: System MUST allow editing and deleting meet records
 - **FR-023**: System MUST list previous meets for easy selection when adding times, filterable by course type
@@ -239,7 +240,8 @@ As a swim parent, I want to import my daughter's historical swim results from on
 
 **Time Entry**
 
-- **FR-030**: System MUST allow recording swim times with: event (stroke + distance), time (in minutes:seconds.hundredths format), associated meet (course type determined by current context)
+- **FR-030**: System MUST allow recording swim times with: event (stroke + distance), time (in minutes:seconds.hundredths format), associated meet, and event date (within meet date range)
+- **FR-030a**: System MUST allow selecting an event date from the meet's date range when entering times
 - **FR-031**: System MUST support all standard competitive swimming events:
   - Freestyle: 50m, 100m, 200m, 400m, 800m, 1500m
   - Backstroke: 50m, 100m, 200m

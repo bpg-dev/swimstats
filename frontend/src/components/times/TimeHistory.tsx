@@ -2,6 +2,7 @@ import { TimeRecord, EventCode, getEventInfo } from '@/types/time';
 import { CourseType } from '@/types/meet';
 import { Card, CardContent, CardHeader, CardTitle, Loading, ErrorBanner } from '@/components/ui';
 import { useTimes, useDeleteTime } from '@/hooks/useTimes';
+import { formatDateRange } from '@/utils/timeFormat';
 
 export interface TimeHistoryProps {
   courseType?: CourseType;
@@ -40,13 +41,17 @@ export function TimeHistory({
 
   const times = data?.times || [];
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-CA', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
+  const formatMeetDate = (time: TimeRecord): string => {
+    if (!time.meet) return '—';
+    // If event_date is set and different from meet start_date, show it
+    if (time.event_date && time.event_date !== time.meet.start_date) {
+      return new Date(time.event_date + 'T00:00:00').toLocaleDateString('en-CA', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    }
+    return formatDateRange(time.meet.start_date, time.meet.end_date);
   };
 
   const handleDelete = async (time: TimeRecord) => {
@@ -116,7 +121,7 @@ export function TimeHistory({
                       )}
                     </td>
                     <td className="py-3 text-slate-600">
-                      {time.meet?.date ? formatDate(time.meet.date) : '—'}
+                      {formatMeetDate(time)}
                     </td>
                     <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-1">

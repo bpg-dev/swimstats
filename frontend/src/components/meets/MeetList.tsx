@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Meet, CourseType } from '@/types/meet';
 import { Card, CardContent, CardHeader, CardTitle, Loading, ErrorBanner } from '@/components/ui';
 import { useMeets } from '@/hooks/useMeets';
+import { formatDateRange } from '@/utils/timeFormat';
 
 export interface MeetListProps {
   courseType?: CourseType;
@@ -32,14 +33,6 @@ export function MeetList({
 
   const meets = data?.meets || [];
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-CA', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
 
   const content = (
     <>
@@ -53,7 +46,7 @@ export function MeetList({
                 <div className="min-w-0">
                   <p className="font-medium text-slate-900 truncate">{meet.name}</p>
                   <p className="text-sm text-slate-500">
-                    {meet.city}, {meet.country} • {formatDate(meet.date)}
+                    {meet.city}, {meet.country} • {formatDateRange(meet.start_date, meet.end_date)}
                   </p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0 ml-4">

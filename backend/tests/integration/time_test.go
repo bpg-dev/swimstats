@@ -10,10 +10,11 @@ import (
 )
 
 type TimeInput struct {
-	MeetID string `json:"meet_id"`
-	Event  string `json:"event"`
-	TimeMS int    `json:"time_ms"`
-	Notes  string `json:"notes,omitempty"`
+	MeetID    string `json:"meet_id"`
+	Event     string `json:"event"`
+	TimeMS    int    `json:"time_ms"`
+	Notes     string `json:"notes,omitempty"`
+	EventDate string `json:"event_date"`
 }
 
 type TimeBatchInput struct {
@@ -80,7 +81,7 @@ func TestTimeAPI(t *testing.T) {
 		meetInput := MeetInput{
 			Name:       "Test Meet",
 			City:       "Toronto",
-			Date:       "2026-03-15",
+			StartDate:  "2026-03-15",
 			CourseType: courseType,
 		}
 		rr = client.Post("/api/v1/meets", meetInput)
@@ -149,7 +150,7 @@ func TestTimeAPI(t *testing.T) {
 		_, meetID1 := setupSwimmerAndMeet(t, "25m")
 
 		// Create second meet for same event
-		meetInput := MeetInput{Name: "Meet 2", City: "Ottawa", Date: "2026-04-15", CourseType: "25m"}
+		meetInput := MeetInput{Name: "Meet 2", City: "Ottawa", StartDate: "2026-04-15", CourseType: "25m"}
 		rr := client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 		var meet2 Meet
@@ -184,7 +185,7 @@ func TestTimeAPI(t *testing.T) {
 		meetInput := MeetInput{
 			Name:       "50m Meet",
 			City:       "Ottawa",
-			Date:       "2026-04-15",
+			StartDate:  "2026-04-15",
 			CourseType: "50m",
 		}
 		rr := client.Post("/api/v1/meets", meetInput)
@@ -342,7 +343,7 @@ func TestTimeAPI(t *testing.T) {
 		_, meetID1 := setupSwimmerAndMeet(t, "25m")
 
 		// Create second meet
-		meetInput := MeetInput{Name: "Meet 2", City: "Ottawa", Date: "2026-04-15", CourseType: "25m"}
+		meetInput := MeetInput{Name: "Meet 2", City: "Ottawa", StartDate: "2026-04-15", CourseType: "25m"}
 		rr := client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 		var meet2 Meet
@@ -383,7 +384,7 @@ func TestTimeBatchAPI(t *testing.T) {
 		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
 
 		// Create meet
-		meetInput := MeetInput{Name: "Meet", City: "Toronto", Date: "2026-03-15", CourseType: "25m"}
+		meetInput := MeetInput{Name: "Meet", City: "Toronto", StartDate: "2026-03-15", CourseType: "25m"}
 		rr = client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 		var meet Meet
@@ -418,7 +419,7 @@ func TestTimeBatchAPI(t *testing.T) {
 		rr := client.Put("/api/v1/swimmer", swimmerInput)
 		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
 
-		meetInput := MeetInput{Name: "Meet 1", City: "Toronto", Date: "2026-03-15", CourseType: "25m"}
+		meetInput := MeetInput{Name: "Meet 1", City: "Toronto", StartDate: "2026-03-15", CourseType: "25m"}
 		rr = client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 		var meet1 Meet
@@ -431,7 +432,7 @@ func TestTimeBatchAPI(t *testing.T) {
 
 		// Create second meet with faster time
 		meetInput.Name = "Meet 2"
-		meetInput.Date = "2026-04-15"
+		meetInput.StartDate = "2026-04-15"
 		rr = client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 		var meet2 Meet
@@ -466,7 +467,7 @@ func TestTimeBatchAPI(t *testing.T) {
 		rr := client.Put("/api/v1/swimmer", swimmerInput)
 		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
 
-		meetInput := MeetInput{Name: "Meet", City: "Toronto", Date: "2026-03-15", CourseType: "25m"}
+		meetInput := MeetInput{Name: "Meet", City: "Toronto", StartDate: "2026-03-15", CourseType: "25m"}
 		rr = client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 		var meet Meet
@@ -494,7 +495,7 @@ func TestTimeBatchAPI(t *testing.T) {
 		rr := client.Put("/api/v1/swimmer", swimmerInput)
 		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
 
-		meetInput := MeetInput{Name: "Meet", City: "Toronto", Date: "2026-03-15", CourseType: "25m"}
+		meetInput := MeetInput{Name: "Meet", City: "Toronto", StartDate: "2026-03-15", CourseType: "25m"}
 		rr = client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 		var meet Meet
@@ -552,7 +553,7 @@ func TestTimeFormatting(t *testing.T) {
 			rr := client.Put("/api/v1/swimmer", swimmerInput)
 			require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
 
-			meetInput := MeetInput{Name: "Meet", City: "Toronto", Date: "2026-03-15", CourseType: "25m"}
+			meetInput := MeetInput{Name: "Meet", City: "Toronto", StartDate: "2026-03-15", CourseType: "25m"}
 			rr = client.Post("/api/v1/meets", meetInput)
 			require.Equal(t, http.StatusCreated, rr.Code)
 			var meet Meet

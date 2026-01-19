@@ -14,7 +14,8 @@ type MeetInput struct {
 	Name       string `json:"name"`
 	City       string `json:"city"`
 	Country    string `json:"country,omitempty"`
-	Date       string `json:"date"`
+	StartDate  string `json:"start_date"`
+	EndDate    string `json:"end_date,omitempty"`
 	CourseType string `json:"course_type"`
 }
 
@@ -23,7 +24,8 @@ type Meet struct {
 	Name       string `json:"name"`
 	City       string `json:"city"`
 	Country    string `json:"country"`
-	Date       string `json:"date"`
+	StartDate  string `json:"start_date"`
+	EndDate    string `json:"end_date"`
 	CourseType string `json:"course_type"`
 	TimeCount  int    `json:"time_count,omitempty"`
 }
@@ -53,7 +55,7 @@ func TestMeetAPI(t *testing.T) {
 			Name:       "Ontario Championships",
 			City:       "Toronto",
 			Country:    "Canada",
-			Date:       "2026-03-15",
+			StartDate:       "2026-03-15",
 			CourseType: "25m",
 		}
 
@@ -67,7 +69,7 @@ func TestMeetAPI(t *testing.T) {
 		assert.Equal(t, "Ontario Championships", meet.Name)
 		assert.Equal(t, "Toronto", meet.City)
 		assert.Equal(t, "Canada", meet.Country)
-		assert.Equal(t, "2026-03-15", meet.Date)
+		assert.Equal(t, "2026-03-15", meet.StartDate)
 		assert.Equal(t, "25m", meet.CourseType)
 	})
 
@@ -77,7 +79,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Local Meet",
 			City:       "Ottawa",
-			Date:       "2026-02-10",
+			StartDate:       "2026-02-10",
 			CourseType: "50m",
 		}
 
@@ -94,9 +96,9 @@ func TestMeetAPI(t *testing.T) {
 
 		// Create multiple meets
 		meets := []MeetInput{
-			{Name: "Meet 1", City: "Toronto", Date: "2026-01-10", CourseType: "25m"},
-			{Name: "Meet 2", City: "Ottawa", Date: "2026-02-15", CourseType: "50m"},
-			{Name: "Meet 3", City: "Montreal", Date: "2026-03-20", CourseType: "25m"},
+			{Name: "Meet 1", City: "Toronto", StartDate: "2026-01-10", CourseType: "25m"},
+			{Name: "Meet 2", City: "Ottawa", StartDate: "2026-02-15", CourseType: "50m"},
+			{Name: "Meet 3", City: "Montreal", StartDate: "2026-03-20", CourseType: "25m"},
 		}
 
 		for _, m := range meets {
@@ -120,9 +122,9 @@ func TestMeetAPI(t *testing.T) {
 		testDB.ClearTables(ctx, t)
 
 		meets := []MeetInput{
-			{Name: "25m Meet 1", City: "Toronto", Date: "2026-01-10", CourseType: "25m"},
-			{Name: "50m Meet", City: "Ottawa", Date: "2026-02-15", CourseType: "50m"},
-			{Name: "25m Meet 2", City: "Montreal", Date: "2026-03-20", CourseType: "25m"},
+			{Name: "25m Meet 1", City: "Toronto", StartDate: "2026-01-10", CourseType: "25m"},
+			{Name: "50m Meet", City: "Ottawa", StartDate: "2026-02-15", CourseType: "50m"},
+			{Name: "25m Meet 2", City: "Montreal", StartDate: "2026-03-20", CourseType: "25m"},
 		}
 
 		for _, m := range meets {
@@ -148,7 +150,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Specific Meet",
 			City:       "Vancouver",
-			Date:       "2026-04-01",
+			StartDate:       "2026-04-01",
 			CourseType: "50m",
 		}
 		rr := client.Post("/api/v1/meets", input)
@@ -182,7 +184,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Original Name",
 			City:       "Toronto",
-			Date:       "2026-01-10",
+			StartDate:       "2026-01-10",
 			CourseType: "25m",
 		}
 		rr := client.Post("/api/v1/meets", input)
@@ -211,7 +213,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "To Delete",
 			City:       "Toronto",
-			Date:       "2026-01-10",
+			StartDate:       "2026-01-10",
 			CourseType: "25m",
 		}
 		rr := client.Post("/api/v1/meets", input)
@@ -238,19 +240,19 @@ func TestMeetAPI(t *testing.T) {
 		}{
 			{
 				name:  "empty name",
-				input: MeetInput{Name: "", City: "Toronto", Date: "2026-01-10", CourseType: "25m"},
+				input: MeetInput{Name: "", City: "Toronto", StartDate: "2026-01-10", CourseType: "25m"},
 			},
 			{
 				name:  "empty city",
-				input: MeetInput{Name: "Meet", City: "", Date: "2026-01-10", CourseType: "25m"},
+				input: MeetInput{Name: "Meet", City: "", StartDate: "2026-01-10", CourseType: "25m"},
 			},
 			{
 				name:  "invalid course type",
-				input: MeetInput{Name: "Meet", City: "Toronto", Date: "2026-01-10", CourseType: "100m"},
+				input: MeetInput{Name: "Meet", City: "Toronto", StartDate: "2026-01-10", CourseType: "100m"},
 			},
 			{
 				name:  "invalid date",
-				input: MeetInput{Name: "Meet", City: "Toronto", Date: "not-a-date", CourseType: "25m"},
+				input: MeetInput{Name: "Meet", City: "Toronto", StartDate: "not-a-date", CourseType: "25m"},
 			},
 		}
 
@@ -271,7 +273,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Test Meet",
 			City:       "Toronto",
-			Date:       "2026-01-10",
+			StartDate:       "2026-01-10",
 			CourseType: "25m",
 		}
 
@@ -289,7 +291,7 @@ func TestMeetAPI(t *testing.T) {
 			input := MeetInput{
 				Name:       fmt.Sprintf("Meet %d", i+1),
 				City:       "Toronto",
-				Date:       date,
+				StartDate:       date,
 				CourseType: "25m",
 			}
 			rr := client.Post("/api/v1/meets", input)

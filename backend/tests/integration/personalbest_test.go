@@ -57,10 +57,30 @@ func TestPersonalBestsAPI(t *testing.T) {
 			Name:       "PB Test Meet",
 			City:       "Toronto",
 			Country:    "Canada",
-			Date:       "2026-01-15",
+			StartDate:  "2026-01-15",
+			EndDate:    "2026-01-15",
 			CourseType: courseType,
 		}
 		rr = client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		var meet Meet
+		AssertJSONBody(t, rr, &meet)
+		return meet.ID
+	}
+
+	// Helper to create a meet with a unique name
+	createMeet := func(t *testing.T, name string, startDate string, courseType string) string {
+		t.Helper()
+		meetInput := MeetInput{
+			Name:       name,
+			City:       "Toronto",
+			Country:    "Canada",
+			StartDate:  startDate,
+			EndDate:    startDate,
+			CourseType: courseType,
+		}
+		rr := client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
 		var meet Meet
@@ -103,14 +123,20 @@ func TestPersonalBestsAPI(t *testing.T) {
 	})
 
 	t.Run("GET /personal-bests returns fastest times per event", func(t *testing.T) {
-		meetID := setupSwimmerAndMeet(t, "25m")
+		setupSwimmerAndMeet(t, "25m")
 
-		// Create multiple times for same event - different speeds
+		// Create multiple meets for same event times (can't have duplicate events in same meet)
+		meet1 := createMeet(t, "PB Meet 1", "2026-01-10", "25m")
+		meet2 := createMeet(t, "PB Meet 2", "2026-01-11", "25m")
+		meet3 := createMeet(t, "PB Meet 3", "2026-01-12", "25m")
+		meet4 := createMeet(t, "PB Meet 4", "2026-01-13", "25m")
+
+		// Create times for same event across different meets
 		times := []TimeInput{
-			{MeetID: meetID, Event: "100FR", TimeMS: 65000}, // 1:05.00 (fastest)
-			{MeetID: meetID, Event: "100FR", TimeMS: 66000}, // 1:06.00
-			{MeetID: meetID, Event: "100FR", TimeMS: 67000}, // 1:07.00
-			{MeetID: meetID, Event: "50FR", TimeMS: 28500},  // 28.50
+			{MeetID: meet1, Event: "100FR", TimeMS: 65000, EventDate: "2026-01-10"}, // 1:05.00 (fastest)
+			{MeetID: meet2, Event: "100FR", TimeMS: 66000, EventDate: "2026-01-11"}, // 1:06.00
+			{MeetID: meet3, Event: "100FR", TimeMS: 67000, EventDate: "2026-01-12"}, // 1:07.00
+			{MeetID: meet4, Event: "50FR", TimeMS: 28500, EventDate: "2026-01-13"},  // 28.50
 		}
 
 		for _, input := range times {
@@ -141,27 +167,14 @@ func TestPersonalBestsAPI(t *testing.T) {
 
 	t.Run("GET /personal-bests respects course_type filter", func(t *testing.T) {
 		// Create meets for both course types
-		meet25m := setupSwimmerAndMeet(t, "25m")
-
-		// Create 50m meet
-		meetInput := MeetInput{
-			Name:       "Long Course Meet",
-			City:       "Toronto",
-			Country:    "Canada",
-			Date:       "2026-02-15",
-			CourseType: "50m",
-		}
-		rr := client.Post("/api/v1/meets", meetInput)
-		require.Equal(t, http.StatusCreated, rr.Code)
-
-		var meet50m Meet
-		AssertJSONBody(t, rr, &meet50m)
+		meet25m := createMeet(t, "Course Filter 25m Meet", "2026-02-14", "25m")
+		meet50m := createMeet(t, "Course Filter 50m Meet", "2026-02-15", "50m")
 
 		// Add times to both
-		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet25m, Event: "200FR", TimeMS: 130000})
+		rr := client.Post("/api/v1/times", TimeInput{MeetID: meet25m, Event: "200FR", TimeMS: 130000, EventDate: "2026-02-14"})
 		require.Equal(t, http.StatusCreated, rr.Code)
 
-		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet50m.ID, Event: "200FR", TimeMS: 135000})
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet50m, Event: "200FR", TimeMS: 135000, EventDate: "2026-02-15"})
 		require.Equal(t, http.StatusCreated, rr.Code)
 
 		// Check 25m PBs

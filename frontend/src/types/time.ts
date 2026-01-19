@@ -13,6 +13,7 @@ export interface TimeRecord {
   event: EventCode;
   time_ms: number;
   time_formatted: string;
+  event_date?: string;  // Specific date when event was swum (within meet date range)
   notes?: string;
   is_pb?: boolean;
   meet?: Meet;
@@ -22,6 +23,7 @@ export interface TimeInput {
   meet_id: string;
   event: EventCode;
   time_ms: number;
+  event_date?: string;  // Optional - specific date when event was swum
   notes?: string;
 }
 
@@ -30,6 +32,7 @@ export interface TimeBatchInput {
   times: Array<{
     event: EventCode;
     time_ms: number;
+    event_date?: string;  // Optional - specific date when event was swum
     notes?: string;
   }>;
 }

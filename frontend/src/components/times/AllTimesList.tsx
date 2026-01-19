@@ -1,5 +1,6 @@
 import { TimeRecord, getEventInfo } from '@/types/time';
 import { SortBy } from './SortToggle';
+import { formatDateRange } from '@/utils/timeFormat';
 
 interface AllTimesListProps {
   times: TimeRecord[];
@@ -27,20 +28,26 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
       // Fastest first
       return a.time_ms - b.time_ms;
     } else {
-      // Newest first (by meet date)
-      const dateA = a.meet?.date ? new Date(a.meet.date).getTime() : 0;
-      const dateB = b.meet?.date ? new Date(b.meet.date).getTime() : 0;
-      return dateB - dateA;
+      // Newest first (by event date or meet start date)
+      const dateA = a.event_date || a.meet?.start_date;
+      const dateB = b.event_date || b.meet?.start_date;
+      const timeA = dateA ? new Date(dateA).getTime() : 0;
+      const timeB = dateB ? new Date(dateB).getTime() : 0;
+      return timeB - timeA;
     }
   });
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-CA', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
+  const formatMeetDate = (time: TimeRecord): string => {
+    if (!time.meet) return '—';
+    // If event_date is set and different from meet start_date, show it
+    if (time.event_date && time.event_date !== time.meet.start_date) {
+      return new Date(time.event_date + 'T00:00:00').toLocaleDateString('en-CA', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    }
+    return formatDateRange(time.meet.start_date, time.meet.end_date);
   };
 
   return (
@@ -116,7 +123,7 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
 
                 {/* Date */}
                 <td className="py-3 text-slate-600">
-                  {time.meet?.date ? formatDate(time.meet.date) : '—'}
+                  {formatMeetDate(time)}
                 </td>
               </tr>
             );

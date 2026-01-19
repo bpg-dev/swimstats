@@ -2,6 +2,7 @@ import { forwardRef, useMemo } from 'react';
 import { Select, SelectProps, Loading } from '@/components/ui';
 import { CourseType } from '@/types/meet';
 import { useMeets } from '@/hooks/useMeets';
+import { formatDateRange } from '@/utils/timeFormat';
 
 export interface MeetSelectorProps extends Omit<SelectProps, 'options'> {
   courseType?: CourseType;
@@ -28,14 +29,10 @@ export const MeetSelector = forwardRef<HTMLSelectElement, MeetSelectorProps>(
       }
 
       return data.meets.map(meet => {
-        const date = new Date(meet.date).toLocaleDateString('en-CA', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        });
+        const dateStr = formatDateRange(meet.start_date, meet.end_date);
         return {
           value: meet.id,
-          label: `${meet.name} - ${date} (${meet.course_type})`,
+          label: `${meet.name} - ${dateStr} (${meet.course_type})`,
         };
       });
     }, [data, showEmpty, emptyLabel]);
