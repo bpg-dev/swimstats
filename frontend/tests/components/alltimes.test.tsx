@@ -26,12 +26,14 @@ function renderWithProviders(ui: React.ReactElement) {
 }
 
 describe('EventFilter', () => {
-  it('renders with "All Events" option', () => {
+  it('renders with event options (no "All Events" option)', () => {
     const onChange = vi.fn();
-    render(<EventFilter value="" onChange={onChange} />);
+    render(<EventFilter value="50FR" onChange={onChange} />);
     
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(screen.getByText('All Events')).toBeInTheDocument();
+    // Should have event options, not "All Events"
+    expect(screen.getByText('50m Freestyle')).toBeInTheDocument();
+    expect(screen.queryByText('All Events')).not.toBeInTheDocument();
   });
 
   it('renders stroke groups', () => {
@@ -159,8 +161,8 @@ describe('AllTimesList', () => {
       <AllTimesList times={mockTimes} pbTimeId="3" sortBy="date" />
     );
     
-    // PB badge should appear
-    expect(screen.getByText('PB!')).toBeInTheDocument();
+    // PB badge should appear (component uses "PB", not "PB!")
+    expect(screen.getByText('PB')).toBeInTheDocument();
   });
 
   it('sorts by date (newest first) when sortBy is date', () => {

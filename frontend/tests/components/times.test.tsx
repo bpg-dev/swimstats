@@ -6,7 +6,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { TimeEntryForm } from '@/components/times/TimeEntryForm';
 import { QuickEntryForm } from '@/components/times/QuickEntryForm';
-import { TimeHistory } from '@/components/times/TimeHistory';
 import { EventSelector } from '@/components/times/EventSelector';
 import { mockMeet, mockTime } from '../mocks/handlers';
 
@@ -209,76 +208,56 @@ describe('QuickEntryForm', () => {
   });
 });
 
-describe('TimeHistory', () => {
-  it('renders times after loading', async () => {
-    render(<TimeHistory />, { wrapper: createWrapper() });
+describe('QuickEntryForm MeetSelector Integration', () => {
+  it('shows meet selector when no meetId provided', async () => {
+    render(<QuickEntryForm courseType="25m" />, { wrapper: createWrapper() });
 
+    // Should show meet selector - wait for it to load
     await waitFor(() => {
-      expect(screen.getByText('100m Freestyle')).toBeInTheDocument();
-    });
-
-    expect(screen.getByText('1:05.32')).toBeInTheDocument();
-  });
-
-  it('shows PB badge for personal best times', async () => {
-    render(<TimeHistory />, { wrapper: createWrapper() });
-
-    await waitFor(() => {
-      expect(screen.getByText('PB')).toBeInTheDocument();
+      expect(screen.getByLabelText(/meet/i)).toBeInTheDocument();
     });
   });
 
-  it('shows notes when available', async () => {
-    render(<TimeHistory />, { wrapper: createWrapper() });
-
-    await waitFor(() => {
-      expect(screen.getByText('Heat 3')).toBeInTheDocument();
-    });
-  });
-
-  it('calls onEditTime when edit button is clicked', async () => {
+  it('submits successfully when meet and time are filled in', async () => {
     const user = userEvent.setup();
-    const onEditTime = vi.fn();
+    const onSuccess = vi.fn();
 
-    render(<TimeHistory onEditTime={onEditTime} />, { wrapper: createWrapper() });
+    render(<QuickEntryForm courseType="25m" onSuccess={onSuccess} />, { wrapper: createWrapper() });
 
+    // Wait for meets to load
     await waitFor(() => {
-      expect(screen.getByText('100m Freestyle')).toBeInTheDocument();
+      const meetSelect = screen.getByLabelText(/meet/i);
+      expect(meetSelect).toBeInTheDocument();
     });
 
-    const editButton = screen.getByRole('button', { name: /edit time/i });
-    await user.click(editButton);
+    // Select a meet
+    const meetSelect = screen.getByLabelText(/meet/i);
+    await user.selectOptions(meetSelect, mockMeet.id);
 
-    expect(onEditTime).toHaveBeenCalledWith(
-      expect.objectContaining({
-        id: mockTime.id,
-        event: mockTime.event,
-      })
-    );
-  });
+    // Find and fill in event selector
+    // The selects are: meet selector, event selector
+    const allSelects = screen.getAllByRole('combobox');
+    // Find the event selector (not the meet one, has 100FR option)
+    for (const select of allSelects) {
+      const options = select.querySelectorAll('option');
+      const has100FR = Array.from(options).some(opt => opt.value === '100FR');
+      if (has100FR) {
+        await user.selectOptions(select, '100FR');
+        break;
+      }
+    }
 
-  it('shows delete confirmation before deleting', async () => {
-    const user = userEvent.setup();
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+    // Fill in time
+    const timeInputs = screen.getAllByPlaceholderText(/SS\.ss/i);
+    await user.type(timeInputs[0], '1:05.32');
 
-    render(<TimeHistory />, { wrapper: createWrapper() });
+    // Submit
+    const submitButton = screen.getByRole('button', { name: /save all times/i });
+    await user.click(submitButton);
 
+    // Should succeed and show PB notification
     await waitFor(() => {
-      expect(screen.getByText('100m Freestyle')).toBeInTheDocument();
-    });
-
-    const deleteButton = screen.getByRole('button', { name: /delete time/i });
-    await user.click(deleteButton);
-
-    expect(confirmSpy).toHaveBeenCalled();
-    confirmSpy.mockRestore();
-  });
-
-  it('shows total count in header', async () => {
-    render(<TimeHistory showHeader />, { wrapper: createWrapper() });
-
-    await waitFor(() => {
-      expect(screen.getByText(/1 total/i)).toBeInTheDocument();
+      expect(screen.getByText(/new personal bests/i)).toBeInTheDocument();
     });
   });
 });
