@@ -264,8 +264,13 @@ The API follows RESTful conventions:
 | `/api/v1/standards/:id` | GET, PUT, DELETE | Get/update/delete standard |
 | `/api/v1/standards/:id/times` | PUT | Set all times for a standard |
 | `/api/v1/comparisons` | GET | Compare PBs against a standard (query: standard_id, course_type) |
+| `/api/v1/data/export` | GET | Export all data as JSON backup |
+| `/api/v1/data/import` | POST | Import data (with replace mode) |
+| `/api/v1/data/import/preview` | POST | Preview import showing what will be deleted |
 
 All endpoints require authentication. In development mode, the backend accepts requests with a mock `Authorization: Bearer dev-token` header or no auth at all (thanks to `ENV=development`).
+
+For complete API documentation, see [specs/001-swim-progress-tracker/contracts/api.yaml](specs/001-swim-progress-tracker/contracts/api.yaml).
 
 ## Troubleshooting
 

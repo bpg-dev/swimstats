@@ -1,8 +1,51 @@
 # Swimmer Data Import Guide
 
-This guide explains how to clean your database and import your actual swimmer data into SwimStats.
+This guide explains how to import swimmer data into SwimStats.
 
-## Quick Start
+## Import Methods
+
+SwimStats provides two ways to import data:
+
+1. **In-App Import** (Recommended) - Import via the Settings page with preview and confirmation
+2. **CLI Scripts** - Command-line scripts for automation and advanced use cases
+
+---
+
+## In-App Import (Recommended)
+
+### Export Your Data
+
+1. Navigate to **Settings** (gear icon in navigation)
+2. Click **Export Data**
+3. A timestamped JSON file will download (e.g., `swimstats-export-2026-01-20.json`)
+
+### Import Data
+
+1. Navigate to **Settings**
+2. Click **Import Data**
+3. Select your JSON file
+4. **Preview**: Review what will be imported and what will be deleted
+5. **Confirm**: Click "Import" to proceed
+
+### Import Behavior
+
+The import uses **replace mode**:
+- If your file includes `swimmer`, it replaces the existing swimmer profile
+- If your file includes `meets`, ALL existing meets and times are deleted first
+- If your file includes `standards`, all custom standards are deleted first (pre-loaded standards are kept)
+
+### Preview Screen
+
+Before importing, you'll see:
+- What will be created (swimmer, meets count, times count, standards count)
+- What will be deleted (existing meets, times, custom standards)
+- Warnings for destructive operations
+
+---
+
+## CLI Import (Advanced)
+
+For automation, initial setup, or importing historical data.
 
 ### 1. Clean the Database
 
