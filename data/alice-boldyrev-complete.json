@@ -1,0 +1,1339 @@
+{
+  "swimmer": {
+    "name": "Alice Boldyrev",
+    "birth_date": "2013-01-22",
+    "gender": "female"
+  },
+  "meets": [
+    {
+      "name": "Time Trials",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2021-10-23",
+      "end_date": "2021-10-23",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "48.21",
+          "event_date": "2021-10-23",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Eswim Rtr 3.1",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2021-11-19",
+      "end_date": "2021-11-19",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "3:31.68",
+          "event_date": "2021-11-19",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Eswim Rtr 3.2",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2021-11-20",
+      "end_date": "2021-11-20",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "44.60",
+          "event_date": "2021-11-20",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "ESWIM RTR In-House",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2021-12-18",
+      "end_date": "2021-12-18",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "41.74",
+          "event_date": "2021-12-18",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "ESWIM March Break Blitz",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-03-12",
+      "end_date": "2022-03-12",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "3:21.01",
+          "event_date": "2022-03-12",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Marilyn Bell Swim Classic",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-05-01",
+      "end_date": "2022-05-01",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "41.77",
+          "event_date": "2022-05-01",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "3:19.11",
+          "event_date": "2022-05-01",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Top Cup LC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-05-14",
+      "end_date": "2022-05-14",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "40.37",
+          "event_date": "2022-05-14",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Top Cup SC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-05-14",
+      "end_date": "2022-05-15",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "39.75",
+          "event_date": "2022-05-14",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "38.51",
+          "event_date": "2022-05-15",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "3:10.06",
+          "event_date": "2022-05-15",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Central Region Team Championships",
+      "city": "Unionville",
+      "country": "Canada",
+      "start_date": "2022-06-25",
+      "end_date": "2022-06-25",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "38.85",
+          "event_date": "2022-06-25",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "ESWIM In-house",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-07-17",
+      "end_date": "2022-07-17",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "36.90",
+          "event_date": "2022-07-17",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "3:04.51",
+          "event_date": "2022-07-17",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Hall of Fame",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-10-15",
+      "end_date": "2022-10-15",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "36.32",
+          "event_date": "2022-10-15",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "38.59",
+          "event_date": "2022-10-15",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-11-12",
+      "end_date": "2022-11-12",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "32.94",
+          "event_date": "2022-11-12",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Gus Ryder Memorial Cup",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2022-11-27",
+      "end_date": "2022-11-27",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:42.95",
+          "event_date": "2022-11-27",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "MAC Jingle Bell Meet",
+      "city": "Unionville",
+      "country": "Canada",
+      "start_date": "2022-12-16",
+      "end_date": "2022-12-16",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "32.47",
+          "event_date": "2022-12-16",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "ESWIM A/B Meet",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-01-15",
+      "end_date": "2023-01-15",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "33.37",
+          "event_date": "2023-01-15",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:46.41",
+          "event_date": "2023-01-15",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Central Region 'A' Championships",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-01-27",
+      "end_date": "2023-01-27",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "33.63",
+          "event_date": "2023-01-27",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:43.96",
+          "event_date": "2023-01-27",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Winter Ontario Festival Championships",
+      "city": "Unionville",
+      "country": "Canada",
+      "start_date": "2023-02-18",
+      "end_date": "2023-02-18",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "32.45",
+          "event_date": "2023-02-18",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:35.78",
+          "event_date": "2023-02-18",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Top Cup LC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-05-13",
+      "end_date": "2023-05-13",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "32.42",
+          "event_date": "2023-05-13",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Dr. Ralph Hicken International",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-05-19",
+      "end_date": "2023-05-20",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:36.87",
+          "event_date": "2023-05-19",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "31.59",
+          "event_date": "2023-05-20",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International (LC)",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-06-02",
+      "end_date": "2023-06-04",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:33.66",
+          "event_date": "2023-06-02",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "31.91",
+          "event_date": "2023-06-03",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:09.10",
+          "event_date": "2023-06-04",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Summer Ontario Festival Championships",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-06-16",
+      "end_date": "2023-06-18",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:34.98",
+          "event_date": "2023-06-16",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "31.37",
+          "event_date": "2023-06-17",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "32.08",
+          "event_date": "2023-06-18",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:09.18",
+          "event_date": "2023-06-18",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Hall of Fame",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-10-14",
+      "end_date": "2023-10-15",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "30.82",
+          "event_date": "2023-10-14",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:06.10",
+          "event_date": "2023-10-15",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International SC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2023-11-10",
+      "end_date": "2023-11-12",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:26.75",
+          "event_date": "2023-11-10",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "29.62",
+          "event_date": "2023-11-11",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:05.47",
+          "event_date": "2023-11-12",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "MAC Jingle Bell",
+      "city": "Unionville",
+      "country": "Canada",
+      "start_date": "2023-12-16",
+      "end_date": "2023-12-16",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "30.18",
+          "event_date": "2023-12-16",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:31.37",
+          "event_date": "2023-12-16",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "A/B Meet",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-01-14",
+      "end_date": "2024-01-14",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "29.51",
+          "event_date": "2024-01-14",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "MAC Winter Long Course Invitational",
+      "city": "Unionville",
+      "country": "Canada",
+      "start_date": "2024-01-19",
+      "end_date": "2024-01-19",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "30.30",
+          "event_date": "2024-01-19",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "David Lawson",
+      "city": "Oakville",
+      "country": "Canada",
+      "start_date": "2024-01-21",
+      "end_date": "2024-01-21",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "29.76",
+          "event_date": "2024-01-21",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Winter Ontario Festival Championships",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-02-17",
+      "end_date": "2024-02-17",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "30.41",
+          "event_date": "2024-02-17",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "31.26",
+          "event_date": "2024-02-17",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Dr. Ralph Hicken Invitational",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-05-03",
+      "end_date": "2024-05-04",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:27.65",
+          "event_date": "2024-05-03",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "30.14",
+          "event_date": "2024-05-04",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International LC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-05-31",
+      "end_date": "2024-05-31",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:27.43",
+          "event_date": "2024-05-31",
+          "notes": ""
+        },
+        {
+          "event": "100BR",
+          "time": "1:32.52",
+          "event_date": "2024-05-31",
+          "notes": ""
+        },
+        {
+          "event": "200FL",
+          "time": "3:03.66",
+          "event_date": "2024-05-31",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International LC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-06-01",
+      "end_date": "2024-06-02",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "30.24",
+          "event_date": "2024-06-01",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:06.11",
+          "event_date": "2024-06-02",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Summer Ontario Festival Championships",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-06-14",
+      "end_date": "2024-06-16",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:27.29",
+          "event_date": "2024-06-14",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "30.41",
+          "event_date": "2024-06-15",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:05.68",
+          "event_date": "2024-06-16",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "July 14 Mini Meet",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-07-14",
+      "end_date": "2024-07-14",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "100FR",
+          "time": "1:04.88",
+          "event_date": "2024-07-14",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Hall of Fame Meet",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2024-10-19",
+      "end_date": "2024-10-20",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "29.14",
+          "event_date": "2024-10-19",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:20.16",
+          "event_date": "2024-10-19",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "29.07",
+          "event_date": "2024-10-20",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:03.33",
+          "event_date": "2024-10-20",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2024-11-08",
+      "end_date": "2024-11-10",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:14.82",
+          "event_date": "2024-11-08",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.50",
+          "event_date": "2024-11-09",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.88",
+          "event_date": "2024-11-09",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:02.46",
+          "event_date": "2024-11-10",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Invitation Pointe-Claire",
+      "city": "Pointe-Claire",
+      "country": "Canada",
+      "start_date": "2024-12-06",
+      "end_date": "2024-12-08",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:11.45",
+          "event_date": "2024-12-06",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:14.16",
+          "event_date": "2024-12-06",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.08",
+          "event_date": "2024-12-07",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.47",
+          "event_date": "2024-12-07",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.36",
+          "event_date": "2024-12-08",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:00.86",
+          "event_date": "2024-12-08",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.57",
+          "event_date": "2024-12-08",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "New Years Cup",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-01-10",
+      "end_date": "2025-01-12",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "200FL",
+          "time": "2:46.62",
+          "event_date": "2025-01-10",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:51.38",
+          "event_date": "2025-01-10",
+          "notes": ""
+        },
+        {
+          "event": "800FR",
+          "time": "9:50.20",
+          "event_date": "2025-01-10",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.04",
+          "event_date": "2025-01-11",
+          "notes": ""
+        },
+        {
+          "event": "50BR",
+          "time": "37.52",
+          "event_date": "2025-01-12",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:12.29",
+          "event_date": "2025-01-12",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Grand Prix",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-01-24",
+      "end_date": "2025-01-25",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "29.38",
+          "event_date": "2025-01-24",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:18.66",
+          "event_date": "2025-01-24",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:53.73",
+          "event_date": "2025-01-25",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Ontario Age Groups - MPAC",
+      "city": "Unionville",
+      "country": "Canada",
+      "start_date": "2025-03-01",
+      "end_date": "2025-03-02",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "100FR",
+          "time": "1:01.79",
+          "event_date": "2025-03-01",
+          "notes": ""
+        },
+        {
+          "event": "400IM",
+          "time": "5:30.31",
+          "event_date": "2025-03-01",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:13.91",
+          "event_date": "2025-03-02",
+          "notes": ""
+        },
+        {
+          "event": "200BK",
+          "time": "2:33.51",
+          "event_date": "2025-03-02",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Dr. Ralph Hicken Internat",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2025-05-15",
+      "end_date": "2025-05-18",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "800FR",
+          "time": "10:05.30",
+          "event_date": "2025-05-15",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.90",
+          "event_date": "2025-05-16",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:15.01",
+          "event_date": "2025-05-17",
+          "notes": ""
+        },
+        {
+          "event": "200IM",
+          "time": "2:33.25",
+          "event_date": "2025-05-17",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.91",
+          "event_date": "2025-05-18",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:47.57",
+          "event_date": "2025-05-18",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International LC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2025-06-06",
+      "end_date": "2025-06-08",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "200FR",
+          "time": "2:14.42",
+          "event_date": "2025-06-06",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "29.00",
+          "event_date": "2025-06-07",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.25",
+          "event_date": "2025-06-08",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:54.21",
+          "event_date": "2025-06-08",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Ontario Swimming Championships",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-07-10",
+      "end_date": "2025-07-12",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "28.81",
+          "event_date": "2025-07-10",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.93",
+          "event_date": "2025-07-10",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:44.77",
+          "event_date": "2025-07-11",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "29.22",
+          "event_date": "2025-07-11",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:02.52",
+          "event_date": "2025-07-11",
+          "notes": ""
+        },
+        {
+          "event": "50BK",
+          "time": "33.36",
+          "event_date": "2025-07-12",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:14.93",
+          "event_date": "2025-07-12",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "SCAR Cindy Nicholas Memorial",
+      "city": "Unionville",
+      "country": "Canada",
+      "start_date": "2025-11-01",
+      "end_date": "2025-11-02",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "400FR",
+          "time": "4:42.32",
+          "event_date": "2025-11-01",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:11.35",
+          "event_date": "2025-11-01",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "59.18",
+          "event_date": "2025-11-02",
+          "notes": ""
+        },
+        {
+          "event": "200IM",
+          "time": "2:28.71",
+          "event_date": "2025-11-02",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Time Trials",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2025-11-11",
+      "end_date": "2025-11-11",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "100FR",
+          "time": "57.75",
+          "event_date": "2025-11-11",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "NYAC Cup",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-11-14",
+      "end_date": "2025-11-16",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "100FR",
+          "time": "59.14",
+          "event_date": "2025-11-14",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "27.36",
+          "event_date": "2025-11-15",
+          "notes": ""
+        },
+        {
+          "event": "100BK",
+          "time": "1:06.79",
+          "event_date": "2025-11-15",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:38.81",
+          "event_date": "2025-11-15",
+          "notes": ""
+        },
+        {
+          "event": "50BK",
+          "time": "30.66",
+          "event_date": "2025-11-16",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:08.99",
+          "event_date": "2025-11-16",
+          "notes": ""
+        },
+        {
+          "event": "800FR",
+          "time": "9:43.02",
+          "event_date": "2025-11-16",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Age Group International SC",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2025-11-27",
+      "end_date": "2025-11-30",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "800FR",
+          "time": "9:40.83",
+          "event_date": "2025-11-27",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:46.90",
+          "event_date": "2025-11-27",
+          "notes": ""
+        },
+        {
+          "event": "100BR",
+          "time": "1:17.31",
+          "event_date": "2025-11-28",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:07.78",
+          "event_date": "2025-11-28",
+          "notes": ""
+        },
+        {
+          "event": "100FL",
+          "time": "1:07.50",
+          "event_date": "2025-11-29",
+          "notes": ""
+        },
+        {
+          "event": "400IM",
+          "time": "5:20.03",
+          "event_date": "2025-11-29",
+          "notes": ""
+        },
+        {
+          "event": "50FL",
+          "time": "29.65",
+          "event_date": "2025-11-30",
+          "notes": ""
+        },
+        {
+          "event": "200BR",
+          "time": "2:48.31",
+          "event_date": "2025-11-30",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Murray Drudge Invitational",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-12-05",
+      "end_date": "2025-12-07",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FL",
+          "time": "29.44",
+          "event_date": "2025-12-05",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "58.61",
+          "event_date": "2025-12-05",
+          "notes": ""
+        },
+        {
+          "event": "200BK",
+          "time": "2:25.45",
+          "event_date": "2025-12-05",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "27.37",
+          "event_date": "2025-12-06",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:07.26",
+          "event_date": "2025-12-07",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:44.25",
+          "event_date": "2025-12-07",
+          "notes": ""
+        },
+        {
+          "event": "800FR",
+          "time": "9:42.67",
+          "event_date": "2025-12-07",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Beast Cup",
+      "city": "Belleville",
+      "country": "Canada",
+      "start_date": "2026-01-10",
+      "end_date": "2026-01-11",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "27.71",
+          "event_date": "2026-01-10",
+          "notes": ""
+        },
+        {
+          "event": "50FL",
+          "time": "29.79",
+          "event_date": "2026-01-10",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:00.15",
+          "event_date": "2026-01-11",
+          "notes": ""
+        },
+        {
+          "event": "100FL",
+          "time": "1:08.19",
+          "event_date": "2026-01-11",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Scar Pan Am Winter Classic",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2026-01-17",
+      "end_date": "2026-01-18",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "100FL",
+          "time": "1:10.47",
+          "event_date": "2026-01-17",
+          "notes": ""
+        },
+        {
+          "event": "50BR",
+          "time": "38.91",
+          "event_date": "2026-01-17",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.36",
+          "event_date": "2026-01-17",
+          "notes": ""
+        },
+        {
+          "event": "50FL",
+          "time": "30.36",
+          "event_date": "2026-01-18",
+          "notes": ""
+        },
+        {
+          "event": "100BK",
+          "time": "1:10.92",
+          "event_date": "2026-01-18",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.82",
+          "event_date": "2026-01-18",
+          "notes": ""
+        }
+      ]
+    }
+  ]
+}

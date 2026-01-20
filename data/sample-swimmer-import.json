@@ -1,0 +1,117 @@
+{
+  "swimmer": {
+    "name": "Emma Johnson",
+    "birth_date": "2012-05-14",
+    "gender": "female"
+  },
+  "meets": [
+    {
+      "name": "Fall Classic 2025",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-10-12",
+      "end_date": "2025-10-14",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "30.12",
+          "event_date": "2025-10-12",
+          "notes": "Heat 2, Lane 5"
+        },
+        {
+          "event": "100FR",
+          "time": "1:07.45",
+          "event_date": "2025-10-13",
+          "notes": "Finals - PB!"
+        },
+        {
+          "event": "200FR",
+          "time": "2:28.91",
+          "event_date": "2025-10-13",
+          "notes": ""
+        },
+        {
+          "event": "50BK",
+          "time": "35.67",
+          "event_date": "2025-10-14",
+          "notes": ""
+        },
+        {
+          "event": "100BK",
+          "time": "1:18.23",
+          "event_date": "2025-10-14",
+          "notes": "Heat 1, Lane 4"
+        }
+      ]
+    },
+    {
+      "name": "City Championships 2025",
+      "city": "Mississauga",
+      "country": "Canada",
+      "start_date": "2025-11-20",
+      "end_date": "2025-11-22",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "29.45",
+          "event_date": "2025-11-20",
+          "notes": "New PB!"
+        },
+        {
+          "event": "100FR",
+          "time": "1:06.12",
+          "event_date": "2025-11-21",
+          "notes": "Finals - 3rd place"
+        },
+        {
+          "event": "50FL",
+          "time": "33.78",
+          "event_date": "2025-11-21",
+          "notes": ""
+        },
+        {
+          "event": "100FL",
+          "time": "1:14.56",
+          "event_date": "2025-11-22",
+          "notes": "Heat 3, Lane 2"
+        },
+        {
+          "event": "200IM",
+          "time": "2:45.89",
+          "event_date": "2025-11-22",
+          "notes": "Finals"
+        }
+      ]
+    },
+    {
+      "name": "Winter Invitational 2026",
+      "city": "Ottawa",
+      "country": "Canada",
+      "start_date": "2026-01-10",
+      "end_date": "2026-01-10",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "29.01",
+          "event_date": "2026-01-10",
+          "notes": "PB - qualified for regionals!"
+        },
+        {
+          "event": "100FR",
+          "time": "1:05.34",
+          "event_date": "2026-01-10",
+          "notes": "PB"
+        },
+        {
+          "event": "200FR",
+          "time": "2:25.67",
+          "event_date": "2026-01-10",
+          "notes": "New PB!"
+        }
+      ]
+    }
+  ]
+}

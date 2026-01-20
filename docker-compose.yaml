@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: swimstats-postgres
+    environment:
+      POSTGRES_USER: swimstats
+      POSTGRES_PASSWORD: swimstats
+      POSTGRES_DB: swimstats
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swimstats -d swimstats"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Run migrations automatically on startup
+  migrate:
+    image: migrate/migrate:v4.17.0
+    container_name: swimstats-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/migrations:/migrations
+    command: ["-path", "/migrations", "-database", "postgres://swimstats:swimstats@postgres:5432/swimstats?sslmode=disable", "up"]
+    profiles:
+      - migrate
+
+volumes:
+  postgres_data:

@@ -1,0 +1,1235 @@
+openapi: 3.1.0
+info:
+  title: SwimStats API
+  description: API for tracking competitive swimming progress
+  version: 1.0.0
+  contact:
+    name: SwimStats
+
+servers:
+  - url: /api/v1
+    description: API v1
+
+security:
+  - oidc: []
+
+paths:
+  # Health & Auth
+  /health:
+    get:
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /auth/me:
+    get:
+      summary: Get current user info
+      tags: [Auth]
+      responses:
+        '200':
+          description: Current user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # Swimmer
+  /swimmer:
+    get:
+      summary: Get swimmer profile
+      tags: [Swimmer]
+      responses:
+        '200':
+          description: Swimmer profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Swimmer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Create or update swimmer profile
+      tags: [Swimmer]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwimmerInput'
+      responses:
+        '200':
+          description: Swimmer updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Swimmer'
+        '201':
+          description: Swimmer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Swimmer'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # Meets
+  /meets:
+    get:
+      summary: List meets
+      tags: [Meets]
+      parameters:
+        - name: course_type
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseType'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of meets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetList'
+
+    post:
+      summary: Create a meet
+      tags: [Meets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeetInput'
+      responses:
+        '201':
+          description: Meet created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meet'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /meets/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get a meet
+      tags: [Meets]
+      responses:
+        '200':
+          description: Meet details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meet'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update a meet
+      tags: [Meets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeetInput'
+      responses:
+        '200':
+          description: Meet updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meet'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Delete a meet
+      tags: [Meets]
+      responses:
+        '204':
+          description: Meet deleted
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Times
+  /times:
+    get:
+      summary: List times
+      tags: [Times]
+      parameters:
+        - name: course_type
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseType'
+        - name: event
+          in: query
+          schema:
+            $ref: '#/components/schemas/EventCode'
+        - name: meet_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of times
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeList'
+
+    post:
+      summary: Record a time
+      tags: [Times]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeInput'
+      responses:
+        '201':
+          description: Time recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeRecord'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Duplicate event - this event already has a time recorded for this meet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /times/batch:
+    post:
+      summary: Record multiple times (quick entry)
+      tags: [Times]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeBatchInput'
+      responses:
+        '201':
+          description: Times recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  times:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TimeRecord'
+                  new_pbs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventCode'
+        '400':
+          description: Validation error (including duplicate events in batch)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Duplicate event - one of the events already has a time recorded for this meet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /times/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get a time
+      tags: [Times]
+      responses:
+        '200':
+          description: Time details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeRecord'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update a time
+      tags: [Times]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeInput'
+      responses:
+        '200':
+          description: Time updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeRecord'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Delete a time
+      tags: [Times]
+      responses:
+        '204':
+          description: Time deleted
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Personal Bests
+  /personal-bests:
+    get:
+      summary: Get personal bests
+      tags: [Personal Bests]
+      parameters:
+        - name: course_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/CourseType'
+      responses:
+        '200':
+          description: Personal bests by event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalBestList'
+
+  # Progress Charts
+  /progress/{event}:
+    get:
+      summary: Get time progression for an event
+      tags: [Progress]
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/EventCode'
+        - name: course_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/CourseType'
+        - name: start_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Filter times from this date onwards
+        - name: end_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Filter times up to this date
+      responses:
+        '200':
+          description: Progress data with time series
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressData'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Time Standards
+  /standards:
+    get:
+      summary: List time standards
+      tags: [Standards]
+      parameters:
+        - name: course_type
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseType'
+      responses:
+        '200':
+          description: List of standards
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardList'
+
+    post:
+      summary: Create a time standard
+      tags: [Standards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandardInput'
+      responses:
+        '201':
+          description: Standard created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standard'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /standards/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get a standard with all times
+      tags: [Standards]
+      responses:
+        '200':
+          description: Standard with times
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardWithTimes'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update a standard
+      tags: [Standards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandardInput'
+      responses:
+        '200':
+          description: Standard updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standard'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Delete a standard
+      tags: [Standards]
+      responses:
+        '204':
+          description: Standard deleted
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /standards/{id}/times:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    put:
+      summary: Set standard times (bulk replace)
+      tags: [Standards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [times]
+              properties:
+                times:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/StandardTimeInput'
+      responses:
+        '200':
+          description: Standard times updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardWithTimes'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /standards/import:
+    post:
+      summary: Import standards from structured data
+      tags: [Standards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandardImport'
+      responses:
+        '201':
+          description: Standard imported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardWithTimes'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # Comparisons
+  /comparisons:
+    get:
+      summary: Compare PBs against a standard
+      tags: [Comparisons]
+      parameters:
+        - name: standard_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: course_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/CourseType'
+      responses:
+        '200':
+          description: Comparison results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComparisonResult'
+
+  # Progress (Charts)
+  /progress/{event}:
+    parameters:
+      - name: event
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EventCode'
+
+    get:
+      summary: Get progress data for charting
+      tags: [Progress]
+      parameters:
+        - name: course_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/CourseType'
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: standard_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Progress data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressData'
+
+  # Data Export/Import
+  /data/export:
+    get:
+      summary: Export all data
+      tags: [Data]
+      responses:
+        '200':
+          description: Full data export
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataExport'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /data/import:
+    post:
+      summary: Import data from export
+      tags: [Data]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataExport'
+      responses:
+        '200':
+          description: Import successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  imported:
+                    type: object
+                    properties:
+                      meets:
+                        type: integer
+                      times:
+                        type: integer
+                      standards:
+                        type: integer
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+components:
+  securitySchemes:
+    oidc:
+      type: openIdConnect
+      openIdConnectUrl: /.well-known/openid-configuration
+
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Insufficient permissions (view-only access)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+        details:
+          type: string
+
+    User:
+      type: object
+      required: [id, email, access_level]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        access_level:
+          type: string
+          enum: [full, view_only]
+
+    CourseType:
+      type: string
+      enum: ['25m', '50m']
+
+    EventCode:
+      type: string
+      enum:
+        - 50FR
+        - 100FR
+        - 200FR
+        - 400FR
+        - 800FR
+        - 1500FR
+        - 50BK
+        - 100BK
+        - 200BK
+        - 50BR
+        - 100BR
+        - 200BR
+        - 50FL
+        - 100FL
+        - 200FL
+        - 200IM
+        - 400IM
+
+    AgeGroup:
+      type: string
+      enum: ['10U', '11-12', '13-14', '15-17', 'OPEN']
+
+    Swimmer:
+      type: object
+      required: [id, name, birth_date, gender]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [female, male]
+        current_age:
+          type: integer
+        current_age_group:
+          $ref: '#/components/schemas/AgeGroup'
+
+    SwimmerInput:
+      type: object
+      required: [name, birth_date, gender]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        birth_date:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [female, male]
+
+    Meet:
+      type: object
+      required: [id, name, city, country, date, course_type]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        start_date:
+          type: string
+          format: date
+          description: Start date of the meet
+        end_date:
+          type: string
+          format: date
+          description: End date of the meet (same as start_date for single-day meets)
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        time_count:
+          type: integer
+          description: Number of times recorded at this meet
+
+    MeetInput:
+      type: object
+      required: [name, city, start_date, end_date, course_type]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        city:
+          type: string
+          minLength: 1
+          maxLength: 255
+        country:
+          type: string
+          maxLength: 100
+          default: Canada
+        start_date:
+          type: string
+          format: date
+          description: Start date of the meet
+        end_date:
+          type: string
+          format: date
+          description: End date of the meet (must be >= start_date)
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+
+    MeetList:
+      type: object
+      required: [meets, total]
+      properties:
+        meets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meet'
+        total:
+          type: integer
+
+    TimeRecord:
+      type: object
+      required: [id, meet_id, event, time_ms, time_formatted, event_date]
+      properties:
+        id:
+          type: string
+          format: uuid
+        meet_id:
+          type: string
+          format: uuid
+        meet:
+          $ref: '#/components/schemas/Meet'
+        event:
+          $ref: '#/components/schemas/EventCode'
+        time_ms:
+          type: integer
+          description: Time in milliseconds
+        time_formatted:
+          type: string
+          description: Formatted time (e.g., "1:05.32")
+        event_date:
+          type: string
+          format: date
+          description: The specific date this event was swum (within the meet's date range)
+        notes:
+          type: string
+        is_pb:
+          type: boolean
+          description: Whether this is a personal best
+
+    TimeInput:
+      type: object
+      required: [meet_id, event, time_ms, event_date]
+      properties:
+        meet_id:
+          type: string
+          format: uuid
+        event:
+          $ref: '#/components/schemas/EventCode'
+        time_ms:
+          type: integer
+          minimum: 1
+        event_date:
+          type: string
+          format: date
+          description: The date this event was swum (must be within the meet's start_date and end_date)
+        notes:
+          type: string
+          maxLength: 1000
+
+    TimeBatchInput:
+      type: object
+      required: [meet_id, times]
+      properties:
+        meet_id:
+          type: string
+          format: uuid
+        times:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [event, time_ms, event_date]
+            properties:
+              event:
+                $ref: '#/components/schemas/EventCode'
+              time_ms:
+                type: integer
+                minimum: 1
+              event_date:
+                type: string
+                format: date
+                description: The date this event was swum
+              notes:
+                type: string
+
+    TimeList:
+      type: object
+      required: [times, total]
+      properties:
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeRecord'
+        total:
+          type: integer
+
+    PersonalBest:
+      type: object
+      required: [event, time_ms, time_formatted, meet, date]
+      properties:
+        event:
+          $ref: '#/components/schemas/EventCode'
+        time_ms:
+          type: integer
+        time_formatted:
+          type: string
+        time_id:
+          type: string
+          format: uuid
+        meet:
+          type: string
+          description: Meet name
+        event_date:
+          type: string
+          format: date
+          description: The date the PB was achieved
+
+    PersonalBestList:
+      type: object
+      required: [course_type, personal_bests]
+      properties:
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        personal_bests:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonalBest'
+
+    ProgressData:
+      type: object
+      required: [swimmer_id, event, course_type, data_points]
+      properties:
+        swimmer_id:
+          type: string
+          format: uuid
+        event:
+          $ref: '#/components/schemas/EventCode'
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        start_date:
+          type: string
+          format: date
+          description: Start date filter applied
+        end_date:
+          type: string
+          format: date
+          description: End date filter applied
+        data_points:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressDataPoint'
+
+    ProgressDataPoint:
+      type: object
+      required: [id, time_ms, time_formatted, date, meet_name, event, is_pb]
+      properties:
+        id:
+          type: string
+          format: uuid
+        time_ms:
+          type: integer
+          description: Time in milliseconds
+        time_formatted:
+          type: string
+          description: Human-readable time (e.g., "58.23" or "1:02.45")
+        date:
+          type: string
+          format: date
+          description: Date when this time was swum
+        meet_name:
+          type: string
+          description: Name of the meet
+        event:
+          $ref: '#/components/schemas/EventCode'
+        is_pb:
+          type: boolean
+          description: Whether this time was a personal best
+
+    Standard:
+      type: object
+      required: [id, name, course_type, is_preloaded]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        is_preloaded:
+          type: boolean
+
+    StandardInput:
+      type: object
+      required: [name, course_type]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+
+    StandardTime:
+      type: object
+      required: [event, age_group, time_ms, time_formatted]
+      properties:
+        event:
+          $ref: '#/components/schemas/EventCode'
+        age_group:
+          $ref: '#/components/schemas/AgeGroup'
+        time_ms:
+          type: integer
+        time_formatted:
+          type: string
+
+    StandardTimeInput:
+      type: object
+      required: [event, age_group, time_ms]
+      properties:
+        event:
+          $ref: '#/components/schemas/EventCode'
+        age_group:
+          $ref: '#/components/schemas/AgeGroup'
+        time_ms:
+          type: integer
+          minimum: 1
+
+    StandardWithTimes:
+      allOf:
+        - $ref: '#/components/schemas/Standard'
+        - type: object
+          properties:
+            times:
+              type: array
+              items:
+                $ref: '#/components/schemas/StandardTime'
+
+    StandardList:
+      type: object
+      required: [standards]
+      properties:
+        standards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Standard'
+
+    StandardImport:
+      type: object
+      required: [name, course_type, times]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandardTimeInput'
+
+    EventComparison:
+      type: object
+      required: [event, status]
+      properties:
+        event:
+          $ref: '#/components/schemas/EventCode'
+        pb_time_ms:
+          type: integer
+        pb_time_formatted:
+          type: string
+        standard_time_ms:
+          type: integer
+        standard_time_formatted:
+          type: string
+        difference_ms:
+          type: integer
+          description: Negative = faster than standard (achieved)
+        difference_formatted:
+          type: string
+        status:
+          type: string
+          enum: [achieved, close, not_achieved, no_time, no_standard]
+
+    ComparisonResult:
+      type: object
+      required: [standard, course_type, age_group, comparisons, summary]
+      properties:
+        standard:
+          $ref: '#/components/schemas/Standard'
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        age_group:
+          $ref: '#/components/schemas/AgeGroup'
+        comparisons:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventComparison'
+        summary:
+          type: object
+          properties:
+            achieved:
+              type: integer
+            close:
+              type: integer
+            not_achieved:
+              type: integer
+            no_time:
+              type: integer
+
+    ProgressDataPoint:
+      type: object
+      required: [event_date, time_ms, time_formatted, meet]
+      properties:
+        event_date:
+          type: string
+          format: date
+          description: The date the time was recorded
+        time_ms:
+          type: integer
+        time_formatted:
+          type: string
+        meet:
+          type: string
+        notes:
+          type: string
+
+    ProgressData:
+      type: object
+      required: [event, course_type, data_points]
+      properties:
+        event:
+          $ref: '#/components/schemas/EventCode'
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        data_points:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressDataPoint'
+        standard_line:
+          type: object
+          properties:
+            name:
+              type: string
+            time_ms:
+              type: integer
+            time_formatted:
+              type: string
+        personal_best:
+          $ref: '#/components/schemas/PersonalBest'
+
+    DataExport:
+      type: object
+      required: [version, exported_at, swimmer, meets, times, standards]
+      properties:
+        version:
+          type: string
+          example: "1.0"
+        exported_at:
+          type: string
+          format: date-time
+        swimmer:
+          $ref: '#/components/schemas/Swimmer'
+        meets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meet'
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeRecord'
+        standards:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandardWithTimes'
+
+tags:
+  - name: Auth
+    description: Authentication operations
+  - name: Swimmer
+    description: Swimmer profile management
+  - name: Meets
+    description: Competition/meet management
+  - name: Times
+    description: Swim time recording
+  - name: Personal Bests
+    description: Personal best tracking
+  - name: Standards
+    description: Time standards management
+  - name: Comparisons
+    description: Compare times against standards
+  - name: Progress
+    description: Progress visualization data
+  - name: Data
+    description: Data export/import
