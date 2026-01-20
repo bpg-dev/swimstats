@@ -12,6 +12,7 @@ import (
 	"github.com/bpg/swimstats/backend/internal/api/middleware"
 	"github.com/bpg/swimstats/backend/internal/auth"
 	"github.com/bpg/swimstats/backend/internal/domain/comparison"
+	"github.com/bpg/swimstats/backend/internal/domain/importer"
 	"github.com/bpg/swimstats/backend/internal/domain/meet"
 	"github.com/bpg/swimstats/backend/internal/domain/standard"
 	"github.com/bpg/swimstats/backend/internal/domain/swimmer"
@@ -33,6 +34,7 @@ type Router struct {
 	pbService         *comparison.PersonalBestService
 	comparisonService *comparison.ComparisonService
 	standardService   *standard.Service
+	importService     *importer.Service
 
 	// Handlers
 	authHandler       *handlers.AuthHandler
@@ -42,6 +44,7 @@ type Router struct {
 	pbHandler         *handlers.PersonalBestHandler
 	comparisonHandler *handlers.ComparisonHandler
 	standardHandler   *handlers.StandardHandler
+	importHandler     *handlers.ImportHandler
 }
 
 // NewRouter creates a new API router with all dependencies.
@@ -62,6 +65,7 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 	pbService := comparison.NewPersonalBestService(timeRepo)
 	comparisonService := comparison.NewComparisonService(timeRepo, standardRepo, swimmerRepo)
 	standardService := standard.NewService(standardRepo)
+	importService := importer.NewService(swimmerService, meetService, timeService)
 
 	// Create handlers
 	authHandler := handlers.NewAuthHandler(authProvider)
@@ -71,6 +75,7 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 	pbHandler := handlers.NewPersonalBestHandler(pbService, swimmerService)
 	comparisonHandler := handlers.NewComparisonHandler(comparisonService, swimmerService)
 	standardHandler := handlers.NewStandardHandler(standardService)
+	importHandler := handlers.NewImportHandler(importService, logger)
 
 	return &Router{
 		logger:            logger,
@@ -82,6 +87,7 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 		pbService:         pbService,
 		comparisonService: comparisonService,
 		standardService:   standardService,
+		importService:     importService,
 		authHandler:       authHandler,
 		swimmerHandler:    swimmerHandler,
 		meetHandler:       meetHandler,
@@ -89,6 +95,7 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 		pbHandler:         pbHandler,
 		comparisonHandler: comparisonHandler,
 		standardHandler:   standardHandler,
+		importHandler:     importHandler,
 	}
 }
 
@@ -158,9 +165,9 @@ func (rt *Router) Handler() http.Handler {
 			// Progress (to be implemented in US5)
 			r.Get("/progress/{event}", handlers.NotImplemented)
 
-			// Data export/import (to be implemented in Polish phase)
-			r.Get("/data/export", handlers.NotImplemented)
-			r.Post("/data/import", handlers.NotImplemented)
+			// Data export/import
+			r.Get("/data/export", handlers.NotImplemented) // To be implemented in Polish phase
+			r.Post("/data/import", rt.importHandler.ImportSwimmerData)
 		})
 	})
 

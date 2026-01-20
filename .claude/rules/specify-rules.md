@@ -91,12 +91,11 @@ docker-compose.yaml          # Local development environment
 - Phase 4: US2 - Personal Bests (PB calculation, display)
 - Phase 4b: All Times View (event-based history with PB badges, ranking)
 - Phase 5: US3 - Manage Time Standards (CRUD, JSON import, data files)
-- Phase 6: US4 - Compare Times Against Standards
+- Phase 6: US4 + US6 - Compare Times Against Standards (includes standing dashboard)
 
 **⏳ Next Phases**:
 - Phase 7: US5 - View Progress Graphs (line charts with standard reference lines)
-- Phase 8: US6 - View Standing Against Standard (qualification dashboard)
-- Phase 9: Polish (data export/import, accessibility verification, documentation)
+- Phase 8: Polish (data export/import, accessibility verification, documentation)
 
 ## Key Patterns
 
@@ -130,7 +129,7 @@ docker-compose.yaml          # Local development environment
 
 ## Recent Changes
 
-- 2026-01-19: Completed Phase 6 (US4 - Compare Times Against Standards)
+- 2026-01-19: Completed Phase 6 (US4 + US6 - Compare Times Against Standards with standing dashboard)
 - 2026-01-19: Integrated speckit from .cursor to .claude
 - 2026-01-17: Completed Phase 5 (US3 - Time Standards with JSON import)
 - 2026-01-17: Added multi-day meet support and event dates

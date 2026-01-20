@@ -37,6 +37,7 @@ Build a web application to track competitive swimming progress for a Canadian sw
 | IV. Performance | API p95 <200ms/<500ms, TTI <3s, <250KB bundle, no N+1 queries | sqlc prevents N+1, Vite code splitting, React Query caching | ✅ Pass |
 
 **Quality Gates Compliance:**
+
 - Lint: golangci-lint (Go), ESLint (TS) - CI blocking
 - Type Check: Go compiler, TypeScript strict - CI blocking
 - Unit Tests: go test, Vitest - CI blocking
@@ -78,7 +79,8 @@ backend/
 │   │   ├── meet/             # Meet entity & service
 │   │   ├── time/             # Time entry entity & service
 │   │   ├── standard/         # Time standards entity & service
-│   │   └── comparison/       # Comparison & PB logic
+│   │   ├── comparison/       # Comparison & PB logic
+│   │   └── importer/         # Bulk data import service
 │   └── store/
 │       ├── postgres/         # PostgreSQL implementations
 │       └── queries/          # sqlc SQL files
@@ -117,10 +119,26 @@ frontend/
     ├── ci.yaml               # Lint, test, build
     └── release.yaml          # Build & push containers
 
+scripts/
+├── reset-database.sh         # Clean database and restart
+├── import-all.sh             # Import all standards and swimmer data
+├── import-standards.sh       # Import time standards from JSON
+├── test-import.sh            # Import specific swimmer data file
+├── convert-swimrankings.py   # Convert SwimRankings data to import format
+└── convert-*.py              # Other conversion scripts
+
+data/
+├── swimmer-import-template.json  # Template for swimmer data import
+├── swim-ontario-2025-2026-*.json # Swim Ontario time standards
+├── swimming-canada-2026-2028-*.json # Swimming Canada time standards
+└── IMPORT-README.md          # Import format documentation
+
 docker-compose.yaml           # Local development
+IMPORT-GUIDE.md               # User guide for data import
 ```
 
 **Structure Decision**: Web application pattern (frontend + backend) selected due to:
+
 - Separate deployment scaling for API vs static assets
 - Go backend provides type safety and performance for API
 - React SPA provides responsive, interactive UI for data entry and visualization
@@ -136,12 +154,12 @@ docker-compose.yaml           # Local development
 | Phase 4: US2 - Personal Bests | ✅ Complete | PB calculation, display, API |
 | Phase 4b: All Times View | ✅ Complete | Event-based time history with PB badges |
 | Phase 5: US3 - Standards | ✅ Complete | Time standards CRUD, JSON import, bulk import |
-| Phase 6: US4 - Compare | ✅ Complete | Comparison with adjacent age groups, achievements on PBs |
-| Phase 7: US5 - Progress Charts | ⏳ Pending | |
-| Phase 8: US6 - Standing | ⏳ Pending | |
-| Phase 9: Polish | ⏳ Pending | |
+| Phase 6: US4 + US6 - Compare | ✅ Complete | Comparison with adjacent age groups, achievements on PBs, standing dashboard |
+| Phase 7: US5 - Progress Charts | ⏳ Pending | Line charts showing time progression over dates |
+| Phase 8: Polish | 🔄 In Progress | Data import complete, accessibility verification pending, documentation pending |
 
-**Current State**: Phases 1-6 complete (US1 + US2 + US3 + US4). App can:
+**Current State**: Phases 1-6 complete (US1 + US2 + US3 + US4 + US6), Phase 8 partially complete. App can:
+
 - Create and manage swimmer profile
 - Create and manage meets (with inline quick-add from time entry)
 - Record swim times with batch entry (Quick Entry form with proper column alignment)
@@ -154,9 +172,14 @@ docker-compose.yaml           # Local development
 - Create and manage time standards (CRUD operations)
 - Import time standards from JSON (single or bulk import)
 - Compare personal bests against selected standard with adjacent age groups
+- View standing dashboard showing achieved/almost/not-yet qualification counts
 - Navigate from PB achieved standards directly to comparison view
+- Import swimmer data and time standards from JSON files
+- Bulk import time standards from multiple JSON files
+- Reset database to fresh state for new data imports
 
 **Known Issues Resolved**:
+
 - Base64 encoded `X-Mock-User` header to fix proxy errors
 - Added Settings button to navigation
 - Added swimmer profile editing to Settings page
@@ -166,6 +189,7 @@ docker-compose.yaml           # Local development
 - Fixed Quick Entry form alignment (column headers instead of per-row labels)
 
 **UX Enhancements**:
+
 - Quick Add Meet: Create meets inline from time entry form (FR-037)
 - Navigation reordering: Personal Bests now first after Home in both menu and Quick Actions
 - Consolidated "All Times" and "Time History" into single compact table view
@@ -177,7 +201,12 @@ docker-compose.yaml           # Local development
 - Course filter toggle: Color-coded (25m = blue, 50m = green) to match standards page
 - Comparison table: Shows adjacent age groups (prev/next) when available with achievement indicators
 - Comparison table: Displays percentage in Difference column for easier interpretation
+- Comparison table: Hides age group labels for OPEN standards (standards without age-specific times)
+- Comparison table: Shows date of PB achievement in "Your Time" column
+- Comparison table: Improved vertical and horizontal alignment with centered numerical columns
+- Comparison table: Fixed column widths for consistent layout (tabular-nums for monospaced numbers)
 - Personal Bests: Shows achieved standards as clickable badges linking to comparison page
+- Standing dashboard: High-level summary showing achieved/almost/not-yet counts (US6 covered by US4 implementation)
 
 **Navigation Order**: Home → Personal Bests → Add Times → All Times → Meets → Progress → Standards → Compare
 

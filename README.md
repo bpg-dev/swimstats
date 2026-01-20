@@ -10,6 +10,7 @@ A web application for competitive swimmers to track their times, view personal b
 - 📅 **Meets** - Organize times by competition with inline quick-add during time entry
 - 🎯 **Time Standards** - Manage time standards with JSON import (Swimming Canada, Swim Ontario)
 - 📊 **Comparison** - Compare PBs against standards with adjacent age groups and achievement status
+- 🎯 **Standing Dashboard** - Quick overview showing achieved/almost/not-yet qualification counts
 - 📈 **Progress Charts** - Visualize improvement over time (coming soon)
 - 🔄 **Course Filtering** - Separate 25m (short course) and 50m (long course) data
 - 📱 **Responsive** - Works on desktop and mobile

@@ -10,6 +10,7 @@
 ---
 
 **Current Status** (as of 2026-01-19):
+
 - ✅ MVP Complete: Phases 1-4b (Setup, Foundation, US1, US2, All Times)
 - ✅ Phase 5 Complete: US3 - Time Standards (CRUD, JSON import, data files)
 - ✅ Phase 6 Complete: US4 - Compare Times Against Standards (with adjacent age groups, achievements on PBs)
@@ -453,33 +454,16 @@
 
 ## Phase 8: User Story 6 - View Standing Against Standard (Priority: P3)
 
-**Goal**: Dashboard showing qualification status across all events with configurable "almost there" threshold
+**Status**: ✅ **COMPLETE** - Covered by Phase 6 (US4) implementation
 
-**Independent Test**: View standing dashboard, verify qualification summary with achieved/close/not-achieved counts
+**Rationale**: The Compare page already provides all US6 functionality:
+- ComparisonSummary component displays achieved/almost/not-yet qualification counts
+- Configurable threshold percentage (default 3%) shown in summary
+- Visual color-coding (green/amber/gray) for status indicators
+- Drill-down capability via ComparisonTable below summary
+- All US6 acceptance criteria met through existing US4 implementation
 
-### Tests for User Story 6
-
-- [ ] T151 [P] [US6] Create standing API tests in backend/tests/integration/standing_test.go
-- [ ] T152 [P] [US6] Create standing component tests in frontend/tests/components/standing.test.tsx
-
-### Backend Implementation for US6
-
-- [ ] T153 [US6] Add threshold configuration to user preferences in backend/internal/domain/config/service.go
-- [ ] T154 [US6] Create settings handler in backend/internal/api/handlers/settings.go (GET/PUT threshold config)
-
-### Frontend Implementation for US6
-
-- [ ] T155 [P] [US6] Create settings types in frontend/src/types/settings.ts
-- [ ] T156 [US6] Create settings API service in frontend/src/services/settings.ts
-- [ ] T157 [US6] Create useSettings hook in frontend/src/hooks/useSettings.ts
-- [ ] T158 [US6] Create StandingSummary component in frontend/src/components/comparison/StandingSummary.tsx
-- [ ] T159 [US6] Create StandingGrid component in frontend/src/components/comparison/StandingGrid.tsx
-- [ ] T160 [US6] Create EventStatusCard component in frontend/src/components/comparison/EventStatusCard.tsx
-- [ ] T161 [US6] Create ThresholdSettings component in frontend/src/components/settings/ThresholdSettings.tsx
-- [ ] T162 [US6] Create Standing page in frontend/src/pages/Standing.tsx
-- [ ] T163 [US6] Add threshold settings to existing Settings page in frontend/src/pages/Settings.tsx
-
-**Checkpoint**: User Story 6 complete - can view qualification standing dashboard
+No additional implementation needed. Moving directly to Phase 7 (US5 - Progress Charts).
 
 ---
 
@@ -554,10 +538,12 @@ Phase 7 (US5: Charts)  Phase 8 (US6: Standing)
 ### Parallel Opportunities
 
 **Within Phase 1 (Setup)**:
+
 - T002, T003, T004, T005, T006 can run in parallel
 - T008, T009, T010 can run in parallel
 
 **Within Phase 2 (Foundational)**:
+
 - T014, T015, T016 can run in parallel
 - T019, T020, T021 can run in parallel
 - T028, T029 can run in parallel
@@ -565,6 +551,7 @@ Phase 7 (US5: Charts)  Phase 8 (US6: Standing)
 - T040, T041, T042 can run in parallel
 
 **Within Each User Story**:
+
 - All test tasks marked [P] can run in parallel
 - All type definition tasks marked [P] can run in parallel
 - sqlc queries can be written in parallel before generation
@@ -596,6 +583,7 @@ Phase 7 (US5: Charts)  Phase 8 (US6: Standing)
 ### Suggested MVP Scope
 
 **Minimum Viable Product**: Phases 1-4b (Setup, Foundation, US1, US2, All Times) — ✅ COMPLETE
+
 - Authentication working (dev mode + OIDC ready)
 - Can record swimmer profile
 - Can create meets (single-day and multi-day) and enter times

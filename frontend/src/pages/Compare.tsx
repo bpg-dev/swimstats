@@ -93,8 +93,11 @@ export function Compare() {
                 thresholdPercent={comparison.threshold_percent}
               />
               <div className="mt-4 text-sm text-slate-500">
-                Comparing {comparison.swimmer_name}'s times (age group:{' '}
-                {comparison.swimmer_age_group}) against {comparison.standard_name} for{' '}
+                Comparing {comparison.swimmer_name}'s times
+                {comparison.swimmer_age_group !== 'OPEN' && (
+                  <> (age group: {comparison.swimmer_age_group})</>
+                )}{' '}
+                against {comparison.standard_name} for{' '}
                 {comparison.course_type === '25m' ? 'Short Course' : 'Long Course'}.
               </div>
             </CardContent>

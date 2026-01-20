@@ -181,9 +181,12 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 			}
 
 			// Get standard time for this event and age group
-			stdTimeMS, hasStandard := getStandardTime(stdTimesMap, string(event), ageGroupAtSwim)
+			stdTimeMS, actualAgeGroup, hasStandard := getStandardTime(stdTimesMap, string(event), ageGroupAtSwim)
 
 			if hasStandard {
+				// Update the age group to the one actually used (may be OPEN if it fell back)
+				comp.AgeGroup = actualAgeGroup
+
 				standardTime := int(stdTimeMS)
 				standardTimeFormatted := domain.FormatTime(standardTime)
 				comp.StandardTimeMS = &standardTime
@@ -248,8 +251,11 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 		} else {
 			// No PB for this event
 			// Still check if standard has a time for current age group
-			stdTimeMS, hasStandard := getStandardTime(stdTimesMap, string(event), currentAgeGroup)
+			stdTimeMS, actualAgeGroup, hasStandard := getStandardTime(stdTimesMap, string(event), currentAgeGroup)
 			if hasStandard {
+				// Update the age group to the one actually used (may be OPEN if it fell back)
+				comp.AgeGroup = actualAgeGroup
+
 				standardTime := int(stdTimeMS)
 				standardTimeFormatted := domain.FormatTime(standardTime)
 				comp.StandardTimeMS = &standardTime
@@ -305,18 +311,18 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 }
 
 // getStandardTime looks up a standard time, trying the specific age group first,
-// then falling back to OPEN if not found.
-func getStandardTime(stdTimesMap map[string]map[string]int32, event, ageGroup string) (int32, bool) {
+// then falling back to OPEN if not found. Returns the time, the age group that was used, and whether found.
+func getStandardTime(stdTimesMap map[string]map[string]int32, event, ageGroup string) (int32, string, bool) {
 	if eventTimes, ok := stdTimesMap[event]; ok {
 		if timeMS, ok := eventTimes[ageGroup]; ok {
-			return timeMS, true
+			return timeMS, ageGroup, true
 		}
 		// Fall back to OPEN
 		if timeMS, ok := eventTimes["OPEN"]; ok {
-			return timeMS, true
+			return timeMS, "OPEN", true
 		}
 	}
-	return 0, false
+	return 0, "", false
 }
 
 // getStandardTimeExact looks up a standard time for the exact age group without fallback.

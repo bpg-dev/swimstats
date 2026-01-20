@@ -128,7 +128,15 @@ As a swim parent, I want to compare my daughter's times against a selected time 
 2. **Given** I am viewing a comparison, **When** a swimmer's time meets or beats the standard, **Then** it is visually highlighted as "achieved" or "qualified"
 3. **Given** I am viewing a comparison, **When** a swimmer's time does not meet the standard, **Then** I see the time difference (how much faster they need to swim)
 4. **Given** multiple time standards exist, **When** I want to compare against a different standard, **Then** I can easily switch between standards
-5. **Given** the swimmer's age changes, **When** I view comparisons against age-based standards, **Then** the comparison uses the appropriate age group times
+5. **Given** the swimmer's age changes, **When** I view comparisons against age-based standards, **Then** the comparison uses the appropriate age group times ✅ **Implemented**
+
+**UX Enhancements Implemented**:
+
+- **OPEN Standards**: Age group labels are hidden when comparing against standards without age-specific times (e.g., "Canadian Open" shows just the time, not "(11-12)")
+- **PB Dates**: "Your Time" column displays the date when each personal best was achieved
+- **Table Alignment**: Vertical alignment (align-top) ensures multi-line cells align properly; horizontal alignment centers numerical columns
+- **Typography**: Tabular numbers (`tabular-nums`) for consistent digit spacing in all time values
+- **Column Widths**: Fixed widths for consistent layout (Event: 48, Times: 28-32, Status: 24)
 
 ---
 
@@ -158,35 +166,43 @@ As a swim parent, I want to see a dashboard showing my daughter's overall standi
 
 **Independent Test**: Can be fully tested by selecting a standard and viewing a summary that shows qualification status across all events with visual indicators.
 
+**Implementation Status**: ✅ **Complete** - Covered by US4 implementation. The Compare page includes ComparisonSummary component showing achieved/almost/not-yet qualification counts with configurable threshold, plus drill-down to detailed event comparisons.
+
 **Acceptance Scenarios**:
 
-1. **Given** a time standard is selected, **When** I view the standing dashboard, **Then** I see all events with indicators showing qualified/not-yet-qualified status
-2. **Given** I am viewing the standing dashboard, **When** events are close to qualification (within 3% of qualifying time, configurable), **Then** they are highlighted as "almost there"
-3. **Given** I am viewing the standing dashboard, **When** I want details on a specific event, **Then** I can drill down to see the full comparison and history
+1. **Given** a time standard is selected, **When** I view the standing dashboard, **Then** I see all events with indicators showing qualified/not-yet-qualified status ✅ **Implemented** via ComparisonSummary showing counts
+2. **Given** I am viewing the standing dashboard, **When** events are close to qualification (within 3% of qualifying time, configurable), **Then** they are highlighted as "almost there" ✅ **Implemented** with threshold percentage display
+3. **Given** I am viewing the standing dashboard, **When** I want details on a specific event, **Then** I can drill down to see the full comparison and history ✅ **Implemented** via ComparisonTable below summary
 
 ---
 
-### User Story 7 - Import Historical Results (Priority: P4 - Future)
+### User Story 7 - Import Historical Results (Priority: P4 - ✅ Implemented)
 
-As a swim parent, I want to import my daughter's historical swim results from online sources so that I don't have to manually enter years of past competition data.
+As a swim parent, I want to import my daughter's historical swim results from JSON files so that I don't have to manually enter years of past competition data.
 
-**Why this priority**: This is a convenience feature that saves significant data entry time, but the application is fully functional without it. Additionally, the data source and technical approach are not yet determined. Marked as future/optional.
+**Why this priority**: This is a convenience feature that saves significant data entry time, but the application is fully functional without it.
 
-**Independent Test**: Can be tested by triggering an import for a swimmer and verifying historical times appear in the system with correct events, times, and dates.
+**Independent Test**: Can be tested by importing a swimmer JSON file and verifying all times appear in the system with correct events, times, dates, and meets.
 
 **Acceptance Scenarios**:
 
-1. **Given** I want to import historical data, **When** I initiate an import and provide required identifiers (swimmer name, club, or registration number), **Then** the system retrieves available historical results
-2. **Given** results have been retrieved, **When** I review the imported data, **Then** I can see a preview before confirming the import
-3. **Given** I confirm the import, **When** processing completes, **Then** all imported times appear in the swimmer's history and personal bests are recalculated
-4. **Given** some imported times conflict with existing entries (same event, same date), **When** conflicts are detected, **Then** I can choose to skip, overwrite, or keep both
-5. **Given** the import source is unavailable or returns errors, **When** the import fails, **Then** I see a clear error message and no partial data is saved
+1. **Given** I want to import historical data, **When** I provide a JSON file with swimmer data and meets/times, **Then** the system imports all data and creates the swimmer profile
+2. **Given** I want to import time standards, **When** I provide JSON files with time standards, **Then** the system imports all standards and makes them available for comparison
+3. **Given** I confirm the import, **When** processing completes, **Then** all imported times appear in the swimmer's history and personal bests are calculated
+4. **Given** some imported times conflict with existing entries (same event at same meet), **When** conflicts are detected, **Then** the system reports the error and continues with other times
+5. **Given** the import file has invalid format or data, **When** the import fails, **Then** I see a clear error message and no partial data is saved
 
-**Open Questions** (to be resolved before implementation):
+**Implementation Details**:
 
-- Data source: Potential sources include provincial swimming databases, Swimming Canada results, or meet results aggregators
-- Technical approach: Direct API (if available), authorized data export, or manual file upload as fallback
-- Anti-scraping considerations: May require user to manually export/download their data from source sites
+- **Data Format**: JSON files with structured swimmer, meet, and time data
+- **Import Scripts**:
+  - `import-all.sh` - Import all standards and swimmer data
+  - `import-standards.sh` - Import time standards only
+  - `test-import.sh` - Import specific swimmer data file
+  - `reset-database.sh` - Clean database for fresh imports
+- **Conversion Scripts**: Python scripts to convert SwimRankings.net data to import format
+- **API Endpoint**: `POST /api/v1/data/import` for swimmer data, `POST /api/v1/standards/import/json` for standards
+- **Data Sources**: Manual JSON file creation or conversion from SwimRankings.net using conversion scripts
 
 ---
 
