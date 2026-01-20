@@ -22,7 +22,11 @@ export function Loading({ size = 'md', className, text }: LoadingProps) {
   };
 
   return (
-    <div className={cn('flex flex-col items-center justify-center', className)}>
+    <div
+      className={cn('flex flex-col items-center justify-center', className)}
+      role="status"
+      aria-label={text || 'Loading'}
+    >
       <svg
         className={cn('animate-spin text-cyan-600', sizes[size])}
         xmlns="http://www.w3.org/2000/svg"
