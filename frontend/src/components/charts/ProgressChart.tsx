@@ -108,7 +108,7 @@ const ReferenceLabel = (props: any) => {
       </text>
       <text
         x={x + 10}
-        y={y + 8}
+        y={y + 20}
         fill="#ef4444"
         fontSize={16}
         fontWeight="bold"
