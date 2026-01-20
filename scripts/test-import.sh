@@ -16,11 +16,15 @@ echo "📥 Importing swimmer data from: $IMPORT_FILE"
 echo "   Target API: $API_URL/api/v1/data/import"
 echo ""
 
+# Wrap the data in the new format with confirmation
+IMPORT_DATA=$(cat "$IMPORT_FILE")
+REQUEST_BODY=$(jq -n --argjson data "$IMPORT_DATA" '{data: $data, confirmed: true}')
+
 # Make the request and capture response
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$API_URL/api/v1/data/import" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer dev-token" \
-    -d @"$IMPORT_FILE")
+    -d "$REQUEST_BODY")
 
 # Split response and status code
 HTTP_STATUS=$(echo "$RESPONSE" | tail -1)
