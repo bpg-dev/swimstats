@@ -9,12 +9,13 @@
 
 ---
 
-**Current Status** (as of 2026-01-20):
+**Current Status** (as of 2026-01-19):
 - ✅ MVP Complete: Phases 1-4b (Setup, Foundation, US1, US2, All Times)
 - ✅ Phase 5 Complete: US3 - Time Standards (CRUD, JSON import, data files)
-- ✅ Phase 6 Complete: US4 - Compare Times Against Standards
+- ✅ Phase 6 Complete: US4 - Compare Times Against Standards (with adjacent age groups, achievements on PBs)
 - ⏳ Next: Phase 7 (US5 - View Progress Graphs)
 - Clarifications applied: JSON export format, basic accessibility (semantic HTML + keyboard nav)
+- Recent enhancements: Navigation reorder (PBs first), course filter colors, comparison UI polish
 
 ## Format: `[ID] [P?] [Story?] Description`
 
@@ -396,6 +397,25 @@
 - [x] T134 [US4] Update Compare page in frontend/src/pages/Compare.tsx
 
 **Checkpoint**: User Story 4 complete - can compare times against standards
+
+### Phase 6 Enhancements: Comparison UI & Navigation Polish
+
+- [x] T135 [US4] Add adjacent age group columns (prev/next) to ComparisonTable.tsx
+- [x] T136 [US4] Add PreviousAgeGroup() and NextAgeGroup() helper functions in backend/internal/domain/age.go
+- [x] T137 [US4] Extend EventComparison struct with prev/next age group fields in backend/internal/domain/comparison/service.go
+- [x] T138 [US4] Create getStandardTimeExact() function for age group lookup without OPEN fallback
+- [x] T139 [US4] Make prev/next columns conditional based on data availability in ComparisonTable.tsx
+- [x] T140 [US4] Add percentage display to Difference column in ComparisonTable.tsx
+- [x] T141 [US4] Update course filter toggle colors (25m=blue, 50m=green) in CourseFilterToggle.tsx
+- [x] T142 [US4] Add achieved standards display to PersonalBestCard.tsx with clickable badges
+- [x] T143 [US4] Implement achieved standards calculation in PersonalBests.tsx using useQueries
+- [x] T144 [US4] Add standard_id query parameter support to Compare.tsx for direct navigation
+- [x] T145 [US4] Style achieved standards badges (green background, smaller text)
+- [x] T146 [US4] Remove green highlighting from "Achieved:" label (neutral gray)
+- [x] T147 [Nav] Reorder navigation: Personal Bests first after Home in AppShell.tsx
+- [x] T148 [Nav] Reorder Quick Actions: Personal Bests first in Home.tsx
+
+**Checkpoint**: Phase 6 enhancements complete - polished comparison UI and improved navigation
 
 ---
 

@@ -135,22 +135,26 @@ docker-compose.yaml           # Local development
 | Phase 3: US1 - Record Times | ✅ Complete | Full CRUD for swimmers, meets, times |
 | Phase 4: US2 - Personal Bests | ✅ Complete | PB calculation, display, API |
 | Phase 4b: All Times View | ✅ Complete | Event-based time history with PB badges |
-| Phase 5: US3 - Standards | ⏳ Pending | |
-| Phase 6: US4 - Compare | ⏳ Pending | |
+| Phase 5: US3 - Standards | ✅ Complete | Time standards CRUD, JSON import, bulk import |
+| Phase 6: US4 - Compare | ✅ Complete | Comparison with adjacent age groups, achievements on PBs |
 | Phase 7: US5 - Progress Charts | ⏳ Pending | |
 | Phase 8: US6 - Standing | ⏳ Pending | |
 | Phase 9: Polish | ⏳ Pending | |
 
-**Current State**: MVP (US1 + US2 + All Times) is complete and tested. App can:
+**Current State**: Phases 1-6 complete (US1 + US2 + US3 + US4). App can:
 - Create and manage swimmer profile
 - Create and manage meets (with inline quick-add from time entry)
 - Record swim times with batch entry (Quick Entry form with proper column alignment)
-- Filter by course type (25m/50m)
-- View personal bests by stroke
+- Filter by course type (25m/50m) with color-coded toggle
+- View personal bests by stroke with achieved standards badges
 - View all times per event with PB indicators and sorting (by date or time)
 - View meet details page with all times from that meet
 - Delete individual times from the meet details page
 - Enforce one-event-per-meet rule (prevents duplicate events at the same meet)
+- Create and manage time standards (CRUD operations)
+- Import time standards from JSON (single or bulk import)
+- Compare personal bests against selected standard with adjacent age groups
+- Navigate from PB achieved standards directly to comparison view
 
 **Known Issues Resolved**:
 - Base64 encoded `X-Mock-User` header to fix proxy errors
@@ -163,15 +167,19 @@ docker-compose.yaml           # Local development
 
 **UX Enhancements**:
 - Quick Add Meet: Create meets inline from time entry form (FR-037)
-- Navigation reordering: Add Times before Meets
+- Navigation reordering: Personal Bests now first after Home in both menu and Quick Actions
 - Consolidated "All Times" and "Time History" into single compact table view
 - Removed "All Events" option from All Times (must select specific event for meaningful ranking)
 - All Times shows rank badges (gold/silver/bronze) when sorting by fastest
 - Meet Details page: View all times from a meet with "Add Times" and "View Meet" navigation
 - Save feedback: Success state after saving times with count and navigation options
 - Delete times: Remove individual time entries from meet details page with confirmation
+- Course filter toggle: Color-coded (25m = blue, 50m = green) to match standards page
+- Comparison table: Shows adjacent age groups (prev/next) when available with achievement indicators
+- Comparison table: Displays percentage in Difference column for easier interpretation
+- Personal Bests: Shows achieved standards as clickable badges linking to comparison page
 
-**Navigation Order**: Add Times → All Times → Personal Bests → Meets → Progress → Standards
+**Navigation Order**: Home → Personal Bests → Add Times → All Times → Meets → Progress → Standards → Compare
 
 ## Complexity Tracking
 

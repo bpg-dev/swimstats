@@ -127,6 +127,22 @@ export function Home() {
           <CardContent>
             <div className="space-y-3">
               <Link
+                to="/personal-bests"
+                className="block p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <svg className="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium text-slate-900">Personal Bests</div>
+                    <div className="text-sm text-slate-500">See your fastest times</div>
+                  </div>
+                </div>
+              </Link>
+              <Link
                 to="/add-times"
                 className="block p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
               >
@@ -171,22 +187,6 @@ export function Home() {
                   <div>
                     <div className="font-medium text-slate-900">All Times</div>
                     <div className="text-sm text-slate-500">Browse your time history</div>
-                  </div>
-                </div>
-              </Link>
-              <Link
-                to="/personal-bests"
-                className="block p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                    <svg className="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="font-medium text-slate-900">Personal Bests</div>
-                    <div className="text-sm text-slate-500">See your fastest times</div>
                   </div>
                 </div>
               </Link>

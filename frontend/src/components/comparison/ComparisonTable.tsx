@@ -61,6 +61,16 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
     );
   }
 
+  // Check if any comparison has prev/next age group data
+  // Use truthy check - will be true only if there's an actual non-empty string value
+  const hasPrevAgeGroup = comparisons.some((c) => !!c.prev_age_group);
+  const hasNextAgeGroup = comparisons.some((c) => !!c.next_age_group);
+
+  // Calculate colspan for stroke header
+  const baseColspan = 4; // Event, Your Time, Difference, Status
+  const standardCols = (hasPrevAgeGroup ? 1 : 0) + 1 + (hasNextAgeGroup ? 1 : 0);
+  const totalColspan = baseColspan + standardCols;
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-slate-200">
@@ -72,9 +82,19 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
             <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
               Your Time
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-              Standard
+            {hasPrevAgeGroup && (
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Prev Standard
+              </th>
+            )}
+            <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider bg-indigo-50 border-x-2 border-indigo-200">
+              Current Standard
             </th>
+            {hasNextAgeGroup && (
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Next Standard
+              </th>
+            )}
             <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
               Difference
             </th>
@@ -89,7 +109,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
               {/* Stroke header */}
               <tr className="bg-slate-50">
                 <td
-                  colSpan={5}
+                  colSpan={totalColspan}
                   className="px-4 py-2 text-sm font-semibold text-slate-700"
                 >
                   {group.stroke}
@@ -115,13 +135,39 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                       <span className="text-sm text-slate-400">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  {/* Previous age group column */}
+                  {hasPrevAgeGroup && (
+                    <td
+                      className={`px-4 py-3 whitespace-nowrap ${
+                        comp.prev_achieved ? 'bg-green-50' : ''
+                      }`}
+                    >
+                      {comp.prev_standard_time_formatted ? (
+                        <div>
+                          <span
+                            className={`text-sm font-mono ${
+                              comp.prev_achieved ? 'text-green-700 font-semibold' : 'text-slate-600'
+                            }`}
+                          >
+                            {comp.prev_standard_time_formatted}
+                          </span>
+                          <span className="text-xs text-slate-400 ml-1">
+                            ({comp.prev_age_group})
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-slate-400">—</span>
+                      )}
+                    </td>
+                  )}
+                  {/* Current age group column (highlighted) */}
+                  <td className="px-4 py-3 whitespace-nowrap bg-indigo-50 border-x-2 border-indigo-200">
                     {comp.standard_time_formatted ? (
                       <div>
-                        <span className="text-sm font-mono text-slate-600">
+                        <span className="text-sm font-mono text-slate-900 font-semibold">
                           {comp.standard_time_formatted}
                         </span>
-                        <span className="text-xs text-slate-400 ml-1">
+                        <span className="text-xs text-slate-500 ml-1">
                           ({comp.age_group})
                         </span>
                       </div>
@@ -129,17 +175,56 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                       <span className="text-sm text-slate-400">N/A</span>
                     )}
                   </td>
+                  {/* Next age group column */}
+                  {hasNextAgeGroup && (
+                    <td
+                      className={`px-4 py-3 whitespace-nowrap ${
+                        comp.next_achieved ? 'bg-blue-50' : ''
+                      }`}
+                    >
+                      {comp.next_standard_time_formatted ? (
+                        <div>
+                          <span
+                            className={`text-sm font-mono ${
+                              comp.next_achieved ? 'text-blue-700 font-semibold' : 'text-slate-600'
+                            }`}
+                          >
+                            {comp.next_standard_time_formatted}
+                          </span>
+                          <span className="text-xs text-slate-400 ml-1">
+                            ({comp.next_age_group})
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-slate-400">—</span>
+                      )}
+                    </td>
+                  )}
                   <td className="px-4 py-3 whitespace-nowrap">
                     {comp.difference_formatted ? (
-                      <span
-                        className={`text-sm font-mono ${
-                          (comp.difference_ms ?? 0) <= 0
-                            ? 'text-green-600'
-                            : 'text-slate-600'
-                        }`}
-                      >
-                        {comp.difference_formatted}
-                      </span>
+                      <div>
+                        <span
+                          className={`text-sm font-mono ${
+                            (comp.difference_ms ?? 0) <= 0
+                              ? 'text-green-600'
+                              : 'text-slate-600'
+                          }`}
+                        >
+                          {comp.difference_formatted}
+                        </span>
+                        {comp.difference_percent != null && (
+                          <span
+                            className={`text-xs ml-1 ${
+                              (comp.difference_ms ?? 0) <= 0
+                                ? 'text-green-600'
+                                : 'text-slate-500'
+                            }`}
+                          >
+                            ({comp.difference_percent > 0 ? '+' : ''}
+                            {comp.difference_percent.toFixed(1)}%)
+                          </span>
+                        )}
+                      </div>
                     ) : (
                       <span className="text-sm text-slate-400">—</span>
                     )}

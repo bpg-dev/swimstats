@@ -73,3 +73,37 @@ func AgeAtDate(birthDate, date time.Time) int {
 	}
 	return years
 }
+
+// PreviousAgeGroup returns the age group before the given age group.
+// Returns empty string if there is no previous age group.
+func PreviousAgeGroup(ag AgeGroup) AgeGroup {
+	switch ag {
+	case AgeGroup11_12:
+		return AgeGroup10U
+	case AgeGroup13_14:
+		return AgeGroup11_12
+	case AgeGroup15_17:
+		return AgeGroup13_14
+	case AgeGroupOpen:
+		return AgeGroup15_17
+	default:
+		return "" // No previous age group for 10U
+	}
+}
+
+// NextAgeGroup returns the age group after the given age group.
+// Returns empty string if there is no next age group.
+func NextAgeGroup(ag AgeGroup) AgeGroup {
+	switch ag {
+	case AgeGroup10U:
+		return AgeGroup11_12
+	case AgeGroup11_12:
+		return AgeGroup13_14
+	case AgeGroup13_14:
+		return AgeGroup15_17
+	case AgeGroup15_17:
+		return AgeGroupOpen
+	default:
+		return "" // No next age group for OPEN
+	}
+}

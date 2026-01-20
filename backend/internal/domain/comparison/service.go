@@ -57,6 +57,17 @@ type EventComparison struct {
 	AgeGroup            string           `json:"age_group"`
 	MeetName            *string          `json:"meet_name"`
 	Date                *string          `json:"date"`
+
+	// Adjacent age groups
+	PrevAgeGroup              *string `json:"prev_age_group,omitempty"`
+	PrevStandardTimeMS        *int    `json:"prev_standard_time_ms,omitempty"`
+	PrevStandardTimeFormatted *string `json:"prev_standard_time_formatted,omitempty"`
+	PrevAchieved              bool    `json:"prev_achieved"`
+
+	NextAgeGroup              *string `json:"next_age_group,omitempty"`
+	NextStandardTimeMS        *int    `json:"next_standard_time_ms,omitempty"`
+	NextStandardTimeFormatted *string `json:"next_standard_time_formatted,omitempty"`
+	NextAchieved              bool    `json:"next_achieved"`
 }
 
 // ComparisonSummary provides aggregate statistics.
@@ -202,6 +213,38 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 			} else {
 				comp.Status = StatusNoStandard
 			}
+
+			// Check previous age group
+			prevAG := domain.PreviousAgeGroup(domain.AgeGroup(ageGroupAtSwim))
+			if prevAG != "" {
+				prevStdTimeMS, hasPrevStandard := getStandardTimeExact(stdTimesMap, string(event), string(prevAG))
+				if hasPrevStandard {
+					prevAgeGroupStr := string(prevAG)
+					prevStandardTime := int(prevStdTimeMS)
+					prevStandardTimeFormatted := domain.FormatTime(prevStandardTime)
+					comp.PrevAgeGroup = &prevAgeGroupStr
+					comp.PrevStandardTimeMS = &prevStandardTime
+					comp.PrevStandardTimeFormatted = &prevStandardTimeFormatted
+					// Check if swimmer achieved this standard
+					comp.PrevAchieved = swimmerTime <= prevStandardTime
+				}
+			}
+
+			// Check next age group
+			nextAG := domain.NextAgeGroup(domain.AgeGroup(ageGroupAtSwim))
+			if nextAG != "" {
+				nextStdTimeMS, hasNextStandard := getStandardTimeExact(stdTimesMap, string(event), string(nextAG))
+				if hasNextStandard {
+					nextAgeGroupStr := string(nextAG)
+					nextStandardTime := int(nextStdTimeMS)
+					nextStandardTimeFormatted := domain.FormatTime(nextStandardTime)
+					comp.NextAgeGroup = &nextAgeGroupStr
+					comp.NextStandardTimeMS = &nextStandardTime
+					comp.NextStandardTimeFormatted = &nextStandardTimeFormatted
+					// Check if swimmer achieved this standard
+					comp.NextAchieved = swimmerTime <= nextStandardTime
+				}
+			}
 		} else {
 			// No PB for this event
 			// Still check if standard has a time for current age group
@@ -212,6 +255,35 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 				comp.StandardTimeMS = &standardTime
 				comp.StandardTimeFormatted = &standardTimeFormatted
 			}
+
+			// Check previous age group (even without PB)
+			prevAG := domain.PreviousAgeGroup(domain.AgeGroup(currentAgeGroup))
+			if prevAG != "" {
+				prevStdTimeMS, hasPrevStandard := getStandardTimeExact(stdTimesMap, string(event), string(prevAG))
+				if hasPrevStandard {
+					prevAgeGroupStr := string(prevAG)
+					prevStandardTime := int(prevStdTimeMS)
+					prevStandardTimeFormatted := domain.FormatTime(prevStandardTime)
+					comp.PrevAgeGroup = &prevAgeGroupStr
+					comp.PrevStandardTimeMS = &prevStandardTime
+					comp.PrevStandardTimeFormatted = &prevStandardTimeFormatted
+				}
+			}
+
+			// Check next age group (even without PB)
+			nextAG := domain.NextAgeGroup(domain.AgeGroup(currentAgeGroup))
+			if nextAG != "" {
+				nextStdTimeMS, hasNextStandard := getStandardTimeExact(stdTimesMap, string(event), string(nextAG))
+				if hasNextStandard {
+					nextAgeGroupStr := string(nextAG)
+					nextStandardTime := int(nextStdTimeMS)
+					nextStandardTimeFormatted := domain.FormatTime(nextStandardTime)
+					comp.NextAgeGroup = &nextAgeGroupStr
+					comp.NextStandardTimeMS = &nextStandardTime
+					comp.NextStandardTimeFormatted = &nextStandardTimeFormatted
+				}
+			}
+
 			comp.Status = StatusNoTime
 			summary.NoTime++
 		}
@@ -241,6 +313,17 @@ func getStandardTime(stdTimesMap map[string]map[string]int32, event, ageGroup st
 		}
 		// Fall back to OPEN
 		if timeMS, ok := eventTimes["OPEN"]; ok {
+			return timeMS, true
+		}
+	}
+	return 0, false
+}
+
+// getStandardTimeExact looks up a standard time for the exact age group without fallback.
+// Used for prev/next age group checks to avoid showing age groups that don't exist in the standard.
+func getStandardTimeExact(stdTimesMap map[string]map[string]int32, event, ageGroup string) (int32, bool) {
+	if eventTimes, ok := stdTimesMap[event]; ok {
+		if timeMS, ok := eventTimes[ageGroup]; ok {
 			return timeMS, true
 		}
 	}

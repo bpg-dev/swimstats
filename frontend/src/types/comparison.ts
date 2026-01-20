@@ -15,6 +15,17 @@ export interface EventComparison {
   age_group: string;
   meet_name: string | null;
   date: string | null;
+
+  // Adjacent age groups
+  prev_age_group?: string | null;
+  prev_standard_time_ms?: number | null;
+  prev_standard_time_formatted?: string | null;
+  prev_achieved: boolean;
+
+  next_age_group?: string | null;
+  next_standard_time_ms?: number | null;
+  next_standard_time_formatted?: string | null;
+  next_achieved: boolean;
 }
 
 export interface ComparisonResult {

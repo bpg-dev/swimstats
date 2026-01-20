@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent, Loading, ErrorBanner } from '@/components/ui';
 import {
   StandardSelector,
@@ -13,10 +14,19 @@ import { useCourseType } from '@/stores/courseFilterStore';
  * Compare page - compare personal bests against time standards.
  */
 export function Compare() {
+  const [searchParams] = useSearchParams();
   const [selectedStandardId, setSelectedStandardId] = useState<string>('');
   const [showAllEvents, setShowAllEvents] = useState(false);
   const courseType = useCourseType();
   const { data: swimmer } = useSwimmer();
+
+  // Pre-select standard from query parameter if provided
+  useEffect(() => {
+    const standardIdParam = searchParams.get('standard_id');
+    if (standardIdParam && !selectedStandardId) {
+      setSelectedStandardId(standardIdParam);
+    }
+  }, [searchParams, selectedStandardId]);
 
   const { data: comparison, isLoading, error } = useComparison(
     selectedStandardId

@@ -40,7 +40,9 @@ export function CourseFilterToggle({ className }: CourseFilterToggleProps) {
             className={cn(
               'px-3 py-1.5 text-sm font-medium rounded-md transition-all',
               courseType === option.value
-                ? 'bg-white text-cyan-700 shadow-sm'
+                ? option.value === '25m'
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-green-100 text-green-800'
                 : 'text-slate-600 hover:text-slate-900'
             )}
             title={option.description}
@@ -63,9 +65,10 @@ export function CourseFilterToggleCompact({ className }: CourseFilterToggleProps
     <button
       onClick={toggle}
       className={cn(
-        'px-3 py-1.5 text-sm font-medium rounded-lg',
-        'bg-slate-100 text-slate-700 hover:bg-slate-200',
-        'transition-colors',
+        'px-3 py-1.5 text-sm font-medium rounded-lg transition-colors',
+        courseType === '25m'
+          ? 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+          : 'bg-green-100 text-green-800 hover:bg-green-200',
         className
       )}
       aria-label={`Current: ${courseType}. Click to toggle.`}

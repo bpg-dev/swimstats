@@ -1,9 +1,10 @@
 import { PersonalBest, PersonalBestsByStroke } from '@/types/personalbest';
 import { EVENTS_BY_STROKE } from '@/types/time';
-import { PersonalBestCard } from './PersonalBestCard';
+import { PersonalBestCard, AchievedStandard } from './PersonalBestCard';
 
 interface PersonalBestGridProps {
   personalBests: PersonalBest[];
+  achievedStandardsByEvent?: Map<string, AchievedStandard[]>;
 }
 
 const STROKE_ORDER = [
@@ -42,7 +43,7 @@ function groupByStroke(personalBests: PersonalBest[]): PersonalBestsByStroke {
   return result;
 }
 
-export function PersonalBestGrid({ personalBests }: PersonalBestGridProps) {
+export function PersonalBestGrid({ personalBests, achievedStandardsByEvent }: PersonalBestGridProps) {
   const byStroke = groupByStroke(personalBests);
 
   if (personalBests.length === 0) {
@@ -77,7 +78,11 @@ export function PersonalBestGrid({ personalBests }: PersonalBestGridProps) {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {pbs.map(pb => (
-                <PersonalBestCard key={pb.event} pb={pb} />
+                <PersonalBestCard
+                  key={pb.event}
+                  pb={pb}
+                  achievedStandards={achievedStandardsByEvent?.get(pb.event)}
+                />
               ))}
             </div>
           </section>

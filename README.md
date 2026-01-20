@@ -4,11 +4,14 @@ A web application for competitive swimmers to track their times, view personal b
 
 ## Features
 
+- 🏆 **Personal Bests** - Track fastest times across all events with achieved standards badges
 - 🏊 **Record Swim Times** - Log race results with event, time, and meet details
-- 🏆 **Personal Bests** - Track PBs across all events and course types (25m/50m)
-- 📈 **Progress Charts** - Visualize improvement over time
-- 🎯 **Time Standards** - Compare times against regional/national standards
-- 👥 **Comparison** - Side-by-side comparison with other swimmers
+- ⏱️ **All Times** - Browse complete time history by event with PB indicators and ranking
+- 📅 **Meets** - Organize times by competition with inline quick-add during time entry
+- 🎯 **Time Standards** - Manage time standards with JSON import (Swimming Canada, Swim Ontario)
+- 📊 **Comparison** - Compare PBs against standards with adjacent age groups and achievement status
+- 📈 **Progress Charts** - Visualize improvement over time (coming soon)
+- 🔄 **Course Filtering** - Separate 25m (short course) and 50m (long course) data
 - 📱 **Responsive** - Works on desktop and mobile
 
 ## Tech Stack
@@ -258,6 +261,7 @@ The API follows RESTful conventions:
 | `/api/v1/standards/import/json` | POST | Bulk import from JSON file |
 | `/api/v1/standards/:id` | GET, PUT, DELETE | Get/update/delete standard |
 | `/api/v1/standards/:id/times` | PUT | Set all times for a standard |
+| `/api/v1/comparisons` | GET | Compare PBs against a standard (query: standard_id, course_type) |
 
 All endpoints require authentication. In development mode, the backend accepts requests with a mock `Authorization: Bearer dev-token` header or no auth at all (thanks to `ENV=development`).
 
