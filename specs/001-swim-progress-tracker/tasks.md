@@ -16,9 +16,10 @@
 - ✅ Phase 6 Complete: US4 + US6 - Compare Times Against Standards (with standing dashboard)
 - ✅ Phase 6b Complete: US7 - Import Historical Results (JSON bulk import system)
 - ✅ Phase 7 Complete: US5 - View Progress Graphs (Recharts line charts with standard reference lines)
+- ✅ Navigation UI Polish: Enhanced visual hierarchy, removed redundant Home nav, improved course filter styling
 - ⏳ Next: Phase 8 (Polish - export, accessibility, performance optimization)
 - Clarifications applied: JSON export format, basic accessibility (semantic HTML + keyboard nav)
-- Recent enhancements: Progress charts with PB markers, date filtering, standard reference lines
+- Recent enhancements: Progress charts with PB markers, date filtering, standard reference lines, beautified navigation menu
 
 ## Format: `[ID] [P?] [Story?] Description`
 
@@ -481,6 +482,28 @@
 - [X] T150 [US5] Create Progress page in frontend/src/pages/Progress.tsx with event selector, date filters, standard selector
 
 **Checkpoint**: User Story 5 complete - can view progress graphs with PB markers and standard reference lines
+
+---
+
+## Phase 7b: Navigation UI Polish
+
+**Status**: ✅ **COMPLETE** - Enhanced navigation menu visual hierarchy and styling
+
+**Purpose**: Improve navigation menu aesthetics, visual hierarchy, and user experience
+
+### Navigation Enhancements
+
+- [X] T151 [Nav] Split desktop navigation into logical groups (main + analytics) with visual separator in AppShell.tsx
+- [X] T152 [Nav] Enhance visual separation with darker border (border-l-2 border-slate-300) between nav groups
+- [X] T153 [Nav] Improve course filter styling with bold selected state (solid colors, shadow, semibold font)
+- [X] T154 [Nav] Add user menu grouping with subtle background container (bg-slate-50, border)
+- [X] T155 [Nav] Fine-tune alignment and spacing across all navigation elements
+- [X] T156 [Nav] Add subtle shadows to active nav items for depth (shadow-sm)
+- [X] T157 [Nav] Remove duplicate "Course:" label from AppShell.tsx (CourseFilterToggle has its own)
+- [X] T158 [Nav] Add logout icon to Sign out button for consistency with Settings icon
+- [X] T159 [Nav] Remove redundant Home nav item (SwimStats logo serves as home link)
+
+**Checkpoint**: Navigation UI polish complete - improved visual hierarchy, better grouping, cleaner design
 
 ---
 
