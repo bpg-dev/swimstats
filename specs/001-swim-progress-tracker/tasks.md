@@ -526,65 +526,77 @@ No additional implementation needed. Moving directly to Phase 7 (US5 - Progress 
 
 **Purpose**: Data export, documentation, accessibility, performance validation, and deployment readiness
 
-### Data Export (Import already complete in Phase 6b)
+### Data Export & Import ✅ COMPLETE
 
-- [ ] T180 [P] Create data export API tests in backend/tests/integration/export_test.go
-- [ ] T181 [P] Create export service in backend/internal/domain/exporter/service.go (single JSON file with all data)
-- [ ] T182 [US7] Create export handler in backend/internal/api/handlers/export.go (GET /data/export)
-- [ ] T183 [US7] Add export button to Settings page in frontend/src/pages/Settings.tsx
-- [ ] T184 [US7] Test export/import round-trip for data integrity
+- [x] T180 [P] Create data export API tests in backend/tests/integration/export_test.go
+- [x] T181 [P] Create export service in backend/internal/domain/exporter/service.go (single JSON file with all data)
+- [x] T182 [US7] Create export handler in backend/internal/api/handlers/export.go (GET /data/export)
+- [x] T183 [US7] Add export button to Settings page in frontend/src/pages/Settings.tsx
+- [x] T184 [US7] Test export/import round-trip for data integrity
+- [x] T185 [US7] Update importer to match export format (make swimmer/meets/standards optional sections)
+- [x] T186 [US7] Implement preview endpoint (POST /data/import/preview) showing what will be deleted
+- [x] T187 [US7] Implement replace mode - sections in import file completely replace existing data
+- [x] T188 [US7] Add confirmation flow with warning dialog showing deletion counts
+- [x] T189 [US7] Replace browser alerts with in-app success/error dialogs
+- [x] T190 [US7] Create comprehensive import integration tests with preview and replace mode
+- [x] T191 [US7] Update spec.md and plan.md with export/import implementation details
 
-**Export Requirements**: Single JSON file with swimmer, meets, times, custom standards (FR-081, FR-082)
+**Export/Import Requirements**:
+- Export: Single JSON file with swimmer, meets (with times), custom standards (FR-081)
+- Import: Optional sections (swimmer/meets/standards) with REPLACE mode (FR-082)
+- Preview: Shows counts of what will be deleted before confirmation required
+- UI: File upload, preview dialog, confirmation with warnings, success/error dialogs
+- Format symmetry: Export and import use identical JSON structure
 
 ### Documentation
 
-- [ ] T185 [P] Update README.md with complete feature list and screenshots
-- [ ] T186 [P] Create USER-GUIDE.md documenting all features and workflows
-- [ ] T187 [P] Verify IMPORT-GUIDE.md is complete and accurate
-- [ ] T188 [P] Add API documentation in docs/API.md or update contracts/api.yaml
+- [ ] T192 [P] Update README.md with complete feature list and screenshots
+- [ ] T193 [P] Create USER-GUIDE.md documenting all features and workflows
+- [ ] T194 [P] Verify IMPORT-GUIDE.md is complete and accurate
+- [ ] T195 [P] Add API documentation in docs/API.md or update contracts/api.yaml
 
 ### Accessibility Verification
 
-- [ ] T189 Run axe-core accessibility tests on all UI pages
-- [ ] T190 Verify keyboard navigation works for all interactive elements
-- [ ] T191 Ensure semantic HTML structure throughout application
-- [ ] T192 Test screen reader compatibility on critical user journeys
-- [ ] T193 Verify color contrast meets WCAG AA standards
+- [ ] T196 Run axe-core accessibility tests on all UI pages
+- [ ] T197 Verify keyboard navigation works for all interactive elements
+- [ ] T198 Ensure semantic HTML structure throughout application
+- [ ] T199 Test screen reader compatibility on critical user journeys
+- [ ] T200 Verify color contrast meets WCAG AA standards
 
 **Accessibility Target**: Basic accessibility (semantic HTML, keyboard navigation) per FR-084
 
 ### Performance Optimization & Validation
 
-- [ ] T194 Measure and verify API p95 latency targets (reads <200ms, writes <500ms)
-- [ ] T195 Measure and verify Time to Interactive (TTI) <3s
-- [ ] T196 Verify JavaScript bundle size <250KB gzipped
-- [ ] T197 Optimize chart rendering for 500+ data points if needed (Phase 7 dependency)
-- [ ] T198 Add React Query caching optimization if needed
+- [ ] T201 Measure and verify API p95 latency targets (reads <200ms, writes <500ms)
+- [ ] T202 Measure and verify Time to Interactive (TTI) <3s
+- [ ] T203 Verify JavaScript bundle size <250KB gzipped
+- [ ] T204 Optimize chart rendering for 500+ data points if needed (Phase 7 dependency)
+- [ ] T205 Add React Query caching optimization if needed
 
 **Performance Targets**: API p95 <200ms/<500ms, TTI <3s, <250KB bundle, graphs <2s for 500 times
 
 ### Testing Coverage
 
-- [ ] T199 [P] Add integration tests for progress chart API (Phase 7 dependency)
-- [ ] T200 [P] Add component tests for chart components (Phase 7 dependency)
-- [ ] T201 Verify >90% coverage on critical paths (PB calculation, comparison logic, import service)
-- [ ] T202 Run full test suite and fix any failures
+- [ ] T206 [P] Add integration tests for progress chart API (Phase 7 dependency)
+- [ ] T207 [P] Add component tests for chart components (Phase 7 dependency)
+- [ ] T208 Verify >90% coverage on critical paths (PB calculation, comparison logic, import/export service)
+- [ ] T209 Run full test suite and fix any failures
 
 ### Security & Reliability
 
-- [ ] T203 Review and harden OIDC authentication flow
-- [ ] T204 Verify access level enforcement on all endpoints
-- [ ] T205 Add rate limiting to import endpoints if needed
-- [ ] T206 Review error handling and logging across application
-- [ ] T207 Test session expiry and re-authentication flow
+- [ ] T210 Review and harden OIDC authentication flow
+- [ ] T211 Verify access level enforcement on all endpoints
+- [ ] T212 Add rate limiting to import endpoints if needed
+- [ ] T213 Review error handling and logging across application
+- [ ] T214 Test session expiry and re-authentication flow
 
 ### Final Validation
 
-- [ ] T208 Run quickstart.md validation scenarios
-- [ ] T209 Verify all success criteria (SC-001 through SC-011) are met
-- [ ] T210 Test application end-to-end with real swimmer data
-- [ ] T211 Code cleanup and refactoring across codebase
-- [ ] T212 Final linting and type checking pass (both backend and frontend)
+- [ ] T215 Run quickstart.md validation scenarios
+- [ ] T216 Verify all success criteria (SC-001 through SC-011) are met
+- [ ] T217 Test application end-to-end with real swimmer data
+- [ ] T218 Code cleanup and refactoring across codebase
+- [ ] T219 Final linting and type checking pass (both backend and frontend)
 
 **Success Criteria** (from spec.md):
 - SC-001: Record time in <30s

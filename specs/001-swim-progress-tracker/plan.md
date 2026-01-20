@@ -157,7 +157,7 @@ IMPORT-GUIDE.md               # User guide for data import
 | Phase 6: US4 + US6 - Compare | ✅ Complete | Comparison with adjacent age groups, achievements on PBs, standing dashboard |
 | Phase 7: US5 - Progress Charts | ✅ Complete | Recharts line charts with PB markers, date filtering, standard reference lines |
 | Phase 7b: Navigation UI Polish | ✅ Complete | Enhanced visual hierarchy, logical grouping, improved styling |
-| Phase 8: Polish | 🔄 In Progress | Data import complete, accessibility verification pending, documentation pending |
+| Phase 8: Polish | 🔄 In Progress | Data export/import with preview complete, accessibility verification pending, documentation pending |
 
 **Current State**: Phases 1-7b complete (all user stories + UI polish), Phase 8 partially complete. App can:
 
@@ -175,9 +175,12 @@ IMPORT-GUIDE.md               # User guide for data import
 - Compare personal bests against selected standard with adjacent age groups
 - View standing dashboard showing achieved/almost/not-yet qualification counts
 - Navigate from PB achieved standards directly to comparison view
-- Import swimmer data and time standards from JSON files
-- Bulk import time standards from multiple JSON files
-- Reset database to fresh state for new data imports
+- **Export all data** (swimmer, meets/times, custom standards) as JSON backup
+- **Import data with preview** - see what will be deleted before confirmation
+- **Replace mode import** - optional sections (swimmer/meets/standards) replace existing data
+- Import swimmer data and time standards from JSON files (legacy CLI scripts)
+- Bulk import time standards from multiple JSON files (legacy CLI scripts)
+- Reset database to fresh state for new data imports (legacy CLI scripts)
 - View progress charts showing time improvement over time with PB markers
 - Filter progress charts by date range
 - Compare progress against time standards with reference lines on charts
