@@ -59,19 +59,19 @@ describe('ProgressChart', () => {
   });
 
   it('renders chart with progress data', () => {
-    renderWithProviders(<ProgressChart data={mockProgressData} />);
+    const { container } = renderWithProviders(<ProgressChart data={mockProgressData} />);
 
-    // Recharts renders the data, but we can't easily test SVG content
-    // We can verify that the component renders without errors
-    const container = screen.getByRole('region', { hidden: true });
-    expect(container).toBeInTheDocument();
+    // Recharts renders the data, but we can't easily test SVG content in jsdom
+    // We can verify that the ResponsiveContainer rendered
+    const responsiveContainer = container.querySelector('.recharts-responsive-container');
+    expect(responsiveContainer).toBeInTheDocument();
   });
 
   it('renders with standard reference line', () => {
     const standardTime = 27000; // 27.00 seconds
     const standardName = 'Swimming Canada Junior';
 
-    renderWithProviders(
+    const { container } = renderWithProviders(
       <ProgressChart
         data={mockProgressData}
         standardTime={standardTime}
@@ -79,25 +79,25 @@ describe('ProgressChart', () => {
       />
     );
 
-    // Chart should render
-    const container = screen.getByRole('region', { hidden: true });
-    expect(container).toBeInTheDocument();
+    // Chart should render with responsive container
+    const responsiveContainer = container.querySelector('.recharts-responsive-container');
+    expect(responsiveContainer).toBeInTheDocument();
   });
 
   it('handles single data point', () => {
     const singlePoint = [mockProgressData[0]];
 
-    renderWithProviders(<ProgressChart data={singlePoint} />);
+    const { container } = renderWithProviders(<ProgressChart data={singlePoint} />);
 
-    const container = screen.getByRole('region', { hidden: true });
-    expect(container).toBeInTheDocument();
+    const responsiveContainer = container.querySelector('.recharts-responsive-container');
+    expect(responsiveContainer).toBeInTheDocument();
   });
 
   it('renders correctly with PB markers', () => {
     // All data points in mockProgressData include is_pb flags
-    renderWithProviders(<ProgressChart data={mockProgressData} />);
+    const { container } = renderWithProviders(<ProgressChart data={mockProgressData} />);
 
-    const container = screen.getByRole('region', { hidden: true });
-    expect(container).toBeInTheDocument();
+    const responsiveContainer = container.querySelector('.recharts-responsive-container');
+    expect(responsiveContainer).toBeInTheDocument();
   });
 });

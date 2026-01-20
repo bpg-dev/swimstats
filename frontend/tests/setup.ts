@@ -5,6 +5,14 @@ import { handlers } from './mocks/handlers';
 // Setup MSW server for tests
 export const server = setupServer(...handlers);
 
+// Mock ResizeObserver for Recharts
+global.ResizeObserver = class ResizeObserver {
+  constructor(callback: ResizeObserverCallback) {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 // Start server before all tests
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
 
