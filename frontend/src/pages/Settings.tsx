@@ -28,6 +28,9 @@ export function Settings() {
   const [isImporting, setIsImporting] = useState(false);
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
   const [importData, setImportData] = useState<unknown | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportData = async () => {
@@ -47,7 +50,8 @@ export function Settings() {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Failed to export data:', error);
-      alert('Failed to export data. Please try again.');
+      setErrorMessage('Failed to export data. Please try again.');
+      setShowErrorDialog(true);
     } finally {
       setIsExporting(false);
     }
@@ -68,7 +72,8 @@ export function Settings() {
       setImportData(data);
     } catch (error) {
       console.error('Failed to preview import:', error);
-      alert('Failed to read or preview import file. Please check the file format.');
+      setErrorMessage('Failed to read or preview import file. Please check the file format.');
+      setShowErrorDialog(true);
       setImportPreview(null);
       setImportData(null);
     } finally {
@@ -86,13 +91,14 @@ export function Settings() {
     try {
       setIsImporting(true);
       await post('/v1/data/import', { data: importData, confirmed: true });
-      alert('Data imported successfully!');
       setImportPreview(null);
       setImportData(null);
+      setShowSuccessDialog(true);
       refetch(); // Refresh swimmer data
     } catch (error) {
       console.error('Failed to import data:', error);
-      alert('Failed to import data. Please try again.');
+      setErrorMessage('Failed to import data. Please try again.');
+      setShowErrorDialog(true);
     } finally {
       setIsImporting(false);
     }
@@ -360,6 +366,68 @@ export function Settings() {
                     className="bg-red-600 hover:bg-red-700 text-white"
                   >
                     {isImporting ? 'Importing...' : 'Confirm Import'}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Success Dialog */}
+      {showSuccessDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="max-w-md w-full mx-4">
+            <CardHeader>
+              <CardTitle className="text-green-600 flex items-center gap-2">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Import Successful
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-slate-700">
+                  Data imported successfully!
+                </p>
+                <div className="flex justify-end">
+                  <Button onClick={() => setShowSuccessDialog(false)}>
+                    OK
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Error Dialog */}
+      {showErrorDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="max-w-md w-full mx-4">
+            <CardHeader>
+              <CardTitle className="text-red-600 flex items-center gap-2">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Error
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-slate-700">
+                  {errorMessage}
+                </p>
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowErrorDialog(false);
+                      setErrorMessage('');
+                    }}
+                  >
+                    Close
                   </Button>
                 </div>
               </div>
