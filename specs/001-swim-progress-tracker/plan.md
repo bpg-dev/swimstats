@@ -155,10 +155,11 @@ IMPORT-GUIDE.md               # User guide for data import
 | Phase 4b: All Times View | ✅ Complete | Event-based time history with PB badges |
 | Phase 5: US3 - Standards | ✅ Complete | Time standards CRUD, JSON import, bulk import |
 | Phase 6: US4 + US6 - Compare | ✅ Complete | Comparison with adjacent age groups, achievements on PBs, standing dashboard |
-| Phase 7: US5 - Progress Charts | ⏳ Pending | Line charts showing time progression over dates |
+| Phase 7: US5 - Progress Charts | ✅ Complete | Recharts line charts with PB markers, date filtering, standard reference lines |
+| Phase 7b: Navigation UI Polish | ✅ Complete | Enhanced visual hierarchy, logical grouping, improved styling |
 | Phase 8: Polish | 🔄 In Progress | Data import complete, accessibility verification pending, documentation pending |
 
-**Current State**: Phases 1-6 complete (US1 + US2 + US3 + US4 + US6), Phase 8 partially complete. App can:
+**Current State**: Phases 1-7b complete (all user stories + UI polish), Phase 8 partially complete. App can:
 
 - Create and manage swimmer profile
 - Create and manage meets (with inline quick-add from time entry)
@@ -177,6 +178,9 @@ IMPORT-GUIDE.md               # User guide for data import
 - Import swimmer data and time standards from JSON files
 - Bulk import time standards from multiple JSON files
 - Reset database to fresh state for new data imports
+- View progress charts showing time improvement over time with PB markers
+- Filter progress charts by date range
+- Compare progress against time standards with reference lines on charts
 
 **Known Issues Resolved**:
 
@@ -191,7 +195,7 @@ IMPORT-GUIDE.md               # User guide for data import
 **UX Enhancements**:
 
 - Quick Add Meet: Create meets inline from time entry form (FR-037)
-- Navigation reordering: Personal Bests now first after Home in both menu and Quick Actions
+- Navigation reordering: Personal Bests first, Home removed (logo serves as home), grouped into main + analytics sections
 - Consolidated "All Times" and "Time History" into single compact table view
 - Removed "All Events" option from All Times (must select specific event for meaningful ranking)
 - All Times shows rank badges (gold/silver/bronze) when sorting by fastest
@@ -207,8 +211,13 @@ IMPORT-GUIDE.md               # User guide for data import
 - Comparison table: Fixed column widths for consistent layout (tabular-nums for monospaced numbers)
 - Personal Bests: Shows achieved standards as clickable badges linking to comparison page
 - Standing dashboard: High-level summary showing achieved/almost/not-yet counts (US6 covered by US4 implementation)
+- Progress charts: Recharts line charts with PB markers, date range filtering, standard reference lines
+- Navigation menu: Logical grouping (main nav + analytics), enhanced visual hierarchy with borders and shadows
+- Navigation menu: Removed redundant Home link (SwimStats logo serves as home)
+- Navigation menu: Improved course filter with bold selected state (solid colors with shadow)
+- Navigation menu: User menu grouping with subtle background container for Settings and Logout icons
 
-**Navigation Order**: Home → Personal Bests → Add Times → All Times → Meets → Progress → Standards → Compare
+**Navigation Order**: Personal Bests → Add Times → All Times → Meets | Progress → Compare → Standards
 
 ## Complexity Tracking
 
