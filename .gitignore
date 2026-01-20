@@ -24,6 +24,7 @@ yarn-error.log*
 .pnpm-debug.log*
 frontend/dist/
 frontend/build/
+frontend/.vite/
 
 # Go / Backend
 backend/bin/
