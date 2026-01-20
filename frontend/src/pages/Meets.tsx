@@ -41,7 +41,8 @@ export function Meets() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Meets</h1>
           <p className="text-slate-600 mt-1">
-            Manage your swim competitions and time trials. Click on a meet to view details and times.
+            Manage your swim competitions and time trials. Click on a meet to view details and
+            times.
           </p>
         </div>
         <Button onClick={() => setShowForm(true)}>

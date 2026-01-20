@@ -7,13 +7,13 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   // Actions
   setUser: (user: User | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   logout: () => void;
-  
+
   // Computed
   canWrite: () => boolean;
   accessLevel: () => AccessLevel | null;

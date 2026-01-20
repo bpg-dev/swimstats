@@ -8,7 +8,7 @@ import { MeetList } from '@/components/meets/MeetList';
 import { MeetForm } from '@/components/meets/MeetForm';
 import { MeetSelector } from '@/components/meets/MeetSelector';
 import { MeetTimesList } from '@/components/meets/MeetTimesList';
-import { mockMeet, mockTime } from '../mocks/handlers';
+import { mockMeet } from '../mocks/handlers';
 
 // Test wrapper with providers
 function createWrapper() {

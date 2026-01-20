@@ -7,13 +7,7 @@ interface PersonalBestGridProps {
   achievedStandardsByEvent?: Map<string, AchievedStandard[]>;
 }
 
-const STROKE_ORDER = [
-  'Freestyle',
-  'Backstroke',
-  'Breaststroke',
-  'Butterfly',
-  'Individual Medley',
-];
+const STROKE_ORDER = ['Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'Individual Medley'];
 
 const STROKE_ICONS: Record<string, string> = {
   Freestyle: '🏊',
@@ -27,8 +21,8 @@ function groupByStroke(personalBests: PersonalBest[]): PersonalBestsByStroke {
   const result: PersonalBestsByStroke = {};
 
   for (const stroke of STROKE_ORDER) {
-    const strokeEvents = EVENTS_BY_STROKE[stroke]?.map(e => e.code) ?? [];
-    const strokePBs = personalBests.filter(pb => strokeEvents.includes(pb.event));
+    const strokeEvents = EVENTS_BY_STROKE[stroke]?.map((e) => e.code) ?? [];
+    const strokePBs = personalBests.filter((pb) => strokeEvents.includes(pb.event));
     if (strokePBs.length > 0) {
       // Sort by distance (extracted from event code)
       strokePBs.sort((a, b) => {
@@ -43,7 +37,10 @@ function groupByStroke(personalBests: PersonalBest[]): PersonalBestsByStroke {
   return result;
 }
 
-export function PersonalBestGrid({ personalBests, achievedStandardsByEvent }: PersonalBestGridProps) {
+export function PersonalBestGrid({
+  personalBests,
+  achievedStandardsByEvent,
+}: PersonalBestGridProps) {
   const byStroke = groupByStroke(personalBests);
 
   if (personalBests.length === 0) {
@@ -54,8 +51,8 @@ export function PersonalBestGrid({ personalBests, achievedStandardsByEvent }: Pe
           No Personal Bests Yet
         </h3>
         <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-          Start recording swim times to see your personal bests here.
-          Your fastest time for each event will be automatically tracked.
+          Start recording swim times to see your personal bests here. Your fastest time for each
+          event will be automatically tracked.
         </p>
       </div>
     );
@@ -63,7 +60,7 @@ export function PersonalBestGrid({ personalBests, achievedStandardsByEvent }: Pe
 
   return (
     <div className="space-y-8">
-      {STROKE_ORDER.map(stroke => {
+      {STROKE_ORDER.map((stroke) => {
         const pbs = byStroke[stroke];
         if (!pbs || pbs.length === 0) return null;
 
@@ -77,7 +74,7 @@ export function PersonalBestGrid({ personalBests, achievedStandardsByEvent }: Pe
               </span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {pbs.map(pb => (
+              {pbs.map((pb) => (
                 <PersonalBestCard
                   key={pb.event}
                   pb={pb}

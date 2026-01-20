@@ -12,34 +12,42 @@ export interface EventSelectorProps extends Omit<SelectProps, 'options'> {
 }
 
 export const EventSelector = forwardRef<HTMLSelectElement, EventSelectorProps>(
-  ({ groupByStroke = false, label = 'Event', placeholder = 'Select event', labelClassName, excludeEvents = [], ...props }, ref) => {
+  (
+    {
+      groupByStroke = false,
+      label = 'Event',
+      placeholder = 'Select event',
+      labelClassName,
+      excludeEvents = [],
+      ...props
+    },
+    ref
+  ) => {
     const excludeSet = useMemo(() => new Set(excludeEvents), [excludeEvents]);
-    
+
     const options = useMemo(() => {
       if (groupByStroke) {
         // Create optgroup-like structure (flattened since Select doesn't support optgroups)
         const grouped: { value: string; label: string; disabled?: boolean }[] = [];
-        
+
         Object.entries(EVENTS_BY_STROKE).forEach(([stroke, events]) => {
           // Only add stroke header if there are available events in this group
-          const availableEvents = events.filter(e => !excludeSet.has(e.code));
+          const availableEvents = events.filter((e) => !excludeSet.has(e.code));
           if (availableEvents.length > 0) {
             grouped.push({ value: `__${stroke}`, label: `── ${stroke} ──`, disabled: true });
-            availableEvents.forEach(event => {
+            availableEvents.forEach((event) => {
               grouped.push({ value: event.code, label: event.name });
             });
           }
         });
-        
+
         return grouped;
       }
-      
-      return EVENTS
-        .filter(event => !excludeSet.has(event.code))
-        .map(event => ({
-          value: event.code,
-          label: event.name,
-        }));
+
+      return EVENTS.filter((event) => !excludeSet.has(event.code)).map((event) => ({
+        value: event.code,
+        label: event.name,
+      }));
     }, [groupByStroke, excludeSet]);
 
     return (

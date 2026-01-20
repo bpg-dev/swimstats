@@ -69,10 +69,7 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
             const rank = sortBy === 'time' ? index + 1 : undefined;
 
             return (
-              <tr
-                key={time.id}
-                className={isPB ? 'bg-amber-50' : 'hover:bg-slate-50'}
-              >
+              <tr key={time.id} className={isPB ? 'bg-amber-50' : 'hover:bg-slate-50'}>
                 {/* Rank (only when sorting by time) */}
                 {sortBy === 'time' && (
                   <td className="py-3 pr-3">
@@ -94,12 +91,8 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
 
                 {/* Event */}
                 <td className="py-3">
-                  <div className="font-medium text-slate-900">
-                    {eventInfo?.name || time.event}
-                  </div>
-                  {time.notes && (
-                    <div className="text-xs text-slate-500 italic">{time.notes}</div>
-                  )}
+                  <div className="font-medium text-slate-900">{eventInfo?.name || time.event}</div>
+                  {time.notes && <div className="text-xs text-slate-500 italic">{time.notes}</div>}
                 </td>
 
                 {/* Time */}
@@ -117,14 +110,10 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
                 </td>
 
                 {/* Meet */}
-                <td className="py-3 text-slate-700">
-                  {time.meet?.name ?? '—'}
-                </td>
+                <td className="py-3 text-slate-700">{time.meet?.name ?? '—'}</td>
 
                 {/* Date */}
-                <td className="py-3 text-slate-600">
-                  {formatMeetDate(time)}
-                </td>
+                <td className="py-3 text-slate-600">{formatMeetDate(time)}</td>
               </tr>
             );
           })}

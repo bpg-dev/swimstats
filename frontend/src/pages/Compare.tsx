@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent, Loading, ErrorBanner } from '@/components/ui';
-import {
-  StandardSelector,
-  ComparisonTable,
-  ComparisonSummary,
-} from '@/components/comparison';
+import { StandardSelector, ComparisonTable, ComparisonSummary } from '@/components/comparison';
 import { useComparison } from '@/hooks/useComparison';
 import { useSwimmer } from '@/hooks/useSwimmer';
 import { useCourseType } from '@/stores/courseFilterStore';
@@ -28,7 +24,11 @@ export function Compare() {
     }
   }, [searchParams, selectedStandardId]);
 
-  const { data: comparison, isLoading, error } = useComparison(
+  const {
+    data: comparison,
+    isLoading,
+    error,
+  } = useComparison(
     selectedStandardId
       ? {
           standard_id: selectedStandardId,
@@ -41,9 +41,7 @@ export function Compare() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Compare</h1>
-        <p className="text-slate-600 mt-1">
-          Compare your personal bests against time standards.
-        </p>
+        <p className="text-slate-600 mt-1">Compare your personal bests against time standards.</p>
       </div>
 
       {/* Standard selector */}
@@ -118,10 +116,7 @@ export function Compare() {
               </label>
             </CardHeader>
             <CardContent className="p-0">
-              <ComparisonTable
-                comparisons={comparison.comparisons}
-                showNoTime={showAllEvents}
-              />
+              <ComparisonTable comparisons={comparison.comparisons} showNoTime={showAllEvents} />
             </CardContent>
           </Card>
         </>
@@ -134,8 +129,7 @@ export function Compare() {
             <div className="text-center py-12 text-slate-500">
               <p>Select a time standard above to see how your times compare.</p>
               <p className="text-sm mt-2">
-                You&apos;ll see which events you&apos;ve achieved and how close you are to
-                others.
+                You&apos;ll see which events you&apos;ve achieved and how close you are to others.
               </p>
             </div>
           </CardContent>

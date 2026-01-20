@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Button, Input, Select, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
+import {
+  Button,
+  Input,
+  Select,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui';
 import { SwimmerInput, Swimmer } from '@/types/swimmer';
 import { useCreateOrUpdateSwimmer } from '@/hooks/useSwimmer';
 
@@ -52,8 +61,9 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
     try {
       const swimmer = await mutation.mutateAsync(formData);
       onSuccess?.(swimmer);
-    } catch (error: any) {
-      setErrors({ name: error.message || 'Failed to save swimmer profile' });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to save swimmer profile';
+      setErrors({ name: message });
     }
   };
 
@@ -66,7 +76,7 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
         <CardDescription>
           {isEditing
             ? 'Update your swimmer information below.'
-            : 'Enter the swimmer\'s information to get started tracking their progress.'}
+            : "Enter the swimmer's information to get started tracking their progress."}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -76,7 +86,7 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
             name="name"
             placeholder="Enter swimmer's name"
             value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
             error={errors.name}
             required
           />
@@ -86,7 +96,7 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
             name="birth_date"
             type="date"
             value={formData.birth_date}
-            onChange={(e) => setFormData(prev => ({ ...prev, birth_date: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, birth_date: e.target.value }))}
             error={errors.birth_date}
             hint="Age is calculated as of December 31st per Swimming Canada rules"
             required
@@ -96,10 +106,12 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
             label="Gender"
             name="gender"
             value={formData.gender}
-            onChange={(e) => setFormData(prev => ({ 
-              ...prev, 
-              gender: e.target.value as 'male' | 'female' 
-            }))}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                gender: e.target.value as 'male' | 'female',
+              }))
+            }
             options={[
               { value: 'female', label: 'Female' },
               { value: 'male', label: 'Male' },
@@ -108,18 +120,11 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
           />
 
           <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
-              isLoading={mutation.isPending}
-            >
+            <Button type="submit" isLoading={mutation.isPending}>
               {isEditing ? 'Save Changes' : 'Create Profile'}
             </Button>
             {onCancel && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-              >
+              <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
               </Button>
             )}

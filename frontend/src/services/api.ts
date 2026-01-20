@@ -71,9 +71,7 @@ function createApiClient(): AxiosInstance {
 
       // Extract error message and code
       const message =
-        error.response?.data?.error ||
-        error.message ||
-        'An unexpected error occurred';
+        error.response?.data?.error || error.message || 'An unexpected error occurred';
       const code = error.response?.data?.code;
 
       return Promise.reject(new ApiRequestError(message, code));

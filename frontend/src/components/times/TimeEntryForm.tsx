@@ -17,16 +17,16 @@ export interface TimeEntryFormProps {
   onCancel?: () => void;
 }
 
-export function TimeEntryForm({ 
-  initialData, 
-  meetId: defaultMeetId, 
+export function TimeEntryForm({
+  initialData,
+  meetId: defaultMeetId,
   courseType,
-  onSuccess, 
-  onCancel 
+  onSuccess,
+  onCancel,
 }: TimeEntryFormProps) {
   const [formData, setFormData] = useState({
     meet_id: initialData?.meet_id || defaultMeetId || '',
-    event: initialData?.event || '' as EventCode | '',
+    event: initialData?.event || ('' as EventCode | ''),
     time_str: initialData ? formatTime(initialData.time_ms) : '',
     event_date: initialData?.event_date || '',
     notes: initialData?.notes || '',
@@ -35,7 +35,7 @@ export function TimeEntryForm({
 
   const createMutation = useCreateTime();
   const updateMutation = useUpdateTime();
-  
+
   // Fetch existing times for the selected meet
   const { data: existingTimesData } = useTimes(
     formData.meet_id ? { meet_id: formData.meet_id, limit: 100 } : undefined
@@ -43,30 +43,30 @@ export function TimeEntryForm({
 
   // Fetch meets to get the selected meet's date range
   const { data: meetsData } = useMeets({ course_type: courseType, limit: 100 });
-  
+
   // Get selected meet's info
   const selectedMeet = useMemo(() => {
     if (!formData.meet_id || !meetsData?.meets) return null;
-    return meetsData.meets.find(m => m.id === formData.meet_id) || null;
+    return meetsData.meets.find((m) => m.id === formData.meet_id) || null;
   }, [formData.meet_id, meetsData]);
-  
+
   // Check if selected meet is multi-day
   const isMultiDayMeet = useMemo(() => {
     return selectedMeet ? selectedMeet.start_date !== selectedMeet.end_date : false;
   }, [selectedMeet]);
-  
+
   // Get available dates for the meet
   const availableDates = useMemo(() => {
     if (!selectedMeet) return [];
     return getDateRange(selectedMeet.start_date, selectedMeet.end_date);
   }, [selectedMeet]);
-  
+
   // Compute events to exclude (already in meet, but allow current event when editing)
   const excludedEvents = useMemo(() => {
     if (!existingTimesData?.times) return [];
-    
+
     const excluded: EventCode[] = [];
-    existingTimesData.times.forEach(time => {
+    existingTimesData.times.forEach((time) => {
       // When editing, don't exclude the event we're editing
       if (initialData && time.id === initialData.id) return;
       if (!excluded.includes(time.event)) {
@@ -126,7 +126,9 @@ export function TimeEntryForm({
       onSuccess?.(time);
     } catch (error: unknown) {
       if (error instanceof ApiRequestError && error.code === 'DUPLICATE_EVENT') {
-        setErrors({ form: 'This event already has a time recorded for this meet. Each event can only be entered once per meet.' });
+        setErrors({
+          form: 'This event already has a time recorded for this meet. Each event can only be entered once per meet.',
+        });
       } else {
         const message = error instanceof Error ? error.message : 'Failed to save time';
         setErrors({ form: message });
@@ -151,7 +153,9 @@ export function TimeEntryForm({
             <MeetSelector
               name="meet_id"
               value={formData.meet_id}
-              onChange={(e) => setFormData(prev => ({ ...prev, meet_id: e.target.value, event_date: '' }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, meet_id: e.target.value, event_date: '' }))
+              }
               courseType={courseType}
               error={errors.meet_id}
               required
@@ -161,7 +165,9 @@ export function TimeEntryForm({
           <EventSelector
             name="event"
             value={formData.event as EventCode}
-            onChange={(e) => setFormData(prev => ({ ...prev, event: e.target.value as EventCode }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, event: e.target.value as EventCode }))
+            }
             groupByStroke
             error={errors.event}
             excludeEvents={excludedEvents}
@@ -173,14 +179,14 @@ export function TimeEntryForm({
               label="Event Date"
               name="event_date"
               value={formData.event_date}
-              onChange={(e) => setFormData(prev => ({ ...prev, event_date: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, event_date: e.target.value }))}
               placeholder="Select date (optional)"
-              options={availableDates.map(date => ({
+              options={availableDates.map((date) => ({
                 value: date,
-                label: new Date(date + 'T00:00:00').toLocaleDateString('en-CA', { 
+                label: new Date(date + 'T00:00:00').toLocaleDateString('en-CA', {
                   weekday: 'long',
-                  month: 'short', 
-                  day: 'numeric' 
+                  month: 'short',
+                  day: 'numeric',
                 }),
               }))}
               hint="Which day of the meet was this event swum?"
@@ -192,7 +198,7 @@ export function TimeEntryForm({
             name="time_str"
             placeholder="e.g., 28.45 or 1:05.32"
             value={formData.time_str}
-            onChange={(e) => setFormData(prev => ({ ...prev, time_str: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, time_str: e.target.value }))}
             error={errors.time_str}
             hint="Format: SS.ss or M:SS.ss"
             required
@@ -203,22 +209,15 @@ export function TimeEntryForm({
             name="notes"
             placeholder="e.g., Heat time, Finals, PB attempt"
             value={formData.notes}
-            onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
           />
 
           <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
-              isLoading={isPending}
-            >
+            <Button type="submit" isLoading={isPending}>
               {isEditing ? 'Save Changes' : 'Add Time'}
             </Button>
             {onCancel && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-              >
+              <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
               </Button>
             )}

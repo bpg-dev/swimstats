@@ -47,10 +47,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
 
   if (error) {
     return (
-      <ErrorBanner
-        message={error.message || "Failed to load times"}
-        onRetry={() => refetch()}
-      />
+      <ErrorBanner message={error.message || 'Failed to load times'} onRetry={() => refetch()} />
     );
   }
 
@@ -90,8 +87,15 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
     const eventInfoB = getEventInfo(b as EventCode);
     if (!eventInfoA || !eventInfoB) return 0;
     // Sort by stroke, then by distance
-    const strokeOrder = ['Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'Individual Medley'];
-    const strokeDiff = strokeOrder.indexOf(eventInfoA.stroke) - strokeOrder.indexOf(eventInfoB.stroke);
+    const strokeOrder = [
+      'Freestyle',
+      'Backstroke',
+      'Breaststroke',
+      'Butterfly',
+      'Individual Medley',
+    ];
+    const strokeDiff =
+      strokeOrder.indexOf(eventInfoA.stroke) - strokeOrder.indexOf(eventInfoB.stroke);
     if (strokeDiff !== 0) return strokeDiff;
     return eventInfoA.distance - eventInfoB.distance;
   }) as EventCode[];
@@ -102,9 +106,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-slate-900">
-          Times ({data.total})
-        </h3>
+        <h3 className="text-lg font-semibold text-slate-900">Times ({data.total})</h3>
       </div>
 
       <div className="overflow-x-auto">
@@ -124,10 +126,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
                 const eventInfo = getEventInfo(time.event);
 
                 return (
-                  <tr
-                    key={time.id}
-                    className={isPB ? 'bg-amber-50' : 'hover:bg-slate-50'}
-                  >
+                  <tr key={time.id} className={isPB ? 'bg-amber-50' : 'hover:bg-slate-50'}>
                     <td className="py-3">
                       <div className="font-medium text-slate-900">
                         {eventInfo?.name || time.event}
@@ -145,9 +144,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
                         )}
                       </div>
                     </td>
-                    <td className="py-3 text-slate-600">
-                      {time.notes || '—'}
-                    </td>
+                    <td className="py-3 text-slate-600">{time.notes || '—'}</td>
                     <td className="py-3">
                       {confirmingDeleteId === time.id ? (
                         <div className="flex items-center gap-1">
@@ -176,8 +173,18 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
                           className="text-slate-400 hover:text-red-600 hover:bg-red-50"
                         >
                           {deletingId !== time.id && (
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
                             </svg>
                           )}
                         </Button>

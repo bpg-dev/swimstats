@@ -135,12 +135,12 @@ type ListParams struct {
 
 // JSONFileInput represents the JSON file format for bulk importing standards.
 type JSONFileInput struct {
-	Season     string                       `json:"season"`
-	Source     string                       `json:"source"`
-	CourseType string                       `json:"course_type"`
-	Gender     string                       `json:"gender"`
-	Standards  map[string]JSONStandardMeta  `json:"standards"`
-	AgeGroups  []string                     `json:"age_groups"`
+	Season     string                         `json:"season"`
+	Source     string                         `json:"source"`
+	CourseType string                         `json:"course_type"`
+	Gender     string                         `json:"gender"`
+	Standards  map[string]JSONStandardMeta    `json:"standards"`
+	AgeGroups  []string                       `json:"age_groups"`
 	Times      map[string]map[string]JSONTime `json:"times"` // event -> age_group -> times
 }
 

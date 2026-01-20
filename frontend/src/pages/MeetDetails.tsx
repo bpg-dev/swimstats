@@ -14,7 +14,10 @@ export function MeetDetails() {
   const deleteMutation = useDeleteMeet();
 
   const handleDelete = async () => {
-    if (meet && window.confirm(`Delete "${meet.name}"? This will also delete all times from this meet.`)) {
+    if (
+      meet &&
+      window.confirm(`Delete "${meet.name}"? This will also delete all times from this meet.`)
+    ) {
       await deleteMutation.mutateAsync(meet.id);
       navigate('/meets');
     }
@@ -31,22 +34,15 @@ export function MeetDetails() {
   if (error || !meet) {
     return (
       <div className="max-w-2xl mx-auto">
-        <ErrorBanner
-          message={error?.message || "Meet not found"}
-          onRetry={() => refetch()}
-        />
+        <ErrorBanner message={error?.message || 'Meet not found'} onRetry={() => refetch()} />
         <div className="mt-4">
-          <Link
-            to="/meets"
-            className="text-cyan-600 hover:text-cyan-700 font-medium"
-          >
+          <Link to="/meets" className="text-cyan-600 hover:text-cyan-700 font-medium">
             ← Back to Meets
           </Link>
         </div>
       </div>
     );
   }
-
 
   return (
     <div className="space-y-6">
@@ -57,8 +53,18 @@ export function MeetDetails() {
           className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
           aria-label="Back to Meets"
         >
-          <svg className="h-5 w-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="h-5 w-5 text-slate-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
         </Link>
         <div className="flex-1">
@@ -74,10 +80,22 @@ export function MeetDetails() {
         <CardContent className="py-4">
           <div className="flex flex-wrap gap-6 items-center">
             <div className="flex items-center gap-2">
-              <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg
+                className="h-5 w-5 text-slate-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
-              <span className="text-slate-700">{formatDateRange(meet.start_date, meet.end_date)}</span>
+              <span className="text-slate-700">
+                {formatDateRange(meet.start_date, meet.end_date)}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <span
@@ -92,8 +110,18 @@ export function MeetDetails() {
             </div>
             {meet.time_count !== undefined && (
               <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="h-5 w-5 text-slate-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 <span className="text-slate-700">
                   {meet.time_count} time{meet.time_count !== 1 ? 's' : ''} recorded
@@ -102,20 +130,18 @@ export function MeetDetails() {
             )}
             <div className="flex-1" />
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                onClick={() => navigate(`/add-times?meet_id=${meet.id}`)}
-              >
+              <Button size="sm" onClick={() => navigate(`/add-times?meet_id=${meet.id}`)}>
                 <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
                 Add Times
               </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => navigate(`/meets?id=${meet.id}`)}
-              >
+              <Button size="sm" variant="outline" onClick={() => navigate(`/meets?id=${meet.id}`)}>
                 Edit
               </Button>
               <Button

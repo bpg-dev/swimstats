@@ -13,14 +13,17 @@ export interface MeetSelectorProps extends Omit<SelectProps, 'options'> {
 }
 
 export const MeetSelector = forwardRef<HTMLSelectElement, MeetSelectorProps>(
-  ({ 
-    courseType, 
-    label = 'Meet', 
-    placeholder = 'Select a meet',
-    showEmpty = true,
-    emptyLabel = 'No meets available',
-    ...props 
-  }, ref) => {
+  (
+    {
+      courseType,
+      label = 'Meet',
+      placeholder = 'Select a meet',
+      showEmpty = true,
+      emptyLabel = 'No meets available',
+      ...props
+    },
+    ref
+  ) => {
     const { data, isLoading, error } = useMeets({ course_type: courseType, limit: 100 });
 
     const options = useMemo(() => {
@@ -28,7 +31,7 @@ export const MeetSelector = forwardRef<HTMLSelectElement, MeetSelectorProps>(
         return showEmpty ? [{ value: '', label: emptyLabel, disabled: true }] : [];
       }
 
-      return data.meets.map(meet => {
+      return data.meets.map((meet) => {
         const dateStr = formatDateRange(meet.start_date, meet.end_date);
         return {
           value: meet.id,
@@ -41,9 +44,7 @@ export const MeetSelector = forwardRef<HTMLSelectElement, MeetSelectorProps>(
       return (
         <div className="w-full">
           {label && (
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              {label}
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
           )}
           <div className="h-10 flex items-center">
             <Loading className="h-5 w-5" />
@@ -57,9 +58,7 @@ export const MeetSelector = forwardRef<HTMLSelectElement, MeetSelectorProps>(
       return (
         <div className="w-full">
           {label && (
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              {label}
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
           )}
           <p className="text-sm text-red-600">Failed to load meets</p>
         </div>
@@ -67,13 +66,7 @@ export const MeetSelector = forwardRef<HTMLSelectElement, MeetSelectorProps>(
     }
 
     return (
-      <Select
-        ref={ref}
-        label={label}
-        placeholder={placeholder}
-        options={options}
-        {...props}
-      />
+      <Select ref={ref} label={label} placeholder={placeholder} options={options} {...props} />
     );
   }
 );

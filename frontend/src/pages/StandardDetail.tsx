@@ -1,9 +1,22 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useStandard, useUpdateStandard, useDeleteStandard, useSetStandardTimes } from '@/hooks/useStandards';
+import {
+  useStandard,
+  useUpdateStandard,
+  useDeleteStandard,
+  useSetStandardTimes,
+} from '@/hooks/useStandards';
 import { StandardForm, StandardTimesEditor } from '@/components/standards';
 import { StandardInput, StandardTimeInput, AgeGroup } from '@/types/standard';
-import { Card, CardContent, CardHeader, CardTitle, Button, Loading, ErrorBanner } from '@/components/ui';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+  Loading,
+  ErrorBanner,
+} from '@/components/ui';
 
 const EVENTS = [
   { code: '50FR', name: '50 Free' },

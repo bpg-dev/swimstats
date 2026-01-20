@@ -74,6 +74,6 @@ func (h *SwimmerHandler) PutSwimmer(w http.ResponseWriter, r *http.Request) {
 }
 
 func isValidationError(err error) bool {
-	return err != nil && (errors.Is(err, errors.New("validation")) || 
+	return err != nil && (errors.Is(err, errors.New("validation")) ||
 		len(err.Error()) > 0 && err.Error()[:10] == "validation")
 }

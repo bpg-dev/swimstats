@@ -78,7 +78,7 @@ func main() {
 	db, err := postgres.NewFromDSN(ctx, cfg.DatabaseURL)
 	if err != nil {
 		logger.Error("failed to connect to database", "error", err)
-		os.Exit(1)
+		os.Exit(1) //nolint:gocritic // exitAfterDefer - acceptable in main initialization
 	}
 	defer db.Close()
 

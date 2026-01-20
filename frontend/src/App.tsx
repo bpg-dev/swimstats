@@ -46,16 +46,26 @@ function DevModeLoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-cyan-50 to-blue-100 p-4">
       <div className="text-center max-w-md">
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-6">
-          <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          <svg
+            className="w-10 h-10 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
           </svg>
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">SwimStats</h1>
         <p className="text-slate-600 mb-8">Track your competitive swimming progress</p>
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-amber-800">
-            <strong>Development Mode:</strong> OIDC not configured. 
-            Running with mock authentication.
+            <strong>Development Mode:</strong> OIDC not configured. Running with mock
+            authentication.
           </p>
         </div>
         <button
@@ -81,8 +91,18 @@ function OidcLoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-cyan-50 to-blue-100 p-4">
       <div className="text-center max-w-md">
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-6">
-          <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          <svg
+            className="w-10 h-10 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
           </svg>
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">SwimStats</h1>
@@ -141,13 +161,7 @@ function DevModeApp() {
         <Route path="/login" element={<DevModeLoginPage />} />
         <Route
           path="/*"
-          element={
-            isAuthenticated ? (
-              <AuthenticatedApp />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
+          element={isAuthenticated ? <AuthenticatedApp /> : <Navigate to="/login" replace />}
         />
       </Routes>
     </Suspense>
@@ -193,13 +207,7 @@ function OidcApp() {
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route
           path="/*"
-          element={
-            auth.isAuthenticated ? (
-              <AuthenticatedApp />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
+          element={auth.isAuthenticated ? <AuthenticatedApp /> : <Navigate to="/login" replace />}
         />
       </Routes>
     </Suspense>

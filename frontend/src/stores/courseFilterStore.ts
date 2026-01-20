@@ -23,8 +23,7 @@ export const useCourseFilterStore = create<CourseFilterState>()(
 
       setCourseType: (courseType) => set({ courseType }),
 
-      toggle: () =>
-        set({ courseType: get().courseType === '25m' ? '50m' : '25m' }),
+      toggle: () => set({ courseType: get().courseType === '25m' ? '50m' : '25m' }),
     }),
     {
       name: 'swimstats-course-filter',

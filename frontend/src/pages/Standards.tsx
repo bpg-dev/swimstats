@@ -55,10 +55,7 @@ export function Standards() {
       )}
 
       {mode === 'import' && (
-        <StandardImportForm
-          onSuccess={() => setMode('list')}
-          onCancel={() => setMode('list')}
-        />
+        <StandardImportForm onSuccess={() => setMode('list')} onCancel={() => setMode('list')} />
       )}
 
       {mode === 'list' && (

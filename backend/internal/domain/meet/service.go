@@ -163,7 +163,7 @@ func (s *Service) Create(ctx context.Context, input Input) (*Meet, error) {
 	}
 
 	startDate, _ := time.Parse("2006-01-02", input.StartDate)
-	
+
 	// Default end_date to start_date if not provided
 	endDateStr := input.EndDate
 	if endDateStr == "" {
@@ -199,7 +199,7 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Meet,
 	}
 
 	startDate, _ := time.Parse("2006-01-02", input.StartDate)
-	
+
 	// Default end_date to start_date if not provided
 	endDateStr := input.EndDate
 	if endDateStr == "" {

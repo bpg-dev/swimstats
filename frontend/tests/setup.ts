@@ -7,7 +7,7 @@ export const server = setupServer(...handlers);
 
 // Mock ResizeObserver for Recharts
 global.ResizeObserver = class ResizeObserver {
-  constructor(callback: ResizeObserverCallback) {}
+  constructor(_callback: ResizeObserverCallback) {}
   observe() {}
   unobserve() {}
   disconnect() {}

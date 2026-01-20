@@ -11,7 +11,7 @@ export interface MeetFormProps {
 
 export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
   const today = new Date().toISOString().split('T')[0];
-  
+
   const [formData, setFormData] = useState<MeetInput>({
     name: initialData?.name || '',
     city: initialData?.city || '',
@@ -27,7 +27,7 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
 
   const isEditing = !!initialData;
   const isPending = createMutation.isPending || updateMutation.isPending;
-  
+
   // Check if it's a multi-day meet
   const isMultiDay = formData.start_date !== formData.end_date;
 
@@ -84,13 +84,13 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
 
   // When start_date changes, update end_date if it's before the new start_date
   const handleStartDateChange = (value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       start_date: value,
       // If end_date is before new start_date, update it to match start_date
       end_date: prev.end_date && prev.end_date < value ? value : prev.end_date,
     }));
-    if (errors.start_date) setErrors(prev => ({ ...prev, start_date: '' }));
+    if (errors.start_date) setErrors((prev) => ({ ...prev, start_date: '' }));
   };
 
   return (
@@ -112,8 +112,8 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
             placeholder="e.g., Ontario Championships 2026"
             value={formData.name}
             onChange={(e) => {
-              setFormData(prev => ({ ...prev, name: e.target.value }));
-              if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
+              setFormData((prev) => ({ ...prev, name: e.target.value }));
+              if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
             }}
             error={errors.name}
             required
@@ -126,8 +126,8 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
               placeholder="e.g., Toronto"
               value={formData.city}
               onChange={(e) => {
-                setFormData(prev => ({ ...prev, city: e.target.value }));
-                if (errors.city) setErrors(prev => ({ ...prev, city: '' }));
+                setFormData((prev) => ({ ...prev, city: e.target.value }));
+                if (errors.city) setErrors((prev) => ({ ...prev, city: '' }));
               }}
               error={errors.city}
               required
@@ -138,7 +138,7 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
               name="country"
               placeholder="e.g., Canada"
               value={formData.country || ''}
-              onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, country: e.target.value }))}
             />
           </div>
 
@@ -159,7 +159,7 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
               type="date"
               value={formData.end_date || formData.start_date}
               min={formData.start_date}
-              onChange={(e) => setFormData(prev => ({ ...prev, end_date: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, end_date: e.target.value }))}
               error={errors.end_date}
               hint={!isMultiDay ? 'Same as start date for single-day meets' : undefined}
             />
@@ -169,10 +169,12 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
             label="Course Type"
             name="course_type"
             value={formData.course_type}
-            onChange={(e) => setFormData(prev => ({ 
-              ...prev, 
-              course_type: e.target.value as CourseType 
-            }))}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                course_type: e.target.value as CourseType,
+              }))
+            }
             options={[
               { value: '25m', label: '25m (Short Course)' },
               { value: '50m', label: '50m (Long Course)' },
@@ -181,18 +183,11 @@ export function MeetForm({ initialData, onSuccess, onCancel }: MeetFormProps) {
           />
 
           <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
-              isLoading={isPending}
-            >
+            <Button type="submit" isLoading={isPending}>
               {isEditing ? 'Save Changes' : 'Add Meet'}
             </Button>
             {onCancel && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-              >
+              <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
               </Button>
             )}

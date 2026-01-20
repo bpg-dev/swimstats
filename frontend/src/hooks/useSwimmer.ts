@@ -11,9 +11,10 @@ export function useSwimmer() {
   return useQuery({
     queryKey: swimmerKeys.profile(),
     queryFn: swimmerService.getSwimmer,
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: unknown) => {
       // Don't retry on 404 (no swimmer exists yet)
-      if (error?.response?.status === 404) {
+      const apiError = error as { response?: { status?: number } };
+      if (apiError?.response?.status === 404) {
         return false;
       }
       return failureCount < 3;

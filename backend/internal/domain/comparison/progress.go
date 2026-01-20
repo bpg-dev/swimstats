@@ -25,13 +25,13 @@ func NewProgressService(timeRepo *postgres.TimeRepository) *ProgressService {
 
 // ProgressDataPoint represents a single data point for progress visualization.
 type ProgressDataPoint struct {
-	ID            string `json:"id"`
-	TimeMS        int    `json:"time_ms"`
-	TimeFormatted string `json:"time_formatted"`
-	Date          string `json:"date"`
-	MeetName      string `json:"meet_name"`
-	Event         string `json:"event"`
-	IsPersonalBest bool  `json:"is_pb"`
+	ID             string `json:"id"`
+	TimeMS         int    `json:"time_ms"`
+	TimeFormatted  string `json:"time_formatted"`
+	Date           string `json:"date"`
+	MeetName       string `json:"meet_name"`
+	Event          string `json:"event"`
+	IsPersonalBest bool   `json:"is_pb"`
 }
 
 // ProgressData represents the complete progress data for an event.

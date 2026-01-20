@@ -189,7 +189,7 @@ func (s *Service) parseMeet(data *MeetData) (*ParsedMeet, error) {
 	}
 
 	// Parse times
-	var parsedTimes []ParsedTime
+	parsedTimes := make([]ParsedTime, 0, len(data.Times))
 	for i, timeData := range data.Times {
 		parsedTime, err := s.parseTime(&timeData, startDate, endDate)
 		if err != nil {
@@ -260,13 +260,14 @@ func parseTimeToMS(timeStr string) (int, error) {
 	var totalSeconds float64
 	var err error
 
-	if len(parts) == 1 {
+	switch len(parts) {
+	case 1:
 		// Format: SS.HH (e.g., "28.45")
 		totalSeconds, err = strconv.ParseFloat(parts[0], 64)
 		if err != nil {
 			return 0, fmt.Errorf("invalid time format: %s", timeStr)
 		}
-	} else if len(parts) == 2 {
+	case 2:
 		// Format: MM:SS.HH (e.g., "1:02.34")
 		minutes, err := strconv.Atoi(parts[0])
 		if err != nil {
@@ -279,7 +280,7 @@ func parseTimeToMS(timeStr string) (int, error) {
 		}
 
 		totalSeconds = float64(minutes)*60 + seconds
-	} else {
+	default:
 		return 0, fmt.Errorf("invalid time format (expected MM:SS.HH or SS.HH): %s", timeStr)
 	}
 

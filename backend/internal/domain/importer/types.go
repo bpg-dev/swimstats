@@ -61,29 +61,29 @@ type ImportRequest struct {
 
 // PreviewResult contains information about what will be deleted during import.
 type PreviewResult struct {
-	WillReplaceSwimmer   bool `json:"will_replace_swimmer"`
-	CurrentMeetsCount    int  `json:"current_meets_count"`
-	CurrentTimesCount    int  `json:"current_times_count"`
+	WillReplaceSwimmer    bool `json:"will_replace_swimmer"`
+	CurrentMeetsCount     int  `json:"current_meets_count"`
+	CurrentTimesCount     int  `json:"current_times_count"`
 	CurrentStandardsCount int  `json:"current_standards_count"`
-	NewMeetsCount        int  `json:"new_meets_count"`
-	NewTimesCount        int  `json:"new_times_count"`
-	NewStandardsCount    int  `json:"new_standards_count"`
+	NewMeetsCount         int  `json:"new_meets_count"`
+	NewTimesCount         int  `json:"new_times_count"`
+	NewStandardsCount     int  `json:"new_standards_count"`
 }
 
 // ImportResult contains the results of an import operation.
 type ImportResult struct {
-	Success           bool     `json:"success"`
-	SwimmerReplaced   bool     `json:"swimmer_replaced,omitempty"`
-	SwimmerID         string   `json:"swimmer_id,omitempty"`
-	SwimmerName       string   `json:"swimmer_name,omitempty"`
-	MeetsDeleted      int      `json:"meets_deleted,omitempty"`
-	MeetsCreated      int      `json:"meets_created"`
-	TimesCreated      int      `json:"times_created"`
-	StandardsDeleted  int      `json:"standards_deleted,omitempty"`
-	StandardsCreated  int      `json:"standards_created"`
-	Errors            []string `json:"errors,omitempty"`
-	SkippedTimes      int      `json:"skipped_times,omitempty"`
-	SkippedReason     []string `json:"skipped_reason,omitempty"`
+	Success          bool     `json:"success"`
+	SwimmerReplaced  bool     `json:"swimmer_replaced,omitempty"`
+	SwimmerID        string   `json:"swimmer_id,omitempty"`
+	SwimmerName      string   `json:"swimmer_name,omitempty"`
+	MeetsDeleted     int      `json:"meets_deleted,omitempty"`
+	MeetsCreated     int      `json:"meets_created"`
+	TimesCreated     int      `json:"times_created"`
+	StandardsDeleted int      `json:"standards_deleted,omitempty"`
+	StandardsCreated int      `json:"standards_created"`
+	Errors           []string `json:"errors,omitempty"`
+	SkippedTimes     int      `json:"skipped_times,omitempty"`
+	SkippedReason    []string `json:"skipped_reason,omitempty"`
 }
 
 // ParsedSwimmer is the validated swimmer data ready for database insertion.

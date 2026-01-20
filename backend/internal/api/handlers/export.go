@@ -40,5 +40,7 @@ func (h *ExportHandler) ExportAllData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Disposition", "attachment; filename=\"swimstats-export.json\"")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(exportData)
+	if err := json.NewEncoder(w).Encode(exportData); err != nil {
+		h.logger.Error("Failed to encode export data", "error", err)
+	}
 }

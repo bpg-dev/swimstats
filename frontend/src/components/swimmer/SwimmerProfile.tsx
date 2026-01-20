@@ -8,8 +8,8 @@ export interface SwimmerProfileProps {
 }
 
 export function SwimmerProfile({ swimmer, compact = false, onEdit }: SwimmerProfileProps) {
-  const ageGroupLabel = AGE_GROUPS.find(ag => ag.value === swimmer.current_age_group)?.label;
-  
+  const ageGroupLabel = AGE_GROUPS.find((ag) => ag.value === swimmer.current_age_group)?.label;
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-CA', {
@@ -77,9 +77,7 @@ export function SwimmerProfile({ swimmer, compact = false, onEdit }: SwimmerProf
               </div>
               <div>
                 <p className="text-slate-500">Competition Age</p>
-                <p className="font-medium text-slate-900">
-                  {swimmer.current_age} (as of Dec 31)
-                </p>
+                <p className="font-medium text-slate-900">{swimmer.current_age} (as of Dec 31)</p>
               </div>
             </div>
           </div>

@@ -18,7 +18,12 @@ export function AllTimes() {
   const [sortBy, setSortBy] = useState<SortBy>('date');
 
   // Fetch times for the selected event
-  const { data: timeData, isLoading: timesLoading, error: timesError, refetch: refetchTimes } = useTimes({
+  const {
+    data: timeData,
+    isLoading: timesLoading,
+    error: timesError,
+    refetch: refetchTimes,
+  } = useTimes({
     course_type: courseType,
     event: selectedEvent,
     limit: 100, // Get all times for the event
@@ -39,7 +44,8 @@ export function AllTimes() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900">All Times</h1>
         <p className="text-slate-600 mt-1">
-          View all recorded times for {courseType === '25m' ? 'Short Course (25m)' : 'Long Course (50m)'}.
+          View all recorded times for{' '}
+          {courseType === '25m' ? 'Short Course (25m)' : 'Long Course (50m)'}.
         </p>
       </div>
 
@@ -49,16 +55,10 @@ export function AllTimes() {
           <label htmlFor="event-filter" className="block text-sm font-medium text-slate-700 mb-1">
             Event
           </label>
-          <EventFilter
-            value={selectedEvent}
-            onChange={setSelectedEvent}
-            className="w-full"
-          />
+          <EventFilter value={selectedEvent} onChange={setSelectedEvent} className="w-full" />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
-            Sort by
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Sort by</label>
           <SortToggle value={sortBy} onChange={setSortBy} />
         </div>
       </div>
@@ -66,7 +66,7 @@ export function AllTimes() {
       {/* Error */}
       {timesError && (
         <ErrorBanner
-          message={timesError.message || "Failed to load times"}
+          message={timesError.message || 'Failed to load times'}
           onRetry={() => refetchTimes()}
         />
       )}
@@ -79,14 +79,11 @@ export function AllTimes() {
         <>
           <div className="flex items-center justify-between">
             <p className="text-sm text-slate-600">
-              {timeData.total} time{timeData.total !== 1 ? 's' : ''} recorded for {eventInfo?.name || selectedEvent}
+              {timeData.total} time{timeData.total !== 1 ? 's' : ''} recorded for{' '}
+              {eventInfo?.name || selectedEvent}
             </p>
           </div>
-          <AllTimesList
-            times={timeData.times}
-            pbTimeId={pbTimeId}
-            sortBy={sortBy}
-          />
+          <AllTimesList times={timeData.times} pbTimeId={pbTimeId} sortBy={sortBy} />
         </>
       )}
     </div>

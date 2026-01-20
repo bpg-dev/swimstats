@@ -16,7 +16,7 @@ export interface MeetInput {
   city: string;
   country?: string;
   start_date: string;
-  end_date?: string;  // Optional - defaults to start_date for single-day meets
+  end_date?: string; // Optional - defaults to start_date for single-day meets
   course_type: CourseType;
 }
 

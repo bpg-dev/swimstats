@@ -19,10 +19,23 @@ interface ProgressChartProps {
 }
 
 // Custom dot component to highlight PBs
-const CustomDot = (props: any) => {
+interface CustomDotProps {
+  cx?: number;
+  cy?: number;
+  payload?: ProgressDataPoint;
+  r?: number;
+  fill?: string;
+  stroke?: string;
+}
+
+const CustomDot = (props: CustomDotProps) => {
   const { cx, cy, payload } = props;
 
-  if (payload.is_pb) {
+  if (cx === undefined || cy === undefined) {
+    return null;
+  }
+
+  if (payload?.is_pb) {
     return (
       <g>
         <circle cx={cx} cy={cy} r={6} fill="#10b981" stroke="#fff" strokeWidth={2} />
@@ -37,21 +50,26 @@ const CustomDot = (props: any) => {
 };
 
 // Custom tooltip to show meet details
-const CustomTooltip = ({ active, payload }: any) => {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload: ProgressDataPoint }>;
+}
+
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload as ProgressDataPoint;
     return (
       <div className="bg-white p-3 border border-slate-200 rounded-md shadow-lg">
         <p className="font-semibold text-slate-900">{data.time_formatted}</p>
         <p className="text-sm text-slate-600">{data.meet_name}</p>
-        <p className="text-sm text-slate-500">{new Date(data.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        })}</p>
-        {data.is_pb && (
-          <p className="text-xs text-green-600 font-semibold mt-1">Personal Best</p>
-        )}
+        <p className="text-sm text-slate-500">
+          {new Date(data.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })}
+        </p>
+        {data.is_pb && <p className="text-xs text-green-600 font-semibold mt-1">Personal Best</p>}
       </div>
     );
   }
@@ -91,28 +109,22 @@ const formatTime = (timeMs: number) => {
 };
 
 // Custom label component for reference line
-const ReferenceLabel = (props: any) => {
+interface ReferenceLabelProps {
+  viewBox?: { x: number; y: number };
+  standardTime: number;
+  standardName: string;
+}
+
+const ReferenceLabel = (props: ReferenceLabelProps) => {
   const { viewBox, standardTime, standardName } = props;
-  const { x, y } = viewBox;
+  const { x, y } = viewBox || { x: 0, y: 0 };
 
   return (
     <g>
-      <text
-        x={x + 10}
-        y={y - 8}
-        fill="#ef4444"
-        fontSize={12}
-        fontWeight="600"
-      >
+      <text x={x + 10} y={y - 8} fill="#ef4444" fontSize={12} fontWeight="600">
         {standardName}
       </text>
-      <text
-        x={x + 10}
-        y={y + 20}
-        fill="#ef4444"
-        fontSize={16}
-        fontWeight="bold"
-      >
+      <text x={x + 10} y={y + 20} fill="#ef4444" fontSize={16} fontWeight="bold">
         {formatTime(standardTime)}
       </text>
     </g>
@@ -130,14 +142,11 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
   }
 
   // Find min and max times for Y-axis domain (add 5% padding)
-  const times = data.map(d => d.time_ms);
+  const times = data.map((d) => d.time_ms);
   const minTime = Math.min(...times);
   const maxTime = Math.max(...times);
   const padding = (maxTime - minTime) * 0.05;
-  const yDomain = [
-    Math.max(0, minTime - padding),
-    maxTime + padding,
-  ];
+  const yDomain = [Math.max(0, minTime - padding), maxTime + padding];
 
   // Include standard time in domain if provided
   if (standardTime) {
@@ -147,10 +156,7 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart
-        data={data}
-        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-      >
+      <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
         <XAxis
           dataKey="date"
@@ -164,13 +170,15 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
           tickFormatter={formatYAxis}
           stroke="#64748b"
           style={{ fontSize: '12px' }}
-          label={{ value: 'Time', angle: -90, position: 'insideLeft', style: { fontSize: '14px', fill: '#64748b' } }}
+          label={{
+            value: 'Time',
+            angle: -90,
+            position: 'insideLeft',
+            style: { fontSize: '14px', fill: '#64748b' },
+          }}
         />
         <Tooltip content={<CustomTooltip />} />
-        <Legend
-          wrapperStyle={{ paddingTop: '20px' }}
-          iconType="line"
-        />
+        <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="line" />
 
         {/* Reference line for standard time */}
         {standardTime && (
@@ -179,7 +187,12 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
             stroke="#ef4444"
             strokeDasharray="5 5"
             strokeWidth={3}
-            label={<ReferenceLabel standardTime={standardTime} standardName={standardName || 'Standard'} />}
+            label={
+              <ReferenceLabel
+                standardTime={standardTime}
+                standardName={standardName || 'Standard'}
+              />
+            }
           />
         )}
 

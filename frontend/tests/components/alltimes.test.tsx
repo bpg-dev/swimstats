@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { EventFilter } from '@/components/times/EventFilter';
-import { SortToggle, SortBy } from '@/components/times/SortToggle';
+import { SortToggle } from '@/components/times/SortToggle';
 import { AllTimesList } from '@/components/times/AllTimesList';
 import { TimeRecord } from '@/types/time';
 

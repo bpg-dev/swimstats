@@ -29,15 +29,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 rounded-lg';
 
     const variants = {
-      primary:
-        'bg-cyan-600 text-white hover:bg-cyan-700 focus-visible:ring-cyan-500',
-      secondary:
-        'bg-slate-100 text-slate-900 hover:bg-slate-200 focus-visible:ring-slate-500',
+      primary: 'bg-cyan-600 text-white hover:bg-cyan-700 focus-visible:ring-cyan-500',
+      secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200 focus-visible:ring-slate-500',
       outline:
         'border border-slate-300 bg-transparent hover:bg-slate-100 focus-visible:ring-slate-500',
       ghost: 'hover:bg-slate-100 focus-visible:ring-slate-500',
-      danger:
-        'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
+      danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
     };
 
     const sizes = {

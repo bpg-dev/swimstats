@@ -13,10 +13,16 @@ import { useTimes } from '@/hooks/useTimes';
 export function Home() {
   const courseType = useCourseType();
   const navigate = useNavigate();
-  
+
   const { data: swimmer, isLoading: swimmerLoading, error: swimmerError } = useSwimmer();
-  const { data: meetsData, isLoading: meetsLoading } = useMeets({ course_type: courseType, limit: 5 });
-  const { data: timesData, isLoading: timesLoading } = useTimes({ course_type: courseType, limit: 10 });
+  const { data: meetsData, isLoading: meetsLoading } = useMeets({
+    course_type: courseType,
+    limit: 5,
+  });
+  const { data: timesData, isLoading: timesLoading } = useTimes({
+    course_type: courseType,
+    limit: 10,
+  });
 
   // Show setup form if no swimmer profile exists
   if (swimmerLoading) {
@@ -27,7 +33,10 @@ export function Home() {
     );
   }
 
-  if (swimmerError && (swimmerError as any)?.response?.status === 404) {
+  if (
+    swimmerError &&
+    (swimmerError as { response?: { status?: number } })?.response?.status === 404
+  ) {
     return (
       <div className="max-w-xl mx-auto">
         <SwimmerSetupForm onSuccess={() => window.location.reload()} />
@@ -41,21 +50,13 @@ export function Home() {
   return (
     <div className="space-y-6">
       {/* Swimmer Profile Header */}
-      {swimmer && (
-        <SwimmerProfile 
-          swimmer={swimmer} 
-          compact 
-          onEdit={() => navigate('/settings')} 
-        />
-      )}
+      {swimmer && <SwimmerProfile swimmer={swimmer} compact onEdit={() => navigate('/settings')} />}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Current Course
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">Current Course</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-cyan-600">{courseType}</div>
@@ -67,9 +68,7 @@ export function Home() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Total Meets
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">Total Meets</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900">
@@ -81,9 +80,7 @@ export function Home() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Total Times
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">Total Times</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900">
@@ -95,9 +92,7 @@ export function Home() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Age Group
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">Age Group</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900">
@@ -132,8 +127,18 @@ export function Home() {
               >
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                    <svg className="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    <svg
+                      className="h-5 w-5 text-amber-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                      />
                     </svg>
                   </div>
                   <div>
@@ -148,8 +153,18 @@ export function Home() {
               >
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-cyan-100 flex items-center justify-center">
-                    <svg className="h-5 w-5 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <svg
+                      className="h-5 w-5 text-cyan-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
                     </svg>
                   </div>
                   <div>
@@ -164,8 +179,18 @@ export function Home() {
               >
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
-                    <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="h-5 w-5 text-green-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <div>
@@ -180,8 +205,18 @@ export function Home() {
               >
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="h-5 w-5 text-blue-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
                   <div>

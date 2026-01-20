@@ -1,6 +1,15 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, Select, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
+import {
+  Button,
+  Input,
+  Select,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui';
 import { EventSelector } from './EventSelector';
 import { MeetSelector } from '@/components/meets/MeetSelector';
 import { TimeBatchInput, EventCode, BatchResult } from '@/types/time';
@@ -28,11 +37,11 @@ export interface QuickEntryFormProps {
 let entryIdCounter = 0;
 const generateId = () => `entry-${++entryIdCounter}`;
 
-export function QuickEntryForm({ 
-  meetId: defaultMeetId, 
+export function QuickEntryForm({
+  meetId: defaultMeetId,
   courseType,
-  onSuccess, 
-  onCancel 
+  onSuccess,
+  onCancel,
 }: QuickEntryFormProps) {
   const navigate = useNavigate();
   const [meetId, setMeetId] = useState(defaultMeetId || '');
@@ -43,7 +52,7 @@ export function QuickEntryForm({
   const [newPBs, setNewPBs] = useState<EventCode[]>([]);
   const [savedCount, setSavedCount] = useState(0); // Track number of times saved
   const [showSuccess, setShowSuccess] = useState(false); // Show success state
-  
+
   // Quick add meet state
   const [showQuickMeet, setShowQuickMeet] = useState(false);
   const [quickMeet, setQuickMeet] = useState<MeetInput>({
@@ -58,7 +67,7 @@ export function QuickEntryForm({
 
   const mutation = useCreateBatchTimes();
   const createMeetMutation = useCreateMeet();
-  
+
   // Fetch existing times for the selected meet to know which events are taken
   const { data: existingTimesData } = useTimes(
     meetId ? { meet_id: meetId, limit: 100 } : undefined
@@ -66,61 +75,59 @@ export function QuickEntryForm({
 
   // Fetch meets to get the selected meet's date range
   const { data: meetsData } = useMeets({ course_type: courseType, limit: 100 });
-  
+
   // Get selected meet's info
   const selectedMeet = useMemo(() => {
     if (!meetId || !meetsData?.meets) return null;
-    return meetsData.meets.find(m => m.id === meetId) || null;
+    return meetsData.meets.find((m) => m.id === meetId) || null;
   }, [meetId, meetsData]);
-  
+
   // Check if selected meet is multi-day
   const isMultiDayMeet = useMemo(() => {
     return selectedMeet ? selectedMeet.start_date !== selectedMeet.end_date : false;
   }, [selectedMeet]);
-  
+
   // Get available dates for the meet
   const availableDates = useMemo(() => {
     if (!selectedMeet) return [];
     return getDateRange(selectedMeet.start_date, selectedMeet.end_date);
   }, [selectedMeet]);
-  
+
   // For each entry, compute which events to exclude (exclude other entries' events, but not its own)
   const getExcludedEventsForEntry = (entryId: string): EventCode[] => {
     const excluded: EventCode[] = [];
-    
+
     // Add events already recorded for this meet
     if (existingTimesData?.times) {
-      existingTimesData.times.forEach(time => {
+      existingTimesData.times.forEach((time) => {
         if (!excluded.includes(time.event)) {
           excluded.push(time.event);
         }
       });
     }
-    
+
     // Add events selected in OTHER rows (not the current one)
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.id !== entryId && entry.event && !excluded.includes(entry.event)) {
         excluded.push(entry.event);
       }
     });
-    
+
     return excluded;
   };
 
   const addEntry = () => {
-    setEntries(prev => [...prev, { id: generateId(), event: '', time_str: '', notes: '' }]);
+    setEntries((prev) => [...prev, { id: generateId(), event: '', time_str: '', notes: '' }]);
   };
 
   const removeEntry = (id: string) => {
     if (entries.length > 1) {
-      setEntries(prev => prev.filter(e => e.id !== id));
+      setEntries((prev) => prev.filter((e) => e.id !== id));
     }
   };
 
   const updateEntry = (id: string, field: keyof TimeEntry, value: string) => {
-    setEntries(prev => prev.map(e => 
-      e.id === id ? { ...e, [field]: value } : e
-    ));
+    setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, [field]: value } : e)));
   };
 
   const validate = (): boolean => {
@@ -130,7 +137,7 @@ export function QuickEntryForm({
       newErrors.meet_id = 'Please select a meet';
     }
 
-    const validEntries = entries.filter(e => e.event || e.time_str);
+    const validEntries = entries.filter((e) => e.event || e.time_str);
     if (validEntries.length === 0) {
       newErrors.entries = 'Add at least one time entry';
     }
@@ -161,10 +168,10 @@ export function QuickEntryForm({
     e.preventDefault();
     if (!validate()) return;
 
-    const validEntries = entries.filter(e => e.event && e.time_str);
+    const validEntries = entries.filter((e) => e.event && e.time_str);
     const input: TimeBatchInput = {
       meet_id: meetId,
-      times: validEntries.map(entry => ({
+      times: validEntries.map((entry) => ({
         event: entry.event as EventCode,
         time_ms: parseTime(entry.time_str)!,
         event_date: entry.event_date || undefined,
@@ -180,7 +187,9 @@ export function QuickEntryForm({
       onSuccess?.(result);
     } catch (error: unknown) {
       if (error instanceof ApiRequestError && error.code === 'DUPLICATE_EVENT') {
-        setErrors({ form: 'This event already has a time recorded for this meet. Each event can only be entered once per meet.' });
+        setErrors({
+          form: 'This event already has a time recorded for this meet. Each event can only be entered once per meet.',
+        });
       } else {
         const message = error instanceof Error ? error.message : 'Failed to save times';
         setErrors({ form: message });
@@ -217,7 +226,7 @@ export function QuickEntryForm({
       setQuickMeetError('End date cannot be before start date');
       return;
     }
-    
+
     try {
       const meet = await createMeetMutation.mutateAsync(quickMeet);
       setMeetId(meet.id);
@@ -232,12 +241,13 @@ export function QuickEntryForm({
       });
       setQuickMeetError('');
       // Clear the meet error if it existed
-      setErrors(prev => {
-        const { meet_id, ...rest } = prev;
+      setErrors((prev) => {
+        const { meet_id: _meet_id, ...rest } = prev;
         return rest;
       });
-    } catch (error: any) {
-      setQuickMeetError(error.message || 'Failed to create meet');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to create meet';
+      setQuickMeetError(message);
     }
   };
 
@@ -251,19 +261,26 @@ export function QuickEntryForm({
           </CardTitle>
           <CardDescription>
             {savedCount} time{savedCount !== 1 ? 's' : ''} saved to the meet.
-            {newPBs.length > 0 && ` You achieved ${newPBs.length} new personal best${newPBs.length !== 1 ? 's' : ''}!`}
+            {newPBs.length > 0 &&
+              ` You achieved ${newPBs.length} new personal best${newPBs.length !== 1 ? 's' : ''}!`}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {newPBs.length > 0 && (
             <ul className="space-y-2 mb-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
-              {newPBs.map(event => (
+              {newPBs.map((event) => (
                 <li key={event} className="flex items-center gap-2 text-amber-800">
                   <svg className="h-5 w-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   <span className="font-medium">{event}</span>
-                  <span className="text-xs bg-amber-400 text-amber-900 px-1.5 py-0.5 rounded font-bold">PB</span>
+                  <span className="text-xs bg-amber-400 text-amber-900 px-1.5 py-0.5 rounded font-bold">
+                    PB
+                  </span>
                 </li>
               ))}
             </ul>
@@ -271,19 +288,36 @@ export function QuickEntryForm({
           <div className="flex flex-wrap gap-3">
             <Button onClick={handleViewMeet}>
               <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
               </svg>
               View Meet
             </Button>
             <Button variant="outline" onClick={reset}>
               <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
               </svg>
               Add More Times
             </Button>
             {onCancel && (
-              <Button variant="ghost" onClick={onCancel}>Done</Button>
+              <Button variant="ghost" onClick={onCancel}>
+                Done
+              </Button>
             )}
           </div>
         </CardContent>
@@ -343,33 +377,41 @@ export function QuickEntryForm({
                       }}
                       className="text-cyan-600 hover:text-cyan-800"
                     >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   </div>
-                  
-                  {quickMeetError && (
-                    <p className="text-sm text-red-600">{quickMeetError}</p>
-                  )}
-                  
+
+                  {quickMeetError && <p className="text-sm text-red-600">{quickMeetError}</p>}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <Input
                       label="Meet Name"
                       placeholder="e.g., Winter Championships"
                       value={quickMeet.name}
-                      onChange={(e) => setQuickMeet(prev => ({ ...prev, name: e.target.value }))}
+                      onChange={(e) => setQuickMeet((prev) => ({ ...prev, name: e.target.value }))}
                       required
                     />
                     <Input
                       label="City"
                       placeholder="e.g., Toronto"
                       value={quickMeet.city}
-                      onChange={(e) => setQuickMeet(prev => ({ ...prev, city: e.target.value }))}
+                      onChange={(e) => setQuickMeet((prev) => ({ ...prev, city: e.target.value }))}
                       required
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <Input
                       label="Start Date"
@@ -377,11 +419,12 @@ export function QuickEntryForm({
                       value={quickMeet.start_date}
                       onChange={(e) => {
                         const newStart = e.target.value;
-                        setQuickMeet(prev => ({
+                        setQuickMeet((prev) => ({
                           ...prev,
                           start_date: newStart,
                           // If end_date is before new start_date, update it
-                          end_date: prev.end_date && prev.end_date < newStart ? newStart : prev.end_date,
+                          end_date:
+                            prev.end_date && prev.end_date < newStart ? newStart : prev.end_date,
                         }));
                       }}
                       required
@@ -390,17 +433,21 @@ export function QuickEntryForm({
                       label="End Date"
                       type="date"
                       value={quickMeet.end_date}
-                      onChange={(e) => setQuickMeet(prev => ({ ...prev, end_date: e.target.value }))}
+                      onChange={(e) =>
+                        setQuickMeet((prev) => ({ ...prev, end_date: e.target.value }))
+                      }
                       min={quickMeet.start_date}
                       required
                     />
                     <Select
                       label="Course Type"
                       value={quickMeet.course_type}
-                      onChange={(e) => setQuickMeet(prev => ({ 
-                        ...prev, 
-                        course_type: e.target.value as CourseType 
-                      }))}
+                      onChange={(e) =>
+                        setQuickMeet((prev) => ({
+                          ...prev,
+                          course_type: e.target.value as CourseType,
+                        }))
+                      }
                       options={[
                         { value: '25m', label: '25m (Short Course)' },
                         { value: '50m', label: '50m (Long Course)' },
@@ -408,8 +455,10 @@ export function QuickEntryForm({
                       required
                     />
                   </div>
-                  <p className="text-xs text-slate-500">For single-day meets, set start and end date to the same day.</p>
-                  
+                  <p className="text-xs text-slate-500">
+                    For single-day meets, set start and end date to the same day.
+                  </p>
+
                   <div className="flex gap-2 pt-2">
                     <Button
                       type="button"
@@ -436,9 +485,7 @@ export function QuickEntryForm({
             </div>
           )}
 
-          {errors.entries && (
-            <p className="text-sm text-red-600">{errors.entries}</p>
-          )}
+          {errors.entries && <p className="text-sm text-red-600">{errors.entries}</p>}
 
           <div className="space-y-3">
             {/* Column headers - visible on sm+ screens, matches form row padding structure */}
@@ -452,10 +499,12 @@ export function QuickEntryForm({
                 <label className="text-sm font-medium text-slate-700">Notes</label>
               </div>
             </div>
-            
+
             {entries.map((entry) => (
               <div key={entry.id} className="relative p-4 bg-slate-50 rounded-lg">
-                <div className={`grid grid-cols-1 gap-3 ${isMultiDayMeet ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} ${entries.length > 1 ? 'sm:pr-8' : ''}`}>
+                <div
+                  className={`grid grid-cols-1 gap-3 ${isMultiDayMeet ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} ${entries.length > 1 ? 'sm:pr-8' : ''}`}
+                >
                   <EventSelector
                     value={entry.event as EventCode}
                     onChange={(e) => updateEntry(entry.id, 'event', e.target.value)}
@@ -472,12 +521,12 @@ export function QuickEntryForm({
                       value={entry.event_date || ''}
                       onChange={(e) => updateEntry(entry.id, 'event_date', e.target.value)}
                       placeholder="Select date"
-                      options={availableDates.map(date => ({
+                      options={availableDates.map((date) => ({
                         value: date,
-                        label: new Date(date + 'T00:00:00').toLocaleDateString('en-CA', { 
+                        label: new Date(date + 'T00:00:00').toLocaleDateString('en-CA', {
                           weekday: 'short',
-                          month: 'short', 
-                          day: 'numeric' 
+                          month: 'short',
+                          day: 'numeric',
                         }),
                       }))}
                     />
@@ -506,7 +555,12 @@ export function QuickEntryForm({
                     aria-label="Remove entry"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 )}
@@ -520,24 +574,22 @@ export function QuickEntryForm({
             className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Add Another Time
           </button>
 
           <div className="flex gap-3 pt-4 border-t border-slate-200">
-            <Button
-              type="submit"
-              isLoading={mutation.isPending}
-            >
-              Save All Times ({entries.filter(e => e.event && e.time_str).length})
+            <Button type="submit" isLoading={mutation.isPending}>
+              Save All Times ({entries.filter((e) => e.event && e.time_str).length})
             </Button>
             {onCancel && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-              >
+              <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
               </Button>
             )}

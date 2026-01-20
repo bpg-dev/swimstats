@@ -27,14 +27,14 @@ type TimeBatchInput struct {
 }
 
 type TimeRecord struct {
-	ID             string `json:"id"`
-	MeetID         string `json:"meet_id"`
-	Event          string `json:"event"`
-	TimeMS         int    `json:"time_ms"`
-	TimeFormatted  string `json:"time_formatted"`
-	Notes          string `json:"notes,omitempty"`
-	IsPB           bool   `json:"is_pb,omitempty"`
-	Meet           *Meet  `json:"meet,omitempty"`
+	ID            string `json:"id"`
+	MeetID        string `json:"meet_id"`
+	Event         string `json:"event"`
+	TimeMS        int    `json:"time_ms"`
+	TimeFormatted string `json:"time_formatted"`
+	Notes         string `json:"notes,omitempty"`
+	IsPB          bool   `json:"is_pb,omitempty"`
+	Meet          *Meet  `json:"meet,omitempty"`
 }
 
 type TimeList struct {
@@ -63,7 +63,7 @@ func TestTimeAPI(t *testing.T) {
 	// Helper to create swimmer and meet
 	setupSwimmerAndMeet := func(t *testing.T, courseType string) (swimmerID, meetID string) {
 		t.Helper()
-		
+
 		// Create swimmer
 		swimmerInput := SwimmerInput{
 			Name:      "Test Swimmer",
@@ -72,7 +72,7 @@ func TestTimeAPI(t *testing.T) {
 		}
 		rr := client.Put("/api/v1/swimmer", swimmerInput)
 		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
-		
+
 		var swimmer Swimmer
 		AssertJSONBody(t, rr, &swimmer)
 		swimmerID = swimmer.ID
@@ -86,7 +86,7 @@ func TestTimeAPI(t *testing.T) {
 		}
 		rr = client.Post("/api/v1/meets", meetInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
-		
+
 		var meet Meet
 		AssertJSONBody(t, rr, &meet)
 		meetID = meet.ID
@@ -106,7 +106,7 @@ func TestTimeAPI(t *testing.T) {
 		}
 
 		rr := client.Post("/api/v1/times", input)
-		
+
 		assert.Equal(t, http.StatusCreated, rr.Code, "got %d: %s", rr.Code, rr.Body.String())
 
 		var time TimeRecord
@@ -136,7 +136,7 @@ func TestTimeAPI(t *testing.T) {
 		}
 
 		rr := client.Get("/api/v1/times")
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var list TimeList
@@ -168,7 +168,7 @@ func TestTimeAPI(t *testing.T) {
 		}
 
 		rr = client.Get("/api/v1/times?event=100FR")
-		
+
 		var list TimeList
 		AssertJSONBody(t, rr, &list)
 		assert.Equal(t, 2, list.Total)
@@ -180,7 +180,7 @@ func TestTimeAPI(t *testing.T) {
 	t.Run("GET /times filters by course_type", func(t *testing.T) {
 		testDB.ClearTables(ctx, t)
 		_, meetID25 := setupSwimmerAndMeet(t, "25m")
-		
+
 		// Create another meet with 50m course
 		meetInput := MeetInput{
 			Name:       "50m Meet",
@@ -200,7 +200,7 @@ func TestTimeAPI(t *testing.T) {
 		require.Equal(t, http.StatusCreated, rr.Code)
 
 		rr = client.Get("/api/v1/times?course_type=25m")
-		
+
 		var list TimeList
 		AssertJSONBody(t, rr, &list)
 		assert.Equal(t, 1, list.Total)
@@ -218,7 +218,7 @@ func TestTimeAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &created)
 
 		rr = client.Get("/api/v1/times/" + created.ID)
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var time TimeRecord
@@ -244,7 +244,7 @@ func TestTimeAPI(t *testing.T) {
 		input.TimeMS = 64000
 		input.Notes = "Final"
 		rr = client.Put("/api/v1/times/"+created.ID, input)
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var updated TimeRecord
@@ -265,7 +265,7 @@ func TestTimeAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &created)
 
 		rr = client.Delete("/api/v1/times/" + created.ID)
-		
+
 		assert.Equal(t, http.StatusNoContent, rr.Code)
 
 		// Verify deleted
@@ -317,7 +317,7 @@ func TestTimeAPI(t *testing.T) {
 
 		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320}
 		rr := client.Post("/api/v1/times", input)
-		
+
 		assert.Equal(t, http.StatusForbidden, rr.Code)
 	})
 
@@ -333,7 +333,7 @@ func TestTimeAPI(t *testing.T) {
 		// Try to create second time for same event at same meet
 		input.TimeMS = 64000 // Different time, same event
 		rr = client.Post("/api/v1/times", input)
-		
+
 		assert.Equal(t, http.StatusConflict, rr.Code)
 		AssertJSONError(t, rr, "DUPLICATE_EVENT")
 	})
@@ -357,7 +357,7 @@ func TestTimeAPI(t *testing.T) {
 		// Create same event at second meet - should succeed
 		input.MeetID = meet2.ID
 		rr = client.Post("/api/v1/times", input)
-		
+
 		assert.Equal(t, http.StatusCreated, rr.Code)
 	})
 }
@@ -401,7 +401,7 @@ func TestTimeBatchAPI(t *testing.T) {
 		}
 
 		rr = client.Post("/api/v1/times/batch", input)
-		
+
 		assert.Equal(t, http.StatusCreated, rr.Code, "got %d: %s", rr.Code, rr.Body.String())
 
 		var response BatchResponse
@@ -538,10 +538,10 @@ func TestTimeFormatting(t *testing.T) {
 		timeMS    int
 		formatted string
 	}{
-		{28450, "28.45"},       // Under a minute
-		{65320, "1:05.32"},     // Over a minute
-		{145670, "2:25.67"},    // Multiple minutes
-		{1002180, "16:42.18"},  // Long distance
+		{28450, "28.45"},      // Under a minute
+		{65320, "1:05.32"},    // Over a minute
+		{145670, "2:25.67"},   // Multiple minutes
+		{1002180, "16:42.18"}, // Long distance
 	}
 
 	for _, tc := range testCases {

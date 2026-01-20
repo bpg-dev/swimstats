@@ -49,14 +49,7 @@ export function ErrorBanner({
   const style = variants[variant];
 
   return (
-    <div
-      className={cn(
-        'rounded-lg border p-4',
-        style.bg,
-        className
-      )}
-      role="alert"
-    >
+    <div className={cn('rounded-lg border p-4', style.bg, className)} role="alert">
       <div className="flex">
         <div className="flex-shrink-0">
           {variant === 'error' && (
@@ -106,22 +99,15 @@ export function ErrorBanner({
           )}
         </div>
         <div className="ml-3 flex-1">
-          {title && (
-            <h3 className={cn('text-sm font-medium', style.title)}>{title}</h3>
-          )}
-          <p className={cn('text-sm', title ? 'mt-1' : '', style.message)}>
-            {message}
-          </p>
+          {title && <h3 className={cn('text-sm font-medium', style.title)}>{title}</h3>}
+          <p className={cn('text-sm', title ? 'mt-1' : '', style.message)}>{message}</p>
           {(onRetry || onDismiss) && (
             <div className="mt-3 flex gap-3">
               {onRetry && (
                 <button
                   type="button"
                   onClick={onRetry}
-                  className={cn(
-                    'text-sm font-medium underline hover:no-underline',
-                    style.title
-                  )}
+                  className={cn('text-sm font-medium underline hover:no-underline', style.title)}
                 >
                   Try again
                 </button>
@@ -130,10 +116,7 @@ export function ErrorBanner({
                 <button
                   type="button"
                   onClick={onDismiss}
-                  className={cn(
-                    'text-sm font-medium underline hover:no-underline',
-                    style.message
-                  )}
+                  className={cn('text-sm font-medium underline hover:no-underline', style.message)}
                 >
                   Dismiss
                 </button>

@@ -22,8 +22,8 @@ export function groupByStroke(personalBests: PersonalBest[]): PersonalBestsByStr
   const result: PersonalBestsByStroke = {};
 
   for (const stroke of strokes) {
-    const strokeEvents = EVENTS_BY_STROKE[stroke].map(e => e.code);
-    const strokePBs = personalBests.filter(pb => strokeEvents.includes(pb.event));
+    const strokeEvents = EVENTS_BY_STROKE[stroke].map((e) => e.code);
+    const strokePBs = personalBests.filter((pb) => strokeEvents.includes(pb.event));
     if (strokePBs.length > 0) {
       result[stroke] = strokePBs;
     }

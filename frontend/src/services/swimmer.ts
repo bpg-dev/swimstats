@@ -14,8 +14,9 @@ export const swimmerService = {
     try {
       await this.getSwimmer();
       return true;
-    } catch (error: any) {
-      if (error.message?.includes('404') || error.message?.includes('not found')) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : '';
+      if (message.includes('404') || message.includes('not found')) {
         return false;
       }
       throw error;

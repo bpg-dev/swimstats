@@ -57,7 +57,7 @@ func (s *Service) ExportAll(ctx context.Context) (*ExportData, error) {
 	// 2. Export meets with times
 	// Use a large limit to get all meets
 	meetList, err := s.meetService.List(ctx, meet.ListParams{
-		CourseType: nil, // Get all course types
+		CourseType: nil,   // Get all course types
 		Limit:      10000, // Large limit to get all meets
 		Offset:     0,
 	})

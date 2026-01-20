@@ -49,7 +49,9 @@ func (h *ImportHandler) PreviewImport(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(preview)
+	if err := json.NewEncoder(w).Encode(preview); err != nil {
+		h.logger.Error("Failed to encode preview response", "error", err)
+	}
 }
 
 // ImportSwimmerData handles POST /api/v1/data/import
@@ -81,7 +83,9 @@ func (h *ImportHandler) ImportSwimmerData(w http.ResponseWriter, r *http.Request
 		h.logger.Error("Import failed completely", "error", err, "errors", result.Errors)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(result)
+		if encErr := json.NewEncoder(w).Encode(result); encErr != nil {
+			h.logger.Error("Failed to encode error response", "error", encErr)
+		}
 		return
 	}
 
@@ -105,5 +109,7 @@ func (h *ImportHandler) ImportSwimmerData(w http.ResponseWriter, r *http.Request
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(result)
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		h.logger.Error("Failed to encode import result", "error", err)
+	}
 }

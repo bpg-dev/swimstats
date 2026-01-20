@@ -56,9 +56,8 @@ export function StandardTimesEditor({
     return state;
   };
 
-  const [timeValues, setTimeValues] = useState<Record<string, Record<string, string>>>(
-    buildInitialState
-  );
+  const [timeValues, setTimeValues] =
+    useState<Record<string, Record<string, string>>>(buildInitialState);
 
   const handleTimeChange = (event: string, ageGroup: string, value: string) => {
     setTimeValues((prev) => ({

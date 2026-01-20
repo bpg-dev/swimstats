@@ -45,18 +45,18 @@ const (
 
 // EventComparison represents a single event's comparison.
 type EventComparison struct {
-	Event               string           `json:"event"`
-	Status              ComparisonStatus `json:"status"`
-	SwimmerTimeMS       *int             `json:"swimmer_time_ms"`
-	SwimmerTimeFormatted *string         `json:"swimmer_time_formatted"`
-	StandardTimeMS      *int             `json:"standard_time_ms"`
-	StandardTimeFormatted *string        `json:"standard_time_formatted"`
-	DifferenceMS        *int             `json:"difference_ms"`
-	DifferenceFormatted *string          `json:"difference_formatted"`
-	DifferencePercent   *float64         `json:"difference_percent"`
-	AgeGroup            string           `json:"age_group"`
-	MeetName            *string          `json:"meet_name"`
-	Date                *string          `json:"date"`
+	Event                 string           `json:"event"`
+	Status                ComparisonStatus `json:"status"`
+	SwimmerTimeMS         *int             `json:"swimmer_time_ms"`
+	SwimmerTimeFormatted  *string          `json:"swimmer_time_formatted"`
+	StandardTimeMS        *int             `json:"standard_time_ms"`
+	StandardTimeFormatted *string          `json:"standard_time_formatted"`
+	DifferenceMS          *int             `json:"difference_ms"`
+	DifferenceFormatted   *string          `json:"difference_formatted"`
+	DifferencePercent     *float64         `json:"difference_percent"`
+	AgeGroup              string           `json:"age_group"`
+	MeetName              *string          `json:"meet_name"`
+	Date                  *string          `json:"date"`
 
 	// Adjacent age groups
 	PrevAgeGroup              *string `json:"prev_age_group,omitempty"`
@@ -157,7 +157,7 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 		}
 
 		pb, hasPB := pbMap[string(event)]
-		
+
 		if hasPB {
 			// Determine age group at time of swim for this PB
 			ageAtSwim := currentAge
@@ -203,13 +203,14 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 				comp.DifferencePercent = &diffPercent
 
 				// Determine status
-				if diff <= 0 {
+				switch {
+				case diff <= 0:
 					comp.Status = StatusAchieved
 					summary.Achieved++
-				} else if diffPercent <= threshold {
+				case diffPercent <= threshold:
 					comp.Status = StatusAlmost
 					summary.Almost++
-				} else {
+				default:
 					comp.Status = StatusNotAchieved
 					summary.NotAchieved++
 				}

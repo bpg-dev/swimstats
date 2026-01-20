@@ -48,7 +48,7 @@ func TestSwimmerAPI(t *testing.T) {
 		}
 
 		rr := client.Put("/api/v1/swimmer", input)
-		
+
 		// First creation should return 201
 		assert.Equal(t, http.StatusCreated, rr.Code, "expected 201 Created, got %d: %s", rr.Code, rr.Body.String())
 
@@ -76,7 +76,7 @@ func TestSwimmerAPI(t *testing.T) {
 		input.Name = "Updated Name"
 		input.Gender = "male"
 		rr = client.Put("/api/v1/swimmer", input)
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code, "expected 200 OK for update")
 
 		var swimmer Swimmer
@@ -99,7 +99,7 @@ func TestSwimmerAPI(t *testing.T) {
 
 		// Get swimmer
 		rr = client.Get("/api/v1/swimmer")
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var swimmer Swimmer
@@ -114,7 +114,7 @@ func TestSwimmerAPI(t *testing.T) {
 		testDB.ClearTables(ctx, t)
 
 		rr := client.Get("/api/v1/swimmer")
-		
+
 		assert.Equal(t, http.StatusNotFound, rr.Code)
 	})
 
@@ -172,7 +172,7 @@ func TestSwimmerAPI(t *testing.T) {
 		}
 
 		rr := client.Put("/api/v1/swimmer", input)
-		
+
 		assert.Equal(t, http.StatusForbidden, rr.Code)
 	})
 }

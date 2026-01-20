@@ -16,12 +16,15 @@ export function PersonalBests() {
   const courseType = useCourseType();
   const { data: pbData, isLoading: pbLoading, error: pbError } = usePersonalBests(courseType);
   const { data: swimmer } = useSwimmer();
-  const { data: standardsData } = useStandards({ course_type: courseType, gender: swimmer?.gender });
+  const { data: standardsData } = useStandards({
+    course_type: courseType,
+    gender: swimmer?.gender,
+  });
 
   // Fetch all standards with times (for matching gender and course type)
-  const standardIds = standardsData?.standards?.map(s => s.id) || [];
+  const standardIds = standardsData?.standards?.map((s) => s.id) || [];
   const standardQueries = useQueries({
-    queries: standardIds.map(id => ({
+    queries: standardIds.map((id) => ({
       queryKey: standardKeys.detail(id),
       queryFn: () => standardService.getStandard(id),
       enabled: !!id,
@@ -30,7 +33,7 @@ export function PersonalBests() {
 
   // Calculate achieved standards for each event
   const achievedStandardsByEvent = useMemo(() => {
-    if (!pbData || !swimmer || !standardQueries.every(q => q.data)) {
+    if (!pbData || !swimmer || !standardQueries.every((q) => q.data)) {
       return undefined;
     }
 
@@ -50,16 +53,16 @@ export function PersonalBests() {
     else ageGroup = 'OPEN';
 
     // For each PB, check which standards it achieved
-    personalBests.forEach(pb => {
+    personalBests.forEach((pb) => {
       const achieved: AchievedStandard[] = [];
 
-      standardQueries.forEach(query => {
+      standardQueries.forEach((query) => {
         const standard = query.data;
         if (!standard) return;
 
         // Find the time for this event and age group in the standard
         const standardTime = standard.times?.find(
-          t => t.event === pb.event && (t.age_group === ageGroup || t.age_group === 'OPEN')
+          (t) => t.event === pb.event && (t.age_group === ageGroup || t.age_group === 'OPEN')
         );
 
         if (standardTime && pb.time_ms <= standardTime.time_ms) {
@@ -81,11 +84,10 @@ export function PersonalBests() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          Personal Bests
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Personal Bests</h1>
         <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Your fastest times in {courseType} ({courseType === '25m' ? 'Short Course' : 'Long Course'}).
+          Your fastest times in {courseType} (
+          {courseType === '25m' ? 'Short Course' : 'Long Course'}).
         </p>
       </div>
 

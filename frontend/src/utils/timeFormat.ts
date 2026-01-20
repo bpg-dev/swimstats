@@ -111,28 +111,28 @@ export function parseTimeToMs(timeStr: string): number {
 export function formatDateRange(startDate: string, endDate: string): string {
   const start = new Date(startDate + 'T00:00:00');
   const end = new Date(endDate + 'T00:00:00');
-  
-  const options: Intl.DateTimeFormatOptions = { 
-    month: 'short', 
+
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
   };
-  
+
   // Single day meet
   if (startDate === endDate) {
     return start.toLocaleDateString('en-CA', options);
   }
-  
+
   // Multi-day meet
   const startFormatted = start.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
   const endFormatted = end.toLocaleDateString('en-CA', options);
-  
+
   // Same month/year - show "Jan 15-17, 2026"
   if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
     const endDay = end.getDate();
     return `${startFormatted}-${endDay}, ${end.getFullYear()}`;
   }
-  
+
   // Different months or years - show "Jan 15 - Feb 2, 2026"
   return `${startFormatted} - ${endFormatted}`;
 }
@@ -147,11 +147,11 @@ export function getDateRange(startDate: string, endDate: string): string[] {
   const dates: string[] = [];
   const current = new Date(startDate + 'T00:00:00');
   const end = new Date(endDate + 'T00:00:00');
-  
+
   while (current <= end) {
     dates.push(current.toISOString().split('T')[0]);
     current.setDate(current.getDate() + 1);
   }
-  
+
   return dates;
 }

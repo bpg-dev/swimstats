@@ -55,12 +55,12 @@ func TestMeetAPI(t *testing.T) {
 			Name:       "Ontario Championships",
 			City:       "Toronto",
 			Country:    "Canada",
-			StartDate:       "2026-03-15",
+			StartDate:  "2026-03-15",
 			CourseType: "25m",
 		}
 
 		rr := client.Post("/api/v1/meets", input)
-		
+
 		assert.Equal(t, http.StatusCreated, rr.Code, "expected 201, got %d: %s", rr.Code, rr.Body.String())
 
 		var meet Meet
@@ -79,7 +79,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Local Meet",
 			City:       "Ottawa",
-			StartDate:       "2026-02-10",
+			StartDate:  "2026-02-10",
 			CourseType: "50m",
 		}
 
@@ -107,7 +107,7 @@ func TestMeetAPI(t *testing.T) {
 		}
 
 		rr := client.Get("/api/v1/meets")
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var list MeetList
@@ -133,7 +133,7 @@ func TestMeetAPI(t *testing.T) {
 		}
 
 		rr := client.Get("/api/v1/meets?course_type=25m")
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var list MeetList
@@ -150,7 +150,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Specific Meet",
 			City:       "Vancouver",
-			StartDate:       "2026-04-01",
+			StartDate:  "2026-04-01",
 			CourseType: "50m",
 		}
 		rr := client.Post("/api/v1/meets", input)
@@ -160,7 +160,7 @@ func TestMeetAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &created)
 
 		rr = client.Get("/api/v1/meets/" + created.ID)
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var meet Meet
@@ -173,7 +173,7 @@ func TestMeetAPI(t *testing.T) {
 		testDB.ClearTables(ctx, t)
 
 		rr := client.Get("/api/v1/meets/00000000-0000-0000-0000-000000000000")
-		
+
 		assert.Equal(t, http.StatusNotFound, rr.Code)
 	})
 
@@ -184,7 +184,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Original Name",
 			City:       "Toronto",
-			StartDate:       "2026-01-10",
+			StartDate:  "2026-01-10",
 			CourseType: "25m",
 		}
 		rr := client.Post("/api/v1/meets", input)
@@ -197,7 +197,7 @@ func TestMeetAPI(t *testing.T) {
 		input.Name = "Updated Name"
 		input.City = "Ottawa"
 		rr = client.Put("/api/v1/meets/"+created.ID, input)
-		
+
 		assert.Equal(t, http.StatusOK, rr.Code)
 
 		var updated Meet
@@ -213,7 +213,7 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "To Delete",
 			City:       "Toronto",
-			StartDate:       "2026-01-10",
+			StartDate:  "2026-01-10",
 			CourseType: "25m",
 		}
 		rr := client.Post("/api/v1/meets", input)
@@ -223,7 +223,7 @@ func TestMeetAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &created)
 
 		rr = client.Delete("/api/v1/meets/" + created.ID)
-		
+
 		assert.Equal(t, http.StatusNoContent, rr.Code)
 
 		// Verify deleted
@@ -273,12 +273,12 @@ func TestMeetAPI(t *testing.T) {
 		input := MeetInput{
 			Name:       "Test Meet",
 			City:       "Toronto",
-			StartDate:       "2026-01-10",
+			StartDate:  "2026-01-10",
 			CourseType: "25m",
 		}
 
 		rr := client.Post("/api/v1/meets", input)
-		
+
 		assert.Equal(t, http.StatusForbidden, rr.Code)
 	})
 
@@ -291,7 +291,7 @@ func TestMeetAPI(t *testing.T) {
 			input := MeetInput{
 				Name:       fmt.Sprintf("Meet %d", i+1),
 				City:       "Toronto",
-				StartDate:       date,
+				StartDate:  date,
 				CourseType: "25m",
 			}
 			rr := client.Post("/api/v1/meets", input)
@@ -299,7 +299,7 @@ func TestMeetAPI(t *testing.T) {
 		}
 
 		rr := client.Get("/api/v1/meets?limit=2&offset=0")
-		
+
 		var list MeetList
 		AssertJSONBody(t, rr, &list)
 		assert.Equal(t, 5, list.Total)

@@ -1,3 +1,5 @@
+version: "2"
+
 run:
   timeout: 5m
   modules-download-mode: readonly
@@ -5,51 +7,42 @@ run:
 linters:
   enable:
     - errcheck
-    - gosimple
     - govet
     - ineffassign
     - staticcheck
     - unused
-    - gofmt
-    - goimports
     - misspell
     - unconvert
     - unparam
     - nakedret
-    - prealloc
-    - exportloopref
     - gocritic
-    - revive
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
 
 linters-settings:
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+    settings:
+      hugeParam:
+        sizeThreshold: 512
+    disabled-checks:
+      - ifElseChain
+      - exitAfterDefer
+      - paramTypeCombine
+      - unnamedResult
+      - sprintfQuotedString
+      - emptyStringTest
+
+formatters-settings:
   gofmt:
     simplify: true
   goimports:
     local-prefixes: github.com/bpg/swimstats
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-  revive:
-    rules:
-      - name: blank-imports
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-      - name: exported
-      - name: increment-decrement
-      - name: var-naming
-      - name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: time-naming
-      - name: unexported-return
-      - name: indent-error-flow
-      - name: errorf
 
 issues:
   exclude-rules:

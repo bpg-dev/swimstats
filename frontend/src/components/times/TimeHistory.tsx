@@ -23,11 +23,11 @@ export function TimeHistory({
   onEditTime,
   emptyMessage = 'No times recorded yet.',
 }: TimeHistoryProps) {
-  const { data, isLoading, error } = useTimes({ 
-    course_type: courseType, 
-    event, 
+  const { data, isLoading, error } = useTimes({
+    course_type: courseType,
+    event,
     meet_id: meetId,
-    limit 
+    limit,
   });
   const deleteMutation = useDeleteTime();
 
@@ -85,9 +85,7 @@ export function TimeHistory({
                       <div className="font-medium text-slate-900">
                         {eventInfo?.name || time.event}
                       </div>
-                      {time.notes && (
-                        <div className="text-xs text-slate-500">{time.notes}</div>
-                      )}
+                      {time.notes && <div className="text-xs text-slate-500">{time.notes}</div>}
                     </td>
                     <td className="py-3">
                       <div className="flex items-center gap-2">
@@ -107,11 +105,15 @@ export function TimeHistory({
                           <div className="text-slate-900">{time.meet.name}</div>
                           <div className="text-xs text-slate-500">
                             {time.meet.city}
-                            <span className={`ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium
-                              ${time.meet.course_type === '25m' 
-                                ? 'bg-blue-50 text-blue-700' 
-                                : 'bg-green-50 text-green-700'}
-                            `}>
+                            <span
+                              className={`ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium
+                              ${
+                                time.meet.course_type === '25m'
+                                  ? 'bg-blue-50 text-blue-700'
+                                  : 'bg-green-50 text-green-700'
+                              }
+                            `}
+                            >
                               {time.meet.course_type}
                             </span>
                           </div>
@@ -120,9 +122,7 @@ export function TimeHistory({
                         <span className="text-slate-400">—</span>
                       )}
                     </td>
-                    <td className="py-3 text-slate-600">
-                      {formatMeetDate(time)}
-                    </td>
+                    <td className="py-3 text-slate-600">{formatMeetDate(time)}</td>
                     <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         {onEditTime && (
@@ -131,8 +131,18 @@ export function TimeHistory({
                             className="p-1 text-slate-400 hover:text-cyan-600"
                             aria-label="Edit time"
                           >
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
                             </svg>
                           </button>
                         )}
@@ -142,8 +152,18 @@ export function TimeHistory({
                           aria-label="Delete time"
                           disabled={deleteMutation.isPending}
                         >
-                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -168,15 +188,11 @@ export function TimeHistory({
         <CardTitle>
           Time History
           {data?.total !== undefined && data.total > 0 && (
-            <span className="ml-2 text-sm font-normal text-slate-500">
-              ({data.total} total)
-            </span>
+            <span className="ml-2 text-sm font-normal text-slate-500">({data.total} total)</span>
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        {content}
-      </CardContent>
+      <CardContent>{content}</CardContent>
     </Card>
   );
 }

@@ -78,9 +78,7 @@ export function StandardImportForm({ onSuccess, onCancel }: StandardImportFormPr
           {parseError && <ErrorBanner message={parseError} />}
 
           {importMutation.error && (
-            <ErrorBanner
-              message={importMutation.error.message || 'Failed to import standards'}
-            />
+            <ErrorBanner message={importMutation.error.message || 'Failed to import standards'} />
           )}
 
           {/* Preview */}

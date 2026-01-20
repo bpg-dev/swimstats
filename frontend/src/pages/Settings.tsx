@@ -129,7 +129,7 @@ export function Settings() {
           </Card>
         ) : isEditingSwimmer || !swimmer ? (
           <div className="max-w-xl">
-            <SwimmerSetupForm 
+            <SwimmerSetupForm
               initialData={swimmer || undefined}
               onSuccess={() => {
                 setIsEditingSwimmer(false);
@@ -149,7 +149,8 @@ export function Settings() {
                   <div>
                     <div className="font-medium text-slate-900">{swimmer.name}</div>
                     <div className="text-sm text-slate-500">
-                      {swimmer.current_age} years old • {swimmer.current_age_group} • {swimmer.gender}
+                      {swimmer.current_age} years old • {swimmer.current_age_group} •{' '}
+                      {swimmer.gender}
                     </div>
                     <div className="text-sm text-slate-500">
                       Born: {new Date(swimmer.birth_date).toLocaleDateString()}
@@ -157,11 +158,7 @@ export function Settings() {
                   </div>
                 </div>
                 {canWrite() && (
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => setIsEditingSwimmer(true)}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => setIsEditingSwimmer(true)}>
                     Edit Profile
                   </Button>
                 )}
@@ -232,23 +229,44 @@ export function Settings() {
                 Download all your swimmer data, meets, times, and custom standards as a JSON file.
                 This backup can be imported later to restore your data.
               </p>
-              <Button
-                onClick={handleExportData}
-                disabled={isExporting}
-                variant="outline"
-              >
+              <Button onClick={handleExportData} disabled={isExporting} variant="outline">
                 {isExporting ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Exporting...
                   </>
                 ) : (
                   <>
-                    <svg className="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    <svg
+                      className="-ml-1 mr-2 h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      />
                     </svg>
                     Export Data
                   </>
@@ -258,7 +276,8 @@ export function Settings() {
             <div className="pt-4 border-t border-slate-200">
               <h3 className="text-sm font-medium text-slate-900 mb-2">Import Data</h3>
               <p className="text-sm text-slate-600 mb-4">
-                Import a previously exported JSON file. This will <strong>replace</strong> the data sections present in the file.
+                Import a previously exported JSON file. This will <strong>replace</strong> the data
+                sections present in the file.
               </p>
               <input
                 ref={fileInputRef}
@@ -276,16 +295,41 @@ export function Settings() {
               >
                 {isImporting ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Processing...
                   </>
                 ) : (
                   <>
-                    <svg className="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    <svg
+                      className="-ml-1 mr-2 h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                      />
                     </svg>
                     Select Import File
                   </>
@@ -312,8 +356,18 @@ export function Settings() {
                 <div className="bg-amber-50 border border-amber-200 rounded p-4 space-y-2 text-sm">
                   {importPreview.will_replace_swimmer && (
                     <div className="flex items-start gap-2">
-                      <svg className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      <svg
+                        className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
                       </svg>
                       <span className="text-amber-900">
                         <strong>Swimmer profile</strong> will be replaced
@@ -323,26 +377,52 @@ export function Settings() {
 
                   {importPreview.new_meets_count > 0 && (
                     <div className="flex items-start gap-2">
-                      <svg className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      <svg
+                        className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
                       </svg>
                       <div className="text-amber-900">
-                        <strong>{importPreview.current_meets_count} existing meets</strong> and <strong>{importPreview.current_times_count} times</strong> will be deleted
+                        <strong>{importPreview.current_meets_count} existing meets</strong> and{' '}
+                        <strong>{importPreview.current_times_count} times</strong> will be deleted
                         <br />
-                        <strong>{importPreview.new_meets_count} new meets</strong> and <strong>{importPreview.new_times_count} times</strong> will be imported
+                        <strong>{importPreview.new_meets_count} new meets</strong> and{' '}
+                        <strong>{importPreview.new_times_count} times</strong> will be imported
                       </div>
                     </div>
                   )}
 
                   {importPreview.new_standards_count > 0 && (
                     <div className="flex items-start gap-2">
-                      <svg className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      <svg
+                        className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
                       </svg>
                       <div className="text-amber-900">
-                        <strong>{importPreview.current_standards_count} existing custom standards</strong> will be deleted
+                        <strong>
+                          {importPreview.current_standards_count} existing custom standards
+                        </strong>{' '}
+                        will be deleted
                         <br />
-                        <strong>{importPreview.new_standards_count} new standards</strong> will be imported
+                        <strong>{importPreview.new_standards_count} new standards</strong> will be
+                        imported
                       </div>
                     </div>
                   )}
@@ -353,11 +433,7 @@ export function Settings() {
                 </p>
 
                 <div className="flex gap-3 justify-end pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={handleCancelImport}
-                    disabled={isImporting}
-                  >
+                  <Button variant="outline" onClick={handleCancelImport} disabled={isImporting}>
                     Cancel
                   </Button>
                   <Button
@@ -381,20 +457,21 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="text-green-600 flex items-center gap-2">
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 Import Successful
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <p className="text-slate-700">
-                  Data imported successfully!
-                </p>
+                <p className="text-slate-700">Data imported successfully!</p>
                 <div className="flex justify-end">
-                  <Button onClick={() => setShowSuccessDialog(false)}>
-                    OK
-                  </Button>
+                  <Button onClick={() => setShowSuccessDialog(false)}>OK</Button>
                 </div>
               </div>
             </CardContent>
@@ -409,16 +486,19 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="text-red-600 flex items-center gap-2">
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 Error
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <p className="text-slate-700">
-                  {errorMessage}
-                </p>
+                <p className="text-slate-700">{errorMessage}</p>
                 <div className="flex justify-end">
                   <Button
                     variant="outline"

@@ -23,9 +23,7 @@ export function CourseFilterToggle({ className }: CourseFilterToggleProps) {
 
   return (
     <div className={cn('flex items-center gap-1', className)}>
-      <span className="text-sm text-slate-500 mr-2 hidden sm:inline">
-        Course:
-      </span>
+      <span className="text-sm text-slate-500 mr-2 hidden sm:inline">Course:</span>
       <div
         className="inline-flex rounded-lg bg-slate-100 p-0.5"
         role="radiogroup"

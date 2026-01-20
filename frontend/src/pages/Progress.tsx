@@ -34,11 +34,7 @@ export function Progress() {
     ...(endDate && { end_date: endDate }),
   };
 
-  const {
-    data: progressData,
-    isLoading,
-    error,
-  } = useProgress(progressParams);
+  const { data: progressData, isLoading, error } = useProgress(progressParams);
 
   // Find the qualifying time for the selected event in the selected standard
   let standardTime: number | undefined;
@@ -46,7 +42,7 @@ export function Progress() {
   if (selectedStandardData) {
     standardName = selectedStandardData.name;
     // Find the time for this event (match any age group - we'll show the fastest/first one)
-    const matchingTime = selectedStandardData.times?.find(t => t.event === selectedEvent);
+    const matchingTime = selectedStandardData.times?.find((t) => t.event === selectedEvent);
     if (matchingTime) {
       standardTime = matchingTime.time_ms;
     }
@@ -56,9 +52,7 @@ export function Progress() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Progress</h1>
-        <p className="text-slate-600 mt-1">
-          Visualize your improvement over time.
-        </p>
+        <p className="text-slate-600 mt-1">Visualize your improvement over time.</p>
       </div>
 
       {/* Filters */}

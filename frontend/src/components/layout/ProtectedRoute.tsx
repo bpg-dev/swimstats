@@ -39,9 +39,7 @@ export function ProtectedRoute({ children, requireWriteAccess = false }: Protect
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-          <p className="text-gray-600 mb-4">
-            You need full access to perform this action.
-          </p>
+          <p className="text-gray-600 mb-4">You need full access to perform this action.</p>
           <p className="text-sm text-gray-500">
             Contact an administrator if you need elevated access.
           </p>

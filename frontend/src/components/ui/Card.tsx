@@ -18,13 +18,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       elevated: 'bg-white shadow-lg border border-slate-100',
     };
 
-    return (
-      <div
-        ref={ref}
-        className={cn('rounded-xl', variants[variant], className)}
-        {...props}
-      />
-    );
+    return <div ref={ref} className={cn('rounded-xl', variants[variant], className)} {...props} />;
   }
 );
 
@@ -34,11 +28,7 @@ export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {}
 
 export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
   )
 );
 
@@ -62,11 +52,7 @@ export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElemen
 
 export const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
   ({ className, ...props }, ref) => (
-    <p
-      ref={ref}
-      className={cn('text-sm text-slate-500', className)}
-      {...props}
-    />
+    <p ref={ref} className={cn('text-sm text-slate-500', className)} {...props} />
   )
 );
 
@@ -86,11 +72,7 @@ export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {}
 
 export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex items-center p-6 pt-0', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('flex items-center p-6 pt-0', className)} {...props} />
   )
 );
 

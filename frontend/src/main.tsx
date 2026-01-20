@@ -38,6 +38,7 @@ const oidcConfig = {
 // Check if OIDC is configured (skip auth in dev if not configured)
 const isOidcConfigured = oidcConfig.authority && oidcConfig.client_id;
 
+// eslint-disable-next-line react-refresh/only-export-components
 function AppWithProviders() {
   return (
     <React.StrictMode>

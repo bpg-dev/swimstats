@@ -42,16 +42,18 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
   // Filter and organize comparisons
   const comparisonMap = new Map(comparisons.map((c) => [c.event, c]));
 
-  const filteredByStroke = strokeOrder.map((stroke) => ({
-    stroke,
-    events: eventsByStroke[stroke]
-      .map((event) => comparisonMap.get(event))
-      .filter((c): c is EventComparison => {
-        if (!c) return false;
-        if (!showNoTime && c.status === 'no_time') return false;
-        return true;
-      }),
-  })).filter((group) => group.events.length > 0);
+  const filteredByStroke = strokeOrder
+    .map((stroke) => ({
+      stroke,
+      events: eventsByStroke[stroke]
+        .map((event) => comparisonMap.get(event))
+        .filter((c): c is EventComparison => {
+          if (!c) return false;
+          if (!showNoTime && c.status === 'no_time') return false;
+          return true;
+        }),
+    }))
+    .filter((group) => group.events.length > 0);
 
   if (filteredByStroke.every((g) => g.events.length === 0)) {
     return (
@@ -181,9 +183,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                           {comp.standard_time_formatted}
                         </span>
                         {comp.age_group !== 'OPEN' && (
-                          <span className="text-xs text-slate-500 ml-1">
-                            ({comp.age_group})
-                          </span>
+                          <span className="text-xs text-slate-500 ml-1">({comp.age_group})</span>
                         )}
                       </div>
                     ) : (
@@ -222,9 +222,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                       <div>
                         <span
                           className={`text-sm font-mono tabular-nums ${
-                            (comp.difference_ms ?? 0) <= 0
-                              ? 'text-green-600'
-                              : 'text-slate-600'
+                            (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-600'
                           }`}
                         >
                           {comp.difference_formatted}
@@ -232,9 +230,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                         {comp.difference_percent != null && (
                           <span
                             className={`text-xs ml-1 tabular-nums ${
-                              (comp.difference_ms ?? 0) <= 0
-                                ? 'text-green-600'
-                                : 'text-slate-500'
+                              (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-500'
                             }`}
                           >
                             ({comp.difference_percent > 0 ? '+' : ''}

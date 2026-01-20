@@ -13,7 +13,7 @@ export function AddTimes() {
   const courseType = useCourseType();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  
+
   const meetId = searchParams.get('meet_id') || undefined;
   const [mode, setMode] = useState<EntryMode>('quick');
 
@@ -30,9 +30,7 @@ export function AddTimes() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Add Times</h1>
-          <p className="text-slate-600 mt-1">
-            Record swim times from a competition.
-          </p>
+          <p className="text-slate-600 mt-1">Record swim times from a competition.</p>
         </div>
         <div className="flex items-center gap-2">
           <Button

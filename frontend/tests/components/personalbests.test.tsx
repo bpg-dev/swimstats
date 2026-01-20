@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersonalBestCard } from '@/components/comparison/PersonalBestCard';
 import { PersonalBestGrid } from '@/components/comparison/PersonalBestGrid';
@@ -54,7 +54,7 @@ describe('PersonalBestCard', () => {
   });
 
   it('handles unknown event codes', () => {
-    const unknownPB = { ...mockPB, event: 'UNKNOWN' as any };
+    const unknownPB = { ...mockPB, event: 'UNKNOWN' as PersonalBest['event'] };
     renderWithProviders(<PersonalBestCard pb={unknownPB} />);
 
     expect(screen.getByText('UNKNOWN')).toBeInTheDocument();

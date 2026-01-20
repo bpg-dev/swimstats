@@ -10,7 +10,12 @@ export interface StandardFormProps {
   isLoading?: boolean;
 }
 
-export function StandardForm({ standard, onSubmit, onCancel, isLoading = false }: StandardFormProps) {
+export function StandardForm({
+  standard,
+  onSubmit,
+  onCancel,
+  isLoading = false,
+}: StandardFormProps) {
   const [name, setName] = useState(standard?.name || '');
   const [description, setDescription] = useState(standard?.description || '');
   const [courseType, setCourseType] = useState<CourseType>(standard?.course_type || '25m');

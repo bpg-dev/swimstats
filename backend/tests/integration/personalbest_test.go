@@ -31,7 +31,7 @@ func TestPersonalBestsAPI(t *testing.T) {
 	ctx := context.Background()
 	testDB := SetupTestDB(ctx, t)
 	defer testDB.TeardownTestDB(ctx, t)
-	
+
 	// Clean tables for a fresh start
 	testDB.CleanTables(t)
 

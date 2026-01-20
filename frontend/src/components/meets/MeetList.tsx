@@ -33,7 +33,6 @@ export function MeetList({
 
   const meets = data?.meets || [];
 
-
   const content = (
     <>
       {meets.length === 0 ? (
@@ -50,12 +49,16 @@ export function MeetList({
                   </p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-                  <span className={`
+                  <span
+                    className={`
                     inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
-                    ${meet.course_type === '25m' 
-                      ? 'bg-blue-100 text-blue-800' 
-                      : 'bg-green-100 text-green-800'}
-                  `}>
+                    ${
+                      meet.course_type === '25m'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-green-100 text-green-800'
+                    }
+                  `}
+                  >
                     {meet.course_type}
                   </span>
                   {meet.time_count !== undefined && meet.time_count > 0 && (
@@ -64,8 +67,18 @@ export function MeetList({
                     </span>
                   )}
                   {(onSelectMeet || linkToDetails) && (
-                    <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg
+                      className="h-5 w-5 text-slate-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
                     </svg>
                   )}
                 </div>
@@ -108,15 +121,11 @@ export function MeetList({
         <CardTitle>
           Recent Meets
           {data?.total !== undefined && data.total > 0 && (
-            <span className="ml-2 text-sm font-normal text-slate-500">
-              ({data.total} total)
-            </span>
+            <span className="ml-2 text-sm font-normal text-slate-500">({data.total} total)</span>
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="-mx-6 -mb-6">
-        {content}
-      </CardContent>
+      <CardContent className="-mx-6 -mb-6">{content}</CardContent>
     </Card>
   );
 }

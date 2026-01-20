@@ -1,11 +1,23 @@
 import { CourseType, Meet } from './meet';
 
 export type EventCode =
-  | '50FR' | '100FR' | '200FR' | '400FR' | '800FR' | '1500FR'
-  | '50BK' | '100BK' | '200BK'
-  | '50BR' | '100BR' | '200BR'
-  | '50FL' | '100FL' | '200FL'
-  | '200IM' | '400IM';
+  | '50FR'
+  | '100FR'
+  | '200FR'
+  | '400FR'
+  | '800FR'
+  | '1500FR'
+  | '50BK'
+  | '100BK'
+  | '200BK'
+  | '50BR'
+  | '100BR'
+  | '200BR'
+  | '50FL'
+  | '100FL'
+  | '200FL'
+  | '200IM'
+  | '400IM';
 
 export interface TimeRecord {
   id: string;
@@ -13,7 +25,7 @@ export interface TimeRecord {
   event: EventCode;
   time_ms: number;
   time_formatted: string;
-  event_date?: string;  // Specific date when event was swum (within meet date range)
+  event_date?: string; // Specific date when event was swum (within meet date range)
   notes?: string;
   is_pb?: boolean;
   meet?: Meet;
@@ -23,7 +35,7 @@ export interface TimeInput {
   meet_id: string;
   event: EventCode;
   time_ms: number;
-  event_date?: string;  // Optional - specific date when event was swum
+  event_date?: string; // Optional - specific date when event was swum
   notes?: string;
 }
 
@@ -32,7 +44,7 @@ export interface TimeBatchInput {
   times: Array<{
     event: EventCode;
     time_ms: number;
-    event_date?: string;  // Optional - specific date when event was swum
+    event_date?: string; // Optional - specific date when event was swum
     notes?: string;
   }>;
 }
@@ -89,13 +101,13 @@ export const EVENTS: EventInfo[] = [
 ];
 
 export const EVENTS_BY_STROKE: Record<string, EventInfo[]> = {
-  Freestyle: EVENTS.filter(e => e.stroke === 'Freestyle'),
-  Backstroke: EVENTS.filter(e => e.stroke === 'Backstroke'),
-  Breaststroke: EVENTS.filter(e => e.stroke === 'Breaststroke'),
-  Butterfly: EVENTS.filter(e => e.stroke === 'Butterfly'),
-  'Individual Medley': EVENTS.filter(e => e.stroke === 'Individual Medley'),
+  Freestyle: EVENTS.filter((e) => e.stroke === 'Freestyle'),
+  Backstroke: EVENTS.filter((e) => e.stroke === 'Backstroke'),
+  Breaststroke: EVENTS.filter((e) => e.stroke === 'Breaststroke'),
+  Butterfly: EVENTS.filter((e) => e.stroke === 'Butterfly'),
+  'Individual Medley': EVENTS.filter((e) => e.stroke === 'Individual Medley'),
 };
 
 export function getEventInfo(code: EventCode): EventInfo | undefined {
-  return EVENTS.find(e => e.code === code);
+  return EVENTS.find((e) => e.code === code);
 }

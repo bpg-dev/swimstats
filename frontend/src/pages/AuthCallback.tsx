@@ -52,7 +52,17 @@ export function AuthCallback() {
     }
 
     handleCallback();
-  }, [auth.isLoading, auth.isAuthenticated, auth.user, auth.error, navigate, location, setUser, setLoading, setError]);
+  }, [
+    auth.isLoading,
+    auth.isAuthenticated,
+    auth.user,
+    auth.error,
+    navigate,
+    location,
+    setUser,
+    setLoading,
+    setError,
+  ]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
