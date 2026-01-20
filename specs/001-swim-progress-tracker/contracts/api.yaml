@@ -362,6 +362,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/PersonalBestList'
 
+  # Progress Charts
+  /progress/{event}:
+    get:
+      summary: Get time progression for an event
+      tags: [Progress]
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/EventCode'
+        - name: course_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/CourseType'
+        - name: start_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Filter times from this date onwards
+        - name: end_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Filter times up to this date
+      responses:
+        '200':
+          description: Progress data with time series
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressData'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   # Time Standards
   /standards:
     get:
@@ -920,6 +960,56 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PersonalBest'
+
+    ProgressData:
+      type: object
+      required: [swimmer_id, event, course_type, data_points]
+      properties:
+        swimmer_id:
+          type: string
+          format: uuid
+        event:
+          $ref: '#/components/schemas/EventCode'
+        course_type:
+          $ref: '#/components/schemas/CourseType'
+        start_date:
+          type: string
+          format: date
+          description: Start date filter applied
+        end_date:
+          type: string
+          format: date
+          description: End date filter applied
+        data_points:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressDataPoint'
+
+    ProgressDataPoint:
+      type: object
+      required: [id, time_ms, time_formatted, date, meet_name, event, is_pb]
+      properties:
+        id:
+          type: string
+          format: uuid
+        time_ms:
+          type: integer
+          description: Time in milliseconds
+        time_formatted:
+          type: string
+          description: Human-readable time (e.g., "58.23" or "1:02.45")
+        date:
+          type: string
+          format: date
+          description: Date when this time was swum
+        meet_name:
+          type: string
+          description: Name of the meet
+        event:
+          $ref: '#/components/schemas/EventCode'
+        is_pb:
+          type: boolean
+          description: Whether this time was a personal best
 
     Standard:
       type: object

@@ -9,14 +9,16 @@
 
 ---
 
-**Current Status** (as of 2026-01-19):
+**Current Status** (as of 2026-01-20):
 
 - ✅ MVP Complete: Phases 1-4b (Setup, Foundation, US1, US2, All Times)
 - ✅ Phase 5 Complete: US3 - Time Standards (CRUD, JSON import, data files)
-- ✅ Phase 6 Complete: US4 - Compare Times Against Standards (with adjacent age groups, achievements on PBs)
-- ⏳ Next: Phase 7 (US5 - View Progress Graphs)
+- ✅ Phase 6 Complete: US4 + US6 - Compare Times Against Standards (with standing dashboard)
+- ✅ Phase 6b Complete: US7 - Import Historical Results (JSON bulk import system)
+- ✅ Phase 7 Complete: US5 - View Progress Graphs (Recharts line charts with standard reference lines)
+- ⏳ Next: Phase 8 (Polish - export, accessibility, performance optimization)
 - Clarifications applied: JSON export format, basic accessibility (semantic HTML + keyboard nav)
-- Recent enhancements: Navigation reorder (PBs first), course filter colors, comparison UI polish
+- Recent enhancements: Progress charts with PB markers, date filtering, standard reference lines
 
 ## Format: `[ID] [P?] [Story?] Description`
 
@@ -420,7 +422,37 @@
 
 ---
 
-## Phase 7: User Story 5 - View Progress Graphs (Priority: P3)
+## Phase 6b: User Story 7 - Import Historical Results (Priority: P4)
+
+**Status**: ✅ **COMPLETE** - JSON bulk import system implemented
+
+**Goal**: Import swimmer data and time standards from JSON files to avoid manual data entry
+
+**Independent Test**: Import JSON file with meets and times, verify all data appears correctly with PB calculation
+
+### Backend Implementation for US7
+
+- [x] T160 [P] [US7] Create importer service in backend/internal/domain/importer/service.go
+- [x] T161 [P] [US7] Create importer types in backend/internal/domain/importer/types.go
+- [x] T162 [US7] Create import handler in backend/internal/api/handlers/import.go (POST /data/import)
+- [x] T163 [US7] Add import route to router in backend/internal/api/router.go
+
+### Scripts & Documentation for US7
+
+- [x] T164 [P] [US7] Create import-all.sh script in scripts/
+- [x] T165 [P] [US7] Create import-standards.sh script in scripts/
+- [x] T166 [P] [US7] Create test-import.sh script in scripts/
+- [x] T167 [P] [US7] Create reset-database.sh script in scripts/
+- [x] T168 [P] [US7] Create swimmer import template in data/swimmer-import-template.json
+- [x] T169 [P] [US7] Create Alice Boldyrev data files in data/ (complete season + 2025-2026 subset)
+- [x] T170 [P] [US7] Create IMPORT-README.md in data/ (format documentation)
+- [x] T171 [P] [US7] Create IMPORT-GUIDE.md in repository root (user guide)
+
+**Checkpoint**: Phase 6b complete - full import system working with scripts and documentation
+
+---
+
+## Phase 7: User Story 5 - View Progress Graphs (Priority: P3) ✅ COMPLETE
 
 **Goal**: Display line graphs showing time progression with standard reference lines
 
@@ -428,27 +460,27 @@
 
 ### Tests for User Story 5
 
-- [ ] T138 [P] [US5] Create progress API tests in backend/tests/integration/progress_test.go
-- [ ] T139 [P] [US5] Create chart component tests in frontend/tests/components/charts.test.tsx
+- [X] T138 [P] [US5] Create progress API tests in backend/tests/integration/progress_test.go
+- [X] T139 [P] [US5] Create chart component tests in frontend/tests/components/charts.test.tsx
 
 ### Backend Implementation for US5
 
-- [ ] T140 [US5] Create progress data query in backend/internal/store/queries/progress.sql
-- [ ] T141 Run sqlc generate for progress
-- [ ] T142 [US5] Create progress service in backend/internal/domain/comparison/progress.go
-- [ ] T143 [US5] Create progress handler in backend/internal/api/handlers/progress.go (GET /progress/{event})
+- [X] T140 [US5] Create progress data query in backend/internal/store/queries/time.sql (GetProgressData)
+- [X] T141 Run sqlc generate for progress
+- [X] T142 [US5] Create progress service in backend/internal/domain/comparison/progress.go
+- [X] T143 [US5] Create progress handler in backend/internal/api/handlers/progress.go (GET /v1/progress/{event})
 
 ### Frontend Implementation for US5
 
-- [ ] T144 [P] [US5] Create progress types in frontend/src/types/progress.ts
-- [ ] T145 [US5] Create progress API service in frontend/src/services/progress.ts
-- [ ] T146 [US5] Create useProgress hook in frontend/src/hooks/useProgress.ts
-- [ ] T147 [US5] Create ProgressChart component in frontend/src/components/charts/ProgressChart.tsx (Recharts)
-- [ ] T148 [US5] Create DateRangeFilter component in frontend/src/components/charts/DateRangeFilter.tsx
-- [ ] T149 [US5] Create ChartTooltip component in frontend/src/components/charts/ChartTooltip.tsx
-- [ ] T150 [US5] Create Progress page in frontend/src/pages/Progress.tsx
+- [X] T144 [P] [US5] Create progress types in frontend/src/types/progress.ts
+- [X] T145 [US5] Create progress API service in frontend/src/services/progress.ts
+- [X] T146 [US5] Create useProgress hook in frontend/src/hooks/useProgress.ts
+- [X] T147 [US5] Create ProgressChart component in frontend/src/components/charts/ProgressChart.tsx (Recharts with custom PB markers, tooltips, reference line)
+- [X] T148 [US5] Integrate date range filters in frontend/src/pages/Progress.tsx (start_date, end_date query params)
+- [X] T149 [US5] Implement standard reference line with formatted label in ProgressChart.tsx
+- [X] T150 [US5] Create Progress page in frontend/src/pages/Progress.tsx with event selector, date filters, standard selector
 
-**Checkpoint**: User Story 5 complete - can view progress graphs
+**Checkpoint**: User Story 5 complete - can view progress graphs with PB markers and standard reference lines
 
 ---
 
@@ -467,28 +499,90 @@ No additional implementation needed. Moving directly to Phase 7 (US5 - Progress 
 
 ---
 
-## Phase 9: Polish & Cross-Cutting Concerns
+## Phase 8: Polish & Cross-Cutting Concerns
 
-**Purpose**: Data export/import, documentation, and final polish
+**Purpose**: Data export, documentation, accessibility, performance validation, and deployment readiness
 
-### Data Export/Import (JSON format per spec clarification)
+### Data Export (Import already complete in Phase 6b)
 
-- [ ] T164 [P] Create data export API tests in backend/tests/integration/export_test.go
-- [ ] T165 Create export service in backend/internal/domain/data/export.go (single JSON file with all data)
-- [ ] T166 Create import service in backend/internal/domain/data/import.go (JSON validation, conflict detection)
-- [ ] T167 Create data handlers in backend/internal/api/handlers/data.go (GET /data/export, POST /data/import)
-- [ ] T168 Create DataExport page in frontend/src/pages/DataExport.tsx (download JSON backup)
-- [ ] T169 Create DataImport component in frontend/src/components/data/DataImport.tsx (file upload, preview, confirm)
+- [ ] T180 [P] Create data export API tests in backend/tests/integration/export_test.go
+- [ ] T181 [P] Create export service in backend/internal/domain/exporter/service.go (single JSON file with all data)
+- [ ] T182 [US7] Create export handler in backend/internal/api/handlers/export.go (GET /data/export)
+- [ ] T183 [US7] Add export button to Settings page in frontend/src/pages/Settings.tsx
+- [ ] T184 [US7] Test export/import round-trip for data integrity
 
-### Documentation & Polish
+**Export Requirements**: Single JSON file with swimmer, meets, times, custom standards (FR-081, FR-082)
 
-- [ ] T170 [P] Update README.md with project setup instructions
-- [ ] T171 [P] Create API documentation from OpenAPI spec
-- [ ] T172 Verify basic accessibility: semantic HTML, keyboard navigation, focus indicators
-- [ ] T173 Run Lighthouse performance audit and optimize
-- [ ] T174 Verify all empty states have helpful guidance
-- [ ] T175 Verify all loading states show appropriate indicators
-- [ ] T176 Run full E2E test of quickstart.md workflow
+### Documentation
+
+- [ ] T185 [P] Update README.md with complete feature list and screenshots
+- [ ] T186 [P] Create USER-GUIDE.md documenting all features and workflows
+- [ ] T187 [P] Verify IMPORT-GUIDE.md is complete and accurate
+- [ ] T188 [P] Add API documentation in docs/API.md or update contracts/api.yaml
+
+### Accessibility Verification
+
+- [ ] T189 Run axe-core accessibility tests on all UI pages
+- [ ] T190 Verify keyboard navigation works for all interactive elements
+- [ ] T191 Ensure semantic HTML structure throughout application
+- [ ] T192 Test screen reader compatibility on critical user journeys
+- [ ] T193 Verify color contrast meets WCAG AA standards
+
+**Accessibility Target**: Basic accessibility (semantic HTML, keyboard navigation) per FR-084
+
+### Performance Optimization & Validation
+
+- [ ] T194 Measure and verify API p95 latency targets (reads <200ms, writes <500ms)
+- [ ] T195 Measure and verify Time to Interactive (TTI) <3s
+- [ ] T196 Verify JavaScript bundle size <250KB gzipped
+- [ ] T197 Optimize chart rendering for 500+ data points if needed (Phase 7 dependency)
+- [ ] T198 Add React Query caching optimization if needed
+
+**Performance Targets**: API p95 <200ms/<500ms, TTI <3s, <250KB bundle, graphs <2s for 500 times
+
+### Testing Coverage
+
+- [ ] T199 [P] Add integration tests for progress chart API (Phase 7 dependency)
+- [ ] T200 [P] Add component tests for chart components (Phase 7 dependency)
+- [ ] T201 Verify >90% coverage on critical paths (PB calculation, comparison logic, import service)
+- [ ] T202 Run full test suite and fix any failures
+
+### Security & Reliability
+
+- [ ] T203 Review and harden OIDC authentication flow
+- [ ] T204 Verify access level enforcement on all endpoints
+- [ ] T205 Add rate limiting to import endpoints if needed
+- [ ] T206 Review error handling and logging across application
+- [ ] T207 Test session expiry and re-authentication flow
+
+### Final Validation
+
+- [ ] T208 Run quickstart.md validation scenarios
+- [ ] T209 Verify all success criteria (SC-001 through SC-011) are met
+- [ ] T210 Test application end-to-end with real swimmer data
+- [ ] T211 Code cleanup and refactoring across codebase
+- [ ] T212 Final linting and type checking pass (both backend and frontend)
+
+**Success Criteria** (from spec.md):
+- SC-001: Record time in <30s
+- SC-002: Enter 5+ times in <3min
+- SC-003: View all PBs on one screen
+- SC-004: Create standard in <5min
+- SC-005: View comparison within 2 clicks
+- SC-006: Graphs load in <2s for 500 times
+- SC-007: PB identification 100% accurate
+- SC-008: Age-based comparisons correct
+- SC-009: Zero data loss on restart
+- SC-010: Export/import without corruption
+- SC-011: First-time user can add time without docs
+
+### Deployment Preparation
+
+- [ ] T213 [P] Update Docker configurations if needed
+- [ ] T214 [P] Update kubernetes manifests if applicable
+- [ ] T215 Verify GitHub Actions CI/CD pipeline is working
+- [ ] T216 Create deployment guide in docs/DEPLOYMENT.md
+- [ ] T217 Tag release version and update CHANGELOG.md
 
 ---
 
@@ -576,9 +670,9 @@ Phase 7 (US5: Charts)  Phase 8 (US6: Standing)
 | MVP | US1 + US2 + All Times | Record times, view PBs, browse history | ✅ Complete |
 | +Standards | US3 | Add/manage time standards, JSON import | ✅ Complete |
 | +Comparison | US4 | Compare against standards | ✅ Complete |
-| +Charts | US5 | View progress graphs | ⏳ Next |
-| +Dashboard | US6 | Qualification standing view | Pending |
-| +Export | Phase 9 | JSON backup/restore | Pending |
+| +Charts | US5 | View progress graphs with PB markers, standard references | ✅ Complete |
+| +Dashboard | US6 | Qualification standing view | ✅ Complete (via US4) |
+| +Export | Phase 8 | JSON backup/restore, accessibility, performance | ⏳ Next |
 
 ### Suggested MVP Scope
 

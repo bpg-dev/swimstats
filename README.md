@@ -11,7 +11,7 @@ A web application for competitive swimmers to track their times, view personal b
 - 🎯 **Time Standards** - Manage time standards with JSON import (Swimming Canada, Swim Ontario)
 - 📊 **Comparison** - Compare PBs against standards with adjacent age groups and achievement status
 - 🎯 **Standing Dashboard** - Quick overview showing achieved/almost/not-yet qualification counts
-- 📈 **Progress Charts** - Visualize improvement over time (coming soon)
+- 📈 **Progress Charts** - Visualize time progression with PB markers and standard reference lines
 - 🔄 **Course Filtering** - Separate 25m (short course) and 50m (long course) data
 - 📱 **Responsive** - Works on desktop and mobile
 
@@ -257,6 +257,7 @@ The API follows RESTful conventions:
 | `/api/v1/times/batch` | POST | Create multiple times |
 | `/api/v1/times/:id` | GET, PUT, DELETE | Get/update/delete time |
 | `/api/v1/personal-bests` | GET | Get personal bests |
+| `/api/v1/progress/:event` | GET | Get time progression for an event (query: course_type, start_date, end_date) |
 | `/api/v1/standards` | GET, POST | List/create time standards |
 | `/api/v1/standards/import` | POST | Import single standard with times |
 | `/api/v1/standards/import/json` | POST | Bulk import from JSON file |
