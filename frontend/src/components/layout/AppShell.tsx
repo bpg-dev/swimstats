@@ -21,15 +21,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: 'Home',
-    href: '/',
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ),
-  },
-  {
     label: 'Personal Bests',
     href: '/personal-bests',
     icon: (
@@ -135,7 +126,7 @@ export function AppShell({ children }: AppShellProps) {
             <nav className="hidden lg:flex items-center gap-8">
               {/* Primary navigation group */}
               <div className="flex items-center gap-0.5">
-                {navItems.slice(0, 5).map((item) => (
+                {navItems.slice(0, 4).map((item) => (
                   <Link
                     key={item.href}
                     to={item.href}
@@ -153,7 +144,7 @@ export function AppShell({ children }: AppShellProps) {
 
               {/* Analytics navigation group */}
               <div className="flex items-center gap-0.5 pl-8 border-l-2 border-slate-300">
-                {navItems.slice(5).map((item) => (
+                {navItems.slice(4).map((item) => (
                   <Link
                     key={item.href}
                     to={item.href}
@@ -231,7 +222,7 @@ export function AppShell({ children }: AppShellProps) {
             <div className="px-4 py-3 space-y-1">
               {/* Main navigation */}
               <div className="space-y-1">
-                {navItems.slice(0, 5).map((item) => (
+                {navItems.slice(0, 4).map((item) => (
                   <Link
                     key={item.href}
                     to={item.href}
@@ -252,7 +243,7 @@ export function AppShell({ children }: AppShellProps) {
               {/* Analytics group */}
               <div className="pt-3 pb-2 space-y-1 border-t border-slate-200">
                 <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Analytics</p>
-                {navItems.slice(5).map((item) => (
+                {navItems.slice(4).map((item) => (
                   <Link
                     key={item.href}
                     to={item.href}
