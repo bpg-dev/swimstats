@@ -184,7 +184,7 @@ func (s *Service) Create(ctx context.Context, input Input) (*Meet, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create meet: %w", err)
 	}
-	return toMeetFromCreateRow(dbMeet), nil
+	return toMeetFromDB(dbMeet), nil
 }
 
 // Update updates an existing meet.
@@ -221,7 +221,7 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Meet,
 	if err != nil {
 		return nil, fmt.Errorf("update meet: %w", err)
 	}
-	return toMeetFromUpdateRow(dbMeet), nil
+	return toMeetFromDB(dbMeet), nil
 }
 
 // Delete deletes a meet.
@@ -261,19 +261,7 @@ func (s *Service) GetRecent(ctx context.Context, courseType *string, limit int) 
 	return meets, nil
 }
 
-func toMeetFromCreateRow(dbMeet *db.CreateMeetRow) *Meet {
-	return &Meet{
-		ID:         dbMeet.ID,
-		Name:       dbMeet.Name,
-		City:       dbMeet.City,
-		Country:    dbMeet.Country,
-		StartDate:  dbMeet.StartDate.Time.Format("2006-01-02"),
-		EndDate:    dbMeet.EndDate.Time.Format("2006-01-02"),
-		CourseType: dbMeet.CourseType,
-	}
-}
-
-func toMeetFromUpdateRow(dbMeet *db.UpdateMeetRow) *Meet {
+func toMeetFromDB(dbMeet *db.Meet) *Meet {
 	return &Meet{
 		ID:         dbMeet.ID,
 		Name:       dbMeet.Name,

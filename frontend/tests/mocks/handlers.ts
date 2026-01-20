@@ -42,6 +42,23 @@ export const mockTime = {
   is_pb: true,
 };
 
+export const mockStandard = {
+  id: 'standard-1',
+  name: 'Test Standard',
+  description: 'A test time standard',
+  course_type: '25m' as const,
+  gender: 'female' as const,
+  is_preloaded: false,
+};
+
+export const mockStandardWithTimes = {
+  ...mockStandard,
+  times: [
+    { event: '50FR', age_group: '13-14' as const, time_ms: 28500, time_formatted: '28.50' },
+    { event: '100FR', age_group: '13-14' as const, time_ms: 62000, time_formatted: '1:02.00' },
+  ],
+};
+
 /**
  * MSW handlers for mocking API endpoints.
  */
@@ -198,8 +215,66 @@ export const handlers = [
   // Standards
   http.get(`${API_URL}/standards`, () => {
     return HttpResponse.json({
-      standards: [],
+      standards: [mockStandard],
     });
+  }),
+
+  http.get(`${API_URL}/standards/:id`, ({ params }) => {
+    const { id } = params;
+    if (id === mockStandard.id) {
+      return HttpResponse.json(mockStandardWithTimes);
+    }
+    return HttpResponse.json({ error: 'not found' }, { status: 404 });
+  }),
+
+  http.post(`${API_URL}/standards`, async ({ request }) => {
+    const body = await request.json();
+    return HttpResponse.json(
+      { id: 'new-standard-id', is_preloaded: false, ...(body as object) },
+      { status: 201 }
+    );
+  }),
+
+  http.put(`${API_URL}/standards/:id`, async ({ params, request }) => {
+    const { id } = params;
+    if (id === mockStandard.id) {
+      const body = await request.json();
+      return HttpResponse.json({ ...mockStandard, ...(body as object) });
+    }
+    return HttpResponse.json({ error: 'not found' }, { status: 404 });
+  }),
+
+  http.delete(`${API_URL}/standards/:id`, ({ params }) => {
+    const { id } = params;
+    if (id === mockStandard.id) {
+      return new HttpResponse(null, { status: 204 });
+    }
+    return HttpResponse.json({ error: 'not found' }, { status: 404 });
+  }),
+
+  http.put(`${API_URL}/standards/:id/times`, async ({ params, request }) => {
+    const { id } = params;
+    if (id === mockStandard.id) {
+      const body = (await request.json()) as { times: unknown[] };
+      const times = (body.times || []).map((t: unknown) => ({
+        ...(t as object),
+        time_formatted: '1:00.00',
+      }));
+      return HttpResponse.json({ ...mockStandard, times });
+    }
+    return HttpResponse.json({ error: 'not found' }, { status: 404 });
+  }),
+
+  http.post(`${API_URL}/standards/import`, async ({ request }) => {
+    const body = (await request.json()) as { times: unknown[] };
+    const times = (body.times || []).map((t: unknown) => ({
+      ...(t as object),
+      time_formatted: '1:00.00',
+    }));
+    return HttpResponse.json(
+      { id: 'imported-standard-id', is_preloaded: false, ...(body as object), times },
+      { status: 201 }
+    );
   }),
 
   // Comparisons

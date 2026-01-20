@@ -22,7 +22,7 @@ func NewTimeRepository(queries *db.Queries) *TimeRepository {
 }
 
 // Get retrieves a time by ID.
-func (r *TimeRepository) Get(ctx context.Context, id uuid.UUID) (*db.GetTimeRow, error) {
+func (r *TimeRepository) Get(ctx context.Context, id uuid.UUID) (*db.Time, error) {
 	time, err := r.queries.GetTime(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -120,7 +120,7 @@ func (r *TimeRepository) Count(ctx context.Context, params ListTimesParams) (int
 }
 
 // Create creates a new time.
-func (r *TimeRepository) Create(ctx context.Context, params db.CreateTimeParams) (*db.CreateTimeRow, error) {
+func (r *TimeRepository) Create(ctx context.Context, params db.CreateTimeParams) (*db.Time, error) {
 	time, err := r.queries.CreateTime(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("create time: %w", err)
@@ -129,7 +129,7 @@ func (r *TimeRepository) Create(ctx context.Context, params db.CreateTimeParams)
 }
 
 // Update updates an existing time.
-func (r *TimeRepository) Update(ctx context.Context, params db.UpdateTimeParams) (*db.UpdateTimeRow, error) {
+func (r *TimeRepository) Update(ctx context.Context, params db.UpdateTimeParams) (*db.Time, error) {
 	time, err := r.queries.UpdateTime(ctx, params)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -149,7 +149,7 @@ func (r *TimeRepository) Delete(ctx context.Context, id uuid.UUID) error {
 }
 
 // ListByMeet lists all times for a specific meet.
-func (r *TimeRepository) ListByMeet(ctx context.Context, meetID uuid.UUID) ([]db.ListTimesByMeetRow, error) {
+func (r *TimeRepository) ListByMeet(ctx context.Context, meetID uuid.UUID) ([]db.Time, error) {
 	times, err := r.queries.ListTimesByMeet(ctx, meetID)
 	if err != nil {
 		return nil, fmt.Errorf("list times by meet: %w", err)

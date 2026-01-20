@@ -13,6 +13,7 @@ import (
 	"github.com/bpg/swimstats/backend/internal/auth"
 	"github.com/bpg/swimstats/backend/internal/domain/comparison"
 	"github.com/bpg/swimstats/backend/internal/domain/meet"
+	"github.com/bpg/swimstats/backend/internal/domain/standard"
 	"github.com/bpg/swimstats/backend/internal/domain/swimmer"
 	timeservice "github.com/bpg/swimstats/backend/internal/domain/time"
 	"github.com/bpg/swimstats/backend/internal/store/db"
@@ -26,17 +27,19 @@ type Router struct {
 	pool         *pgxpool.Pool
 
 	// Services
-	swimmerService *swimmer.Service
-	meetService    *meet.Service
-	timeService    *timeservice.Service
-	pbService      *comparison.PersonalBestService
+	swimmerService  *swimmer.Service
+	meetService     *meet.Service
+	timeService     *timeservice.Service
+	pbService       *comparison.PersonalBestService
+	standardService *standard.Service
 
 	// Handlers
-	authHandler    *handlers.AuthHandler
-	swimmerHandler *handlers.SwimmerHandler
-	meetHandler    *handlers.MeetHandler
-	timeHandler    *handlers.TimeHandler
-	pbHandler      *handlers.PersonalBestHandler
+	authHandler     *handlers.AuthHandler
+	swimmerHandler  *handlers.SwimmerHandler
+	meetHandler     *handlers.MeetHandler
+	timeHandler     *handlers.TimeHandler
+	pbHandler       *handlers.PersonalBestHandler
+	standardHandler *handlers.StandardHandler
 }
 
 // NewRouter creates a new API router with all dependencies.
@@ -48,12 +51,14 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 	swimmerRepo := postgres.NewSwimmerRepository(queries)
 	meetRepo := postgres.NewMeetRepository(queries)
 	timeRepo := postgres.NewTimeRepository(queries)
+	standardRepo := postgres.NewStandardRepository(queries)
 
 	// Create services
 	swimmerService := swimmer.NewService(swimmerRepo)
 	meetService := meet.NewService(meetRepo)
 	timeService := timeservice.NewService(timeRepo, meetRepo)
 	pbService := comparison.NewPersonalBestService(timeRepo)
+	standardService := standard.NewService(standardRepo)
 
 	// Create handlers
 	authHandler := handlers.NewAuthHandler(authProvider)
@@ -61,20 +66,23 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 	meetHandler := handlers.NewMeetHandler(meetService)
 	timeHandler := handlers.NewTimeHandler(timeService, swimmerService)
 	pbHandler := handlers.NewPersonalBestHandler(pbService, swimmerService)
+	standardHandler := handlers.NewStandardHandler(standardService)
 
 	return &Router{
-		logger:         logger,
-		authProvider:   authProvider,
-		pool:           pool,
-		swimmerService: swimmerService,
-		meetService:    meetService,
-		timeService:    timeService,
-		pbService:      pbService,
-		authHandler:    authHandler,
-		swimmerHandler: swimmerHandler,
-		meetHandler:    meetHandler,
-		timeHandler:    timeHandler,
-		pbHandler:      pbHandler,
+		logger:          logger,
+		authProvider:    authProvider,
+		pool:            pool,
+		swimmerService:  swimmerService,
+		meetService:     meetService,
+		timeService:     timeService,
+		pbService:       pbService,
+		standardService: standardService,
+		authHandler:     authHandler,
+		swimmerHandler:  swimmerHandler,
+		meetHandler:     meetHandler,
+		timeHandler:     timeHandler,
+		pbHandler:       pbHandler,
+		standardHandler: standardHandler,
 	}
 }
 
@@ -128,14 +136,14 @@ func (rt *Router) Handler() http.Handler {
 			// Personal Bests
 			r.Get("/personal-bests", rt.pbHandler.GetPersonalBests)
 
-			// Standards (to be implemented in US3)
-			r.Get("/standards", handlers.NotImplemented)
-			r.Post("/standards", handlers.NotImplemented)
-			r.Get("/standards/{id}", handlers.NotImplemented)
-			r.Put("/standards/{id}", handlers.NotImplemented)
-			r.Delete("/standards/{id}", handlers.NotImplemented)
-			r.Put("/standards/{id}/times", handlers.NotImplemented)
-			r.Post("/standards/import", handlers.NotImplemented)
+			// Standards
+			r.Get("/standards", rt.standardHandler.ListStandards)
+			r.Post("/standards", rt.standardHandler.CreateStandard)
+			r.Post("/standards/import", rt.standardHandler.ImportStandard)
+			r.Get("/standards/{id}", rt.standardHandler.GetStandard)
+			r.Put("/standards/{id}", rt.standardHandler.UpdateStandard)
+			r.Delete("/standards/{id}", rt.standardHandler.DeleteStandard)
+			r.Put("/standards/{id}/times", rt.standardHandler.SetStandardTimes)
 
 			// Comparisons (to be implemented in US4)
 			r.Get("/comparisons", handlers.NotImplemented)

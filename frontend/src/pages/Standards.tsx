@@ -1,10 +1,26 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { StandardList, StandardForm } from '@/components/standards';
+import { StandardInput } from '@/types/standard';
+import { useCreateStandard } from '@/hooks/useStandards';
+import { ErrorBanner } from '@/components/ui';
 
 /**
  * Standards page - manage time standards.
  */
 export function Standards() {
+  const [showForm, setShowForm] = useState(false);
+  const createStandard = useCreateStandard();
+
+  const handleCreateStandard = async (input: StandardInput) => {
+    try {
+      await createStandard.mutateAsync(input);
+      setShowForm(false);
+    } catch {
+      // Error is handled by mutation
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -14,35 +30,25 @@ export function Standards() {
             Manage qualifying time standards to compare your times against.
           </p>
         </div>
-        <Button>Add Standard</Button>
+        {!showForm && <Button onClick={() => setShowForm(true)}>Add Standard</Button>}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Available Standards</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-12 text-slate-500">
-            <svg
-              className="mx-auto h-12 w-12 text-slate-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
-            </svg>
-            <h3 className="mt-4 text-lg font-medium text-slate-900">No standards yet</h3>
-            <p className="mt-2 text-sm">
-              Add time standards like Swimming Canada or Swim Ontario to compare your times.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {createStandard.error && (
+        <ErrorBanner message={createStandard.error.message || 'Failed to create standard'} />
+      )}
+
+      {showForm ? (
+        <StandardForm
+          onSubmit={handleCreateStandard}
+          onCancel={() => setShowForm(false)}
+          isLoading={createStandard.isPending}
+        />
+      ) : (
+        <StandardList
+          linkToDetails
+          emptyMessage="Add time standards like Swimming Canada or Swim Ontario to compare your times."
+        />
+      )}
     </div>
   );
 }

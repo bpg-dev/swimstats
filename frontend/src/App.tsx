@@ -17,6 +17,7 @@ const AllTimes = lazy(() => import('@/pages/AllTimes'));
 const PersonalBests = lazy(() => import('@/pages/PersonalBests'));
 const Progress = lazy(() => import('@/pages/Progress'));
 const Standards = lazy(() => import('@/pages/Standards'));
+const StandardDetail = lazy(() => import('@/pages/StandardDetail'));
 const Compare = lazy(() => import('@/pages/Compare'));
 const Settings = lazy(() => import('@/pages/Settings'));
 
@@ -111,6 +112,7 @@ function AuthenticatedApp() {
           <Route path="/personal-bests" element={<PersonalBests />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/standards" element={<Standards />} />
+          <Route path="/standards/:id" element={<StandardDetail />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />

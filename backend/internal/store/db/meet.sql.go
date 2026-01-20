@@ -40,19 +40,7 @@ type CreateMeetParams struct {
 	CourseType string      `json:"course_type"`
 }
 
-type CreateMeetRow struct {
-	ID         uuid.UUID   `json:"id"`
-	Name       string      `json:"name"`
-	City       string      `json:"city"`
-	Country    string      `json:"country"`
-	StartDate  pgtype.Date `json:"start_date"`
-	EndDate    pgtype.Date `json:"end_date"`
-	CourseType string      `json:"course_type"`
-	CreatedAt  time.Time   `json:"created_at"`
-	UpdatedAt  time.Time   `json:"updated_at"`
-}
-
-func (q *Queries) CreateMeet(ctx context.Context, arg CreateMeetParams) (CreateMeetRow, error) {
+func (q *Queries) CreateMeet(ctx context.Context, arg CreateMeetParams) (Meet, error) {
 	row := q.db.QueryRow(ctx, createMeet,
 		arg.Name,
 		arg.City,
@@ -61,7 +49,7 @@ func (q *Queries) CreateMeet(ctx context.Context, arg CreateMeetParams) (CreateM
 		arg.EndDate,
 		arg.CourseType,
 	)
-	var i CreateMeetRow
+	var i Meet
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -92,21 +80,9 @@ FROM meets
 WHERE id = $1
 `
 
-type GetMeetRow struct {
-	ID         uuid.UUID   `json:"id"`
-	Name       string      `json:"name"`
-	City       string      `json:"city"`
-	Country    string      `json:"country"`
-	StartDate  pgtype.Date `json:"start_date"`
-	EndDate    pgtype.Date `json:"end_date"`
-	CourseType string      `json:"course_type"`
-	CreatedAt  time.Time   `json:"created_at"`
-	UpdatedAt  time.Time   `json:"updated_at"`
-}
-
-func (q *Queries) GetMeet(ctx context.Context, id uuid.UUID) (GetMeetRow, error) {
+func (q *Queries) GetMeet(ctx context.Context, id uuid.UUID) (Meet, error) {
 	row := q.db.QueryRow(ctx, getMeet, id)
-	var i GetMeetRow
+	var i Meet
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -326,19 +302,7 @@ type UpdateMeetParams struct {
 	CourseType string      `json:"course_type"`
 }
 
-type UpdateMeetRow struct {
-	ID         uuid.UUID   `json:"id"`
-	Name       string      `json:"name"`
-	City       string      `json:"city"`
-	Country    string      `json:"country"`
-	StartDate  pgtype.Date `json:"start_date"`
-	EndDate    pgtype.Date `json:"end_date"`
-	CourseType string      `json:"course_type"`
-	CreatedAt  time.Time   `json:"created_at"`
-	UpdatedAt  time.Time   `json:"updated_at"`
-}
-
-func (q *Queries) UpdateMeet(ctx context.Context, arg UpdateMeetParams) (UpdateMeetRow, error) {
+func (q *Queries) UpdateMeet(ctx context.Context, arg UpdateMeetParams) (Meet, error) {
 	row := q.db.QueryRow(ctx, updateMeet,
 		arg.ID,
 		arg.Name,
@@ -348,7 +312,7 @@ func (q *Queries) UpdateMeet(ctx context.Context, arg UpdateMeetParams) (UpdateM
 		arg.EndDate,
 		arg.CourseType,
 	)
-	var i UpdateMeetRow
+	var i Meet
 	err := row.Scan(
 		&i.ID,
 		&i.Name,

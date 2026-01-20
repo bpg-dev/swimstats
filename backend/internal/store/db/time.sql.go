@@ -97,19 +97,7 @@ type CreateTimeParams struct {
 	Notes     pgtype.Text `json:"notes"`
 }
 
-type CreateTimeRow struct {
-	ID        uuid.UUID   `json:"id"`
-	SwimmerID uuid.UUID   `json:"swimmer_id"`
-	MeetID    uuid.UUID   `json:"meet_id"`
-	Event     string      `json:"event"`
-	TimeMs    int32       `json:"time_ms"`
-	EventDate pgtype.Date `json:"event_date"`
-	Notes     pgtype.Text `json:"notes"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
-}
-
-func (q *Queries) CreateTime(ctx context.Context, arg CreateTimeParams) (CreateTimeRow, error) {
+func (q *Queries) CreateTime(ctx context.Context, arg CreateTimeParams) (Time, error) {
 	row := q.db.QueryRow(ctx, createTime,
 		arg.SwimmerID,
 		arg.MeetID,
@@ -118,7 +106,7 @@ func (q *Queries) CreateTime(ctx context.Context, arg CreateTimeParams) (CreateT
 		arg.EventDate,
 		arg.Notes,
 	)
-	var i CreateTimeRow
+	var i Time
 	err := row.Scan(
 		&i.ID,
 		&i.SwimmerID,
@@ -325,21 +313,9 @@ FROM times t
 WHERE t.id = $1
 `
 
-type GetTimeRow struct {
-	ID        uuid.UUID   `json:"id"`
-	SwimmerID uuid.UUID   `json:"swimmer_id"`
-	MeetID    uuid.UUID   `json:"meet_id"`
-	Event     string      `json:"event"`
-	TimeMs    int32       `json:"time_ms"`
-	EventDate pgtype.Date `json:"event_date"`
-	Notes     pgtype.Text `json:"notes"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
-}
-
-func (q *Queries) GetTime(ctx context.Context, id uuid.UUID) (GetTimeRow, error) {
+func (q *Queries) GetTime(ctx context.Context, id uuid.UUID) (Time, error) {
 	row := q.db.QueryRow(ctx, getTime, id)
-	var i GetTimeRow
+	var i Time
 	err := row.Scan(
 		&i.ID,
 		&i.SwimmerID,
@@ -582,27 +558,15 @@ WHERE t.meet_id = $1
 ORDER BY COALESCE(t.event_date, (SELECT start_date FROM meets WHERE id = t.meet_id)), t.event, t.time_ms
 `
 
-type ListTimesByMeetRow struct {
-	ID        uuid.UUID   `json:"id"`
-	SwimmerID uuid.UUID   `json:"swimmer_id"`
-	MeetID    uuid.UUID   `json:"meet_id"`
-	Event     string      `json:"event"`
-	TimeMs    int32       `json:"time_ms"`
-	EventDate pgtype.Date `json:"event_date"`
-	Notes     pgtype.Text `json:"notes"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
-}
-
-func (q *Queries) ListTimesByMeet(ctx context.Context, meetID uuid.UUID) ([]ListTimesByMeetRow, error) {
+func (q *Queries) ListTimesByMeet(ctx context.Context, meetID uuid.UUID) ([]Time, error) {
 	rows, err := q.db.Query(ctx, listTimesByMeet, meetID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []ListTimesByMeetRow{}
+	items := []Time{}
 	for rows.Next() {
-		var i ListTimesByMeetRow
+		var i Time
 		if err := rows.Scan(
 			&i.ID,
 			&i.SwimmerID,
@@ -640,19 +604,7 @@ type UpdateTimeParams struct {
 	Notes     pgtype.Text `json:"notes"`
 }
 
-type UpdateTimeRow struct {
-	ID        uuid.UUID   `json:"id"`
-	SwimmerID uuid.UUID   `json:"swimmer_id"`
-	MeetID    uuid.UUID   `json:"meet_id"`
-	Event     string      `json:"event"`
-	TimeMs    int32       `json:"time_ms"`
-	EventDate pgtype.Date `json:"event_date"`
-	Notes     pgtype.Text `json:"notes"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
-}
-
-func (q *Queries) UpdateTime(ctx context.Context, arg UpdateTimeParams) (UpdateTimeRow, error) {
+func (q *Queries) UpdateTime(ctx context.Context, arg UpdateTimeParams) (Time, error) {
 	row := q.db.QueryRow(ctx, updateTime,
 		arg.ID,
 		arg.MeetID,
@@ -661,7 +613,7 @@ func (q *Queries) UpdateTime(ctx context.Context, arg UpdateTimeParams) (UpdateT
 		arg.EventDate,
 		arg.Notes,
 	)
-	var i UpdateTimeRow
+	var i Time
 	err := row.Scan(
 		&i.ID,
 		&i.SwimmerID,

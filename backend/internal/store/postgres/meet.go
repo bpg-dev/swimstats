@@ -22,7 +22,7 @@ func NewMeetRepository(queries *db.Queries) *MeetRepository {
 }
 
 // Get retrieves a meet by ID.
-func (r *MeetRepository) Get(ctx context.Context, id uuid.UUID) (*db.GetMeetRow, error) {
+func (r *MeetRepository) Get(ctx context.Context, id uuid.UUID) (*db.Meet, error) {
 	meet, err := r.queries.GetMeet(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -91,7 +91,7 @@ func (r *MeetRepository) Count(ctx context.Context, courseType *string) (int64, 
 }
 
 // Create creates a new meet.
-func (r *MeetRepository) Create(ctx context.Context, params db.CreateMeetParams) (*db.CreateMeetRow, error) {
+func (r *MeetRepository) Create(ctx context.Context, params db.CreateMeetParams) (*db.Meet, error) {
 	meet, err := r.queries.CreateMeet(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("create meet: %w", err)
@@ -100,7 +100,7 @@ func (r *MeetRepository) Create(ctx context.Context, params db.CreateMeetParams)
 }
 
 // Update updates an existing meet.
-func (r *MeetRepository) Update(ctx context.Context, params db.UpdateMeetParams) (*db.UpdateMeetRow, error) {
+func (r *MeetRepository) Update(ctx context.Context, params db.UpdateMeetParams) (*db.Meet, error) {
 	meet, err := r.queries.UpdateMeet(ctx, params)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

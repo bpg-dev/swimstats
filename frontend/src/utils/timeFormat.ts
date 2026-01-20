@@ -94,6 +94,15 @@ export function isValidTimeString(timeStr: string): boolean {
 }
 
 /**
+ * Parse time string to milliseconds, returning 0 for invalid inputs.
+ * @param timeStr - Time string (e.g., "28.45" or "1:05.32")
+ * @returns Time in milliseconds, or 0 if invalid
+ */
+export function parseTimeToMs(timeStr: string): number {
+  return parseTime(timeStr) ?? 0;
+}
+
+/**
  * Format a meet date range for display.
  * @param startDate - Start date string (YYYY-MM-DD)
  * @param endDate - End date string (YYYY-MM-DD)
