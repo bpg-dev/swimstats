@@ -140,6 +140,7 @@ func (rt *Router) Handler() http.Handler {
 			r.Get("/standards", rt.standardHandler.ListStandards)
 			r.Post("/standards", rt.standardHandler.CreateStandard)
 			r.Post("/standards/import", rt.standardHandler.ImportStandard)
+			r.Post("/standards/import/json", rt.standardHandler.ImportStandardsFromJSON)
 			r.Get("/standards/{id}", rt.standardHandler.GetStandard)
 			r.Put("/standards/{id}", rt.standardHandler.UpdateStandard)
 			r.Delete("/standards/{id}", rt.standardHandler.DeleteStandard)

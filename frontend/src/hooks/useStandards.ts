@@ -7,6 +7,7 @@ import {
   StandardTimeInput,
   StandardImportInput,
   StandardListParams,
+  JSONFileInput,
 } from '@/types/standard';
 
 export const standardKeys = {
@@ -85,6 +86,17 @@ export function useImportStandard() {
 
   return useMutation({
     mutationFn: (input: StandardImportInput) => standardService.importStandard(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: standardKeys.lists() });
+    },
+  });
+}
+
+export function useImportFromJSON() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: JSONFileInput) => standardService.importFromJSON(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: standardKeys.lists() });
     },

@@ -11,7 +11,8 @@
 
 **Current Status** (as of 2026-01-20):
 - ✅ MVP Complete: Phases 1-4b (Setup, Foundation, US1, US2, All Times)
-- ⏳ Next: Phase 5 (US3 - Time Standards)
+- ✅ Phase 5 Complete: US3 - Time Standards (CRUD, JSON import, data files)
+- ⏳ Next: Phase 6 (US4 - Compare Times Against Standards)
 - Clarifications applied: JSON export format, basic accessibility (semantic HTML + keyboard nav)
 
 ## Format: `[ID] [P?] [Story?] Description`
@@ -323,34 +324,43 @@
 
 ### Tests for User Story 3
 
-- [ ] T100 [P] [US3] Create standards API tests in backend/tests/integration/standard_test.go
-- [ ] T101 [P] [US3] Create standards component tests in frontend/tests/components/standards.test.tsx
+- [x] T100 [P] [US3] Create standards API tests in backend/tests/integration/standard_test.go
+- [x] T101 [P] [US3] Create standards component tests in frontend/tests/components/standards.test.tsx
 
 ### Backend Implementation for US3
 
-- [ ] T102 [P] [US3] Create standard sqlc queries in backend/internal/store/queries/standard.sql
-- [ ] T103 [P] [US3] Create standard time sqlc queries in backend/internal/store/queries/standardtime.sql
-- [ ] T104 Run sqlc generate for standards
-- [ ] T105 [US3] Create standard repository in backend/internal/store/postgres/standard.go
-- [ ] T106 [US3] Create standard service in backend/internal/domain/standard/service.go
-- [ ] T107 [US3] Create standard handlers in backend/internal/api/handlers/standard.go (CRUD /standards, PUT /standards/{id}/times)
-- [ ] T108 [US3] Create standards import handler in backend/internal/api/handlers/standard.go (POST /standards/import)
-- [ ] T109 [US3] Create Swimming Canada standards seed data in backend/tests/testdata/swimming_canada_standards.json
-- [ ] T110 [US3] Create Swim Ontario standards seed data in backend/tests/testdata/swim_ontario_standards.json
-- [ ] T111 [US3] Create seed migration in backend/migrations/002_seed_standards.up.sql
-- [ ] T112 [US3] Add gender field to time_standards table in backend/migrations/003_add_gender_to_standards.up.sql
+- [x] T102 [P] [US3] Create standard sqlc queries in backend/internal/store/queries/standard.sql
+- [x] T103 [P] [US3] Create standard time sqlc queries (combined in standard.sql)
+- [x] T104 Run sqlc generate for standards
+- [x] T105 [US3] Create standard repository in backend/internal/store/postgres/standard.go
+- [x] T106 [US3] Create standard service in backend/internal/domain/standard/service.go
+- [x] T107 [US3] Create standard handlers in backend/internal/api/handlers/standard.go (CRUD /standards, PUT /standards/{id}/times)
+- [x] T108 [US3] Create standards import handler in backend/internal/api/handlers/standard.go (POST /standards/import, POST /standards/import/json)
+- [x] T109 [US3] Create Swimming Canada standards data files in data/swimming-canada-*.json
+- [x] T110 [US3] Create Swim Ontario standards data files in data/swim-ontario-*.json
+- [x] T111 [US3] Add database migration for time_standards and standard_times tables (003_time_standards.up.sql)
+- [x] T112 [US3] Gender field included in time_standards table from initial migration
 
 ### Frontend Implementation for US3
 
-- [ ] T113 [P] [US3] Create standard types in frontend/src/types/standard.ts
-- [ ] T114 [US3] Create standards API service in frontend/src/services/standards.ts
-- [ ] T115 [US3] Create useStandards hook in frontend/src/hooks/useStandards.ts
-- [ ] T116 [US3] Create StandardList component in frontend/src/components/standards/StandardList.tsx
-- [ ] T117 [US3] Create StandardForm component in frontend/src/components/standards/StandardForm.tsx
-- [ ] T118 [US3] Create StandardTimesEditor component in frontend/src/components/standards/StandardTimesEditor.tsx
-- [ ] T119 [US3] Create StandardImportForm component in frontend/src/components/standards/StandardImportForm.tsx
-- [ ] T120 [US3] Create Standards page in frontend/src/pages/Standards.tsx
-- [ ] T121 [US3] Create StandardDetail page in frontend/src/pages/StandardDetail.tsx
+- [x] T113 [P] [US3] Create standard types in frontend/src/types/standard.ts
+- [x] T114 [US3] Create standards API service in frontend/src/services/standards.ts
+- [x] T115 [US3] Create useStandards hook in frontend/src/hooks/useStandards.ts
+- [x] T116 [US3] Create StandardList component in frontend/src/components/standards/StandardList.tsx
+- [x] T117 [US3] Create StandardForm component in frontend/src/components/standards/StandardForm.tsx
+- [x] T118 [US3] Create StandardTimesEditor component in frontend/src/components/standards/StandardTimesEditor.tsx
+- [x] T119 [US3] Create StandardImportForm component in frontend/src/components/standards/StandardImportForm.tsx (JSON file upload)
+- [x] T120 [US3] Create Standards page in frontend/src/pages/Standards.tsx
+- [x] T121 [US3] Create StandardDetail page in frontend/src/pages/StandardDetail.tsx
+
+### US3 Enhancement: JSON File Import
+
+- [x] T122 [US3] Create JSON file format specification in data/README.md
+- [x] T123 [US3] Add JSONFileInput types and ImportFromJSON service method in backend
+- [x] T124 [US3] Add POST /standards/import/json endpoint for bulk JSON import
+- [x] T125 [US3] Add useImportFromJSON hook in frontend
+- [x] T126 [US3] Create Swim Ontario 2025-2026 female standards (SC + LC JSON files)
+- [x] T127 [US3] Create Swimming Canada 2026-2028 female standards (SC + LC JSON files)
 
 **Checkpoint**: User Story 3 complete - can manage time standards
 
@@ -559,8 +569,8 @@ Phase 7 (US5: Charts)  Phase 8 (US6: Standing)
 | Increment | Stories | Capability | Status |
 |-----------|---------|------------|--------|
 | MVP | US1 + US2 + All Times | Record times, view PBs, browse history | ✅ Complete |
-| +Standards | US3 | Add/manage time standards | ⏳ Next |
-| +Comparison | US4 | Compare against standards | Pending |
+| +Standards | US3 | Add/manage time standards, JSON import | ✅ Complete |
+| +Comparison | US4 | Compare against standards | ⏳ Next |
 | +Charts | US5 | View progress graphs | Pending |
 | +Dashboard | US6 | Qualification standing view | Pending |
 | +Export | Phase 9 | JSON backup/restore | Pending |

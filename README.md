@@ -190,7 +190,9 @@ swimstats/
 │   │   │   └── middleware/  # HTTP middleware
 │   │   ├── auth/            # OIDC authentication
 │   │   ├── domain/          # Business logic (services)
+│   │   │   ├── comparison/  # Personal bests service
 │   │   │   ├── meet/        # Meet service
+│   │   │   ├── standard/    # Time standards service
 │   │   │   ├── swimmer/     # Swimmer service
 │   │   │   └── time/        # Time service
 │   │   └── store/           # Data access layer
@@ -199,6 +201,7 @@ swimstats/
 │   │       └── queries/     # SQL query definitions
 │   ├── migrations/          # Database migrations
 │   └── tests/               # Integration tests
+├── data/                    # Time standards JSON files for import
 ├── frontend/
 │   ├── src/
 │   │   ├── components/      # React components
@@ -250,6 +253,11 @@ The API follows RESTful conventions:
 | `/api/v1/times/batch` | POST | Create multiple times |
 | `/api/v1/times/:id` | GET, PUT, DELETE | Get/update/delete time |
 | `/api/v1/personal-bests` | GET | Get personal bests |
+| `/api/v1/standards` | GET, POST | List/create time standards |
+| `/api/v1/standards/import` | POST | Import single standard with times |
+| `/api/v1/standards/import/json` | POST | Bulk import from JSON file |
+| `/api/v1/standards/:id` | GET, PUT, DELETE | Get/update/delete standard |
+| `/api/v1/standards/:id/times` | PUT | Set all times for a standard |
 
 All endpoints require authentication. In development mode, the backend accepts requests with a mock `Authorization: Bearer dev-token` header or no auth at all (thanks to `ENV=development`).
 

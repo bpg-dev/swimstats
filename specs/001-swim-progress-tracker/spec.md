@@ -289,11 +289,12 @@ As a swim parent, I want to import my daughter's historical swim results from on
 - **FR-051**: System MUST allow defining qualifying times for each event within a standard
 - **FR-052**: System MUST support age-group-based standards following Swimming Canada age brackets (10&Under, 11-12, 13-14, 15-17, Senior/Open)
 - **FR-053**: System MUST allow editing and deleting time standards
-- **FR-054**: System MUST allow importing time standards from structured data (for convenience when adding Swimming Canada or provincial standards)
+- **FR-054**: System MUST allow importing time standards from structured JSON files (for convenience when adding Swimming Canada or provincial standards)
+- **FR-054a**: System MUST support bulk import of multiple standards from a single JSON file (e.g., OSC and OAG from one file)
 - **FR-055**: System MUST support defining standards for either or both course types (25m/50m)
-- **FR-056**: System MUST include pre-loaded time standards for all age groups and events:
-  - Swimming Canada national standards (Provincial, Western/Eastern Canadian, Junior National, Senior National)
-  - Swim Ontario provincial standards
+- **FR-056**: System MUST include time standards data files in `data/` directory for easy import:
+  - Swimming Canada national standards (Trials Senior, Trials Junior, Usport, Canadian Open)
+  - Swim Ontario provincial standards (OSC, OAG)
 - **FR-057**: System MUST display only standards applicable to the current course context in comparisons
 - **FR-058**: System MUST store time standards with gender designation (female/male)
 - **FR-059**: System MUST automatically filter available standards to match the swimmer's gender

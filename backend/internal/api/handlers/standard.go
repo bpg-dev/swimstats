@@ -248,3 +248,34 @@ func (h *StandardHandler) ImportStandard(w http.ResponseWriter, r *http.Request)
 
 	middleware.WriteJSON(w, http.StatusCreated, std)
 }
+
+// ImportStandardsFromJSON handles POST /standards/import/json requests.
+// This endpoint accepts the JSON file format with multiple standards.
+func (h *StandardHandler) ImportStandardsFromJSON(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	// Check write access
+	user := middleware.GetUser(ctx)
+	if user != nil && !user.AccessLevel.CanWrite() {
+		middleware.WriteError(w, http.StatusForbidden, "write access required", "FORBIDDEN")
+		return
+	}
+
+	var input standard.JSONFileInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		middleware.WriteError(w, http.StatusBadRequest, "invalid JSON file format", "INVALID_INPUT")
+		return
+	}
+
+	result, err := h.service.ImportFromJSON(ctx, input)
+	if err != nil {
+		if isValidationError(err) {
+			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
+			return
+		}
+		middleware.WriteError(w, http.StatusInternalServerError, "failed to import standards", "INTERNAL_ERROR")
+		return
+	}
+
+	middleware.WriteJSON(w, http.StatusCreated, result)
+}

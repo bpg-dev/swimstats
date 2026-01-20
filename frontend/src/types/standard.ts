@@ -52,3 +52,26 @@ export interface StandardListParams {
   course_type?: CourseType;
   gender?: Gender;
 }
+
+// JSON file import types
+export interface JSONStandardMeta {
+  name: string;
+  description?: string;
+}
+
+export interface JSONFileInput {
+  season: string;
+  source: string;
+  course_type: CourseType;
+  gender: Gender;
+  standards: Record<string, JSONStandardMeta>;
+  age_groups: string[];
+  times: Record<string, Record<string, Record<string, string | null>>>;
+}
+
+export interface JSONImportResult {
+  standards: StandardWithTimes[];
+  imported: number;
+  skipped: number;
+  errors?: string[];
+}

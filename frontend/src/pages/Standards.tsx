@@ -1,21 +1,23 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { StandardList, StandardForm } from '@/components/standards';
+import { StandardList, StandardForm, StandardImportForm } from '@/components/standards';
 import { StandardInput } from '@/types/standard';
 import { useCreateStandard } from '@/hooks/useStandards';
 import { ErrorBanner } from '@/components/ui';
+
+type ViewMode = 'list' | 'create' | 'import';
 
 /**
  * Standards page - manage time standards.
  */
 export function Standards() {
-  const [showForm, setShowForm] = useState(false);
+  const [mode, setMode] = useState<ViewMode>('list');
   const createStandard = useCreateStandard();
 
   const handleCreateStandard = async (input: StandardInput) => {
     try {
       await createStandard.mutateAsync(input);
-      setShowForm(false);
+      setMode('list');
     } catch {
       // Error is handled by mutation
     }
@@ -30,20 +32,36 @@ export function Standards() {
             Manage qualifying time standards to compare your times against.
           </p>
         </div>
-        {!showForm && <Button onClick={() => setShowForm(true)}>Add Standard</Button>}
+        {mode === 'list' && (
+          <div className="flex gap-2">
+            <Button variant="secondary" onClick={() => setMode('import')}>
+              Import JSON
+            </Button>
+            <Button onClick={() => setMode('create')}>Add Standard</Button>
+          </div>
+        )}
       </div>
 
       {createStandard.error && (
         <ErrorBanner message={createStandard.error.message || 'Failed to create standard'} />
       )}
 
-      {showForm ? (
+      {mode === 'create' && (
         <StandardForm
           onSubmit={handleCreateStandard}
-          onCancel={() => setShowForm(false)}
+          onCancel={() => setMode('list')}
           isLoading={createStandard.isPending}
         />
-      ) : (
+      )}
+
+      {mode === 'import' && (
+        <StandardImportForm
+          onSuccess={() => setMode('list')}
+          onCancel={() => setMode('list')}
+        />
+      )}
+
+      {mode === 'list' && (
         <StandardList
           linkToDetails
           emptyMessage="Add time standards like Swimming Canada or Swim Ontario to compare your times."

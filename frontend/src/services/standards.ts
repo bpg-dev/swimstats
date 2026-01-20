@@ -7,6 +7,8 @@ import {
   StandardImportInput,
   StandardList,
   StandardListParams,
+  JSONFileInput,
+  JSONImportResult,
 } from '@/types/standard';
 
 export const standardService = {
@@ -36,5 +38,9 @@ export const standardService = {
 
   async importStandard(input: StandardImportInput): Promise<StandardWithTimes> {
     return post<StandardWithTimes>('/v1/standards/import', input);
+  },
+
+  async importFromJSON(input: JSONFileInput): Promise<JSONImportResult> {
+    return post<JSONImportResult>('/v1/standards/import/json', input);
   },
 };

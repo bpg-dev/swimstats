@@ -1,0 +1,70 @@
+{
+  "season": "2026-2028",
+  "source": "Swimming Canada",
+  "course_type": "25m",
+  "gender": "female",
+  "standards": {
+    "USPORT": {
+      "name": "Swimming Canada Usport SCM 2026-2028",
+      "description": "Swimming Canada Trials Usport SCM Standards (Female)"
+    },
+    "CDN_OPEN": {
+      "name": "Swimming Canada Canadian Open SCM 2026-2028",
+      "description": "Swimming Canada Canadian Open SCM Standards (Female)"
+    }
+  },
+  "age_groups": ["OPEN"],
+  "times": {
+    "50FR": {
+      "OPEN": { "USPORT": "25.50", "CDN_OPEN": "26.36" }
+    },
+    "100FR": {
+      "OPEN": { "USPORT": "55.19", "CDN_OPEN": "56.61" }
+    },
+    "200FR": {
+      "OPEN": { "USPORT": "2:00.39", "CDN_OPEN": "2:02.47" }
+    },
+    "400FR": {
+      "OPEN": { "USPORT": "4:16.17", "CDN_OPEN": "4:21.15" }
+    },
+    "800FR": {
+      "OPEN": { "USPORT": "8:53.74", "CDN_OPEN": "9:02.58" }
+    },
+    "1500FR": {
+      "OPEN": { "USPORT": null, "CDN_OPEN": "17:36.18" }
+    },
+    "50BK": {
+      "OPEN": { "USPORT": "28.96", "CDN_OPEN": "29.96" }
+    },
+    "100BK": {
+      "OPEN": { "USPORT": "1:01.40", "CDN_OPEN": "1:03.64" }
+    },
+    "200BK": {
+      "OPEN": { "USPORT": "2:14.41", "CDN_OPEN": "2:17.89" }
+    },
+    "50BR": {
+      "OPEN": { "USPORT": "32.48", "CDN_OPEN": "33.26" }
+    },
+    "100BR": {
+      "OPEN": { "USPORT": "1:10.46", "CDN_OPEN": "1:12.29" }
+    },
+    "200BR": {
+      "OPEN": { "USPORT": "2:33.74", "CDN_OPEN": "2:37.33" }
+    },
+    "50FL": {
+      "OPEN": { "USPORT": "27.43", "CDN_OPEN": "27.94" }
+    },
+    "100FL": {
+      "OPEN": { "USPORT": "1:00.54", "CDN_OPEN": "1:01.95" }
+    },
+    "200FL": {
+      "OPEN": { "USPORT": "2:16.63", "CDN_OPEN": "2:17.87" }
+    },
+    "200IM": {
+      "OPEN": { "USPORT": "2:16.72", "CDN_OPEN": "2:20.19" }
+    },
+    "400IM": {
+      "OPEN": { "USPORT": "4:54.23", "CDN_OPEN": "4:57.84" }
+    }
+  }
+}

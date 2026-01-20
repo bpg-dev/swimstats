@@ -133,6 +133,34 @@ type ListParams struct {
 	Gender     *string
 }
 
+// JSONFileInput represents the JSON file format for bulk importing standards.
+type JSONFileInput struct {
+	Season     string                       `json:"season"`
+	Source     string                       `json:"source"`
+	CourseType string                       `json:"course_type"`
+	Gender     string                       `json:"gender"`
+	Standards  map[string]JSONStandardMeta  `json:"standards"`
+	AgeGroups  []string                     `json:"age_groups"`
+	Times      map[string]map[string]JSONTime `json:"times"` // event -> age_group -> times
+}
+
+// JSONStandardMeta contains metadata for a standard in the JSON file.
+type JSONStandardMeta struct {
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+}
+
+// JSONTime contains the time values for different standards.
+type JSONTime map[string]string // standard_code -> time_string (e.g., "OSC" -> "1:05.32")
+
+// JSONImportResult contains the results of a JSON file import.
+type JSONImportResult struct {
+	Standards []StandardWithTimes `json:"standards"`
+	Imported  int                 `json:"imported"`
+	Skipped   int                 `json:"skipped"`
+	Errors    []string            `json:"errors,omitempty"`
+}
+
 // Get retrieves a standard by ID (without times).
 func (s *Service) Get(ctx context.Context, id uuid.UUID) (*Standard, error) {
 	dbStandard, err := s.repo.Get(ctx, id)
@@ -361,6 +389,179 @@ func (s *Service) Import(ctx context.Context, input ImportInput) (*StandardWithT
 	}
 
 	return toStandardWithTimes(dbStandard, dbTimes), nil
+}
+
+// ImportFromJSON imports standards from a JSON file format.
+// Each standard code (e.g., "OSC", "OAG") in the file creates a separate standard.
+func (s *Service) ImportFromJSON(ctx context.Context, input JSONFileInput) (*JSONImportResult, error) {
+	// Validate basic fields
+	if input.CourseType != "25m" && input.CourseType != "50m" {
+		return nil, errors.New("validation: course_type must be '25m' or '50m'")
+	}
+	if input.Gender != "female" && input.Gender != "male" {
+		return nil, errors.New("validation: gender must be 'female' or 'male'")
+	}
+	if len(input.Standards) == 0 {
+		return nil, errors.New("validation: no standards defined in file")
+	}
+	if len(input.Times) == 0 {
+		return nil, errors.New("validation: no times defined in file")
+	}
+
+	result := &JSONImportResult{
+		Standards: make([]StandardWithTimes, 0),
+	}
+
+	// Process each standard type (e.g., OSC, OAG)
+	for code, meta := range input.Standards {
+		// Build the standard name
+		name := meta.Name
+		if name == "" {
+			name = fmt.Sprintf("%s %s %s", input.Source, code, input.Season)
+		}
+
+		// Check if standard already exists
+		emptyID := uuid.UUID{}
+		exists, err := s.repo.NameExists(ctx, name, emptyID)
+		if err != nil {
+			result.Errors = append(result.Errors, fmt.Sprintf("%s: failed to check name: %v", code, err))
+			result.Skipped++
+			continue
+		}
+		if exists {
+			result.Errors = append(result.Errors, fmt.Sprintf("%s: standard '%s' already exists", code, name))
+			result.Skipped++
+			continue
+		}
+
+		// Collect times for this standard
+		var times []StandardTimeInput
+		for event, ageGroups := range input.Times {
+			for ageGroupRaw, stdTimes := range ageGroups {
+				timeStr, ok := stdTimes[code]
+				if !ok || timeStr == "" {
+					continue // No time for this standard
+				}
+
+				// Parse time string to milliseconds
+				timeMs, err := parseTimeString(timeStr)
+				if err != nil {
+					result.Errors = append(result.Errors, fmt.Sprintf("%s/%s/%s: invalid time '%s': %v", code, event, ageGroupRaw, timeStr, err))
+					continue
+				}
+
+				// Map age group to our format
+				ageGroup := mapAgeGroup(ageGroupRaw)
+				if !domain.AgeGroup(ageGroup).IsValid() {
+					result.Errors = append(result.Errors, fmt.Sprintf("%s/%s: unknown age group '%s'", code, event, ageGroupRaw))
+					continue
+				}
+
+				// Validate event
+				if !domain.EventCode(event).IsValid() {
+					result.Errors = append(result.Errors, fmt.Sprintf("%s: unknown event '%s'", code, event))
+					continue
+				}
+
+				times = append(times, StandardTimeInput{
+					Event:    event,
+					AgeGroup: ageGroup,
+					TimeMs:   timeMs,
+				})
+			}
+		}
+
+		if len(times) == 0 {
+			result.Errors = append(result.Errors, fmt.Sprintf("%s: no valid times found", code))
+			result.Skipped++
+			continue
+		}
+
+		// Create the standard with times
+		importInput := ImportInput{
+			Name:        name,
+			Description: meta.Description,
+			CourseType:  input.CourseType,
+			Gender:      input.Gender,
+			Times:       times,
+		}
+
+		std, err := s.Import(ctx, importInput)
+		if err != nil {
+			result.Errors = append(result.Errors, fmt.Sprintf("%s: failed to import: %v", code, err))
+			result.Skipped++
+			continue
+		}
+
+		result.Standards = append(result.Standards, *std)
+		result.Imported++
+	}
+
+	return result, nil
+}
+
+// parseTimeString parses a time string like "1:05.32" or "0:28.50" to milliseconds.
+func parseTimeString(s string) (int, error) {
+	if s == "" {
+		return 0, errors.New("empty time string")
+	}
+
+	// Handle formats: "M:SS.ss", "MM:SS.ss", "S.ss", "SS.ss"
+	var minutes, seconds, hundredths int
+
+	// Try "M:SS.ss" or "MM:SS.ss" format first
+	n, err := fmt.Sscanf(s, "%d:%d.%d", &minutes, &seconds, &hundredths)
+	if err == nil && n == 3 {
+		// Adjust hundredths if only one digit was provided
+		if hundredths < 10 && len(s) > 0 && s[len(s)-2] == '.' {
+			hundredths *= 10
+		}
+		totalMs := (minutes*60+seconds)*1000 + hundredths*10
+		return totalMs, nil
+	}
+
+	// Try "S.ss" or "SS.ss" format (with leading "0:")
+	n, err = fmt.Sscanf(s, "0:%d.%d", &seconds, &hundredths)
+	if err == nil && n == 2 {
+		if hundredths < 10 && len(s) > 0 && s[len(s)-2] == '.' {
+			hundredths *= 10
+		}
+		totalMs := seconds*1000 + hundredths*10
+		return totalMs, nil
+	}
+
+	// Try plain "SS.ss" format
+	var secondsFloat float64
+	n, err = fmt.Sscanf(s, "%f", &secondsFloat)
+	if err == nil && n == 1 {
+		return int(secondsFloat * 1000), nil
+	}
+
+	return 0, fmt.Errorf("cannot parse time: %s", s)
+}
+
+// mapAgeGroup maps JSON age group codes to our internal format.
+func mapAgeGroup(raw string) string {
+	switch raw {
+	case "10U", "10&U", "10 & Under":
+		return "10U"
+	case "11U", "11&U", "11 & Under":
+		return "10U" // Map 11U to 10U for now
+	case "12", "12U":
+		return "11-12"
+	case "13U", "13&U", "13 & Under":
+		return "13-14"
+	case "14":
+		return "13-14"
+	case "15":
+		return "15-17"
+	case "16":
+		return "15-17"
+	case "17O", "17&O", "17 & Over", "17+", "OPEN", "Open":
+		return "OPEN"
+	default:
+		return raw
+	}
 }
 
 // Conversion helpers
