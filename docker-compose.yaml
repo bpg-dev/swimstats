@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16-alpine@sha256:23e88eb049fd5d54894d70100df61d38a49ed97909263f79d4ff4c30a5d5fca2
     container_name: swimstats-postgres
     environment:
       POSTGRES_USER: swimstats
@@ -20,7 +20,7 @@ services:
 
   # Optional: Run migrations automatically on startup
   migrate:
-    image: migrate/migrate:v4.17.0
+    image: migrate/migrate:v4.17.0@sha256:4d017c6fb5997127093648cab09e63d377997125c3d3dcca18e5d1c847da49fa
     container_name: swimstats-migrate
     depends_on:
       postgres:
