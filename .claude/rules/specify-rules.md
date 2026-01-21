@@ -162,4 +162,22 @@ docker-compose.yaml          # Local development environment
 - Swim Ontario 2025-2026 (OSC, OAG)
 
 <!-- MANUAL ADDITIONS START -->
+
+## Mandatory Pre-Flight Checks
+
+**BEFORE making any code changes**, you MUST:
+
+1. **Read the Project Constitution** at `.specify/memory/constitution.md`
+   - This document is the authoritative source for all development standards
+   - All other documentation is subordinate to the Constitution
+
+2. **Follow the PR Workflow** (Constitution §Development Workflow):
+   - **All changes MUST be submitted via Pull Requests** - no direct commits to any branch
+   - Create feature branches: `feature/*` for features, `fix/*` for bug fixes
+   - Never commit directly to `main`
+
+3. **Verify Constitution Compliance** before completing any task
+
+Failure to follow these requirements may result in rejected changes or rework.
+
 <!-- MANUAL ADDITIONS END -->
