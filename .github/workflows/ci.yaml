@@ -125,8 +125,10 @@ jobs:
           context: ./backend
           push: false
           tags: swimstats-backend:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=gha,scope=backend-${{ github.ref_name }}
+            type=gha,scope=backend-main
+          cache-to: type=gha,mode=max,scope=backend-${{ github.ref_name }}
 
   build-frontend:
     name: Build Frontend
@@ -144,5 +146,7 @@ jobs:
           context: ./frontend
           push: false
           tags: swimstats-frontend:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=gha,scope=frontend-${{ github.ref_name }}
+            type=gha,scope=frontend-main
+          cache-to: type=gha,mode=max,scope=frontend-${{ github.ref_name }}
