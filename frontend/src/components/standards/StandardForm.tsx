@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Standard, StandardInput, Gender } from '@/types/standard';
 import { CourseType } from '@/types/meet';
 import { Button, Input, Select, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
@@ -16,19 +16,12 @@ export function StandardForm({
   onCancel,
   isLoading = false,
 }: StandardFormProps) {
+  // State is initialized from `standard` prop. If parent needs to reset
+  // the form when standard changes, they should use a key prop.
   const [name, setName] = useState(standard?.name || '');
   const [description, setDescription] = useState(standard?.description || '');
   const [courseType, setCourseType] = useState<CourseType>(standard?.course_type || '25m');
   const [gender, setGender] = useState<Gender>(standard?.gender || 'female');
-
-  useEffect(() => {
-    if (standard) {
-      setName(standard.name);
-      setDescription(standard.description || '');
-      setCourseType(standard.course_type);
-      setGender(standard.gender);
-    }
-  }, [standard]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

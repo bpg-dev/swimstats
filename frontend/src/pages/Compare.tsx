@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent, Loading, ErrorBanner } from '@/components/ui';
 import { StandardSelector, ComparisonTable, ComparisonSummary } from '@/components/comparison';
@@ -11,18 +11,13 @@ import { useCourseType } from '@/stores/courseFilterStore';
  */
 export function Compare() {
   const [searchParams] = useSearchParams();
-  const [selectedStandardId, setSelectedStandardId] = useState<string>('');
+  // Initialize from URL param if present (lazy initialization avoids useEffect)
+  const [selectedStandardId, setSelectedStandardId] = useState<string>(
+    () => searchParams.get('standard_id') || ''
+  );
   const [showAllEvents, setShowAllEvents] = useState(false);
   const courseType = useCourseType();
   const { data: swimmer } = useSwimmer();
-
-  // Pre-select standard from query parameter if provided
-  useEffect(() => {
-    const standardIdParam = searchParams.get('standard_id');
-    if (standardIdParam && !selectedStandardId) {
-      setSelectedStandardId(standardIdParam);
-    }
-  }, [searchParams, selectedStandardId]);
 
   const {
     data: comparison,
