@@ -2,24 +2,21 @@
 ================================================================================
 SYNC IMPACT REPORT
 ================================================================================
-Version Change: N/A → 1.0.0 (Initial ratification)
+Version Change: 1.0.0 → 1.1.0
 
-Modified Principles: N/A (Initial creation)
+Modified Principles: N/A
 
 Added Sections:
-  - Core Principles (4 principles)
-  - Quality Gates
-  - Development Workflow
-  - Governance
+  - Pull Request Requirement (under Development Workflow)
 
 Removed Sections: N/A
 
 Templates Status:
-  - .specify/templates/plan-template.md ✅ Compatible (Constitution Check section exists)
-  - .specify/templates/spec-template.md ✅ Compatible (Success Criteria aligns with principles)
-  - .specify/templates/tasks-template.md ✅ Compatible (Test-first workflow, checkpoints align)
-  - .specify/templates/checklist-template.md ✅ Compatible (General structure)
-  - .specify/templates/agent-file-template.md ✅ Compatible (No constitution references)
+  - .specify/templates/plan-template.md ✅ Compatible
+  - .specify/templates/spec-template.md ✅ Compatible
+  - .specify/templates/tasks-template.md ✅ Compatible
+  - .specify/templates/checklist-template.md ✅ Compatible
+  - .specify/templates/agent-file-template.md ✅ Compatible
 
 Follow-up TODOs: None
 ================================================================================
@@ -133,6 +130,18 @@ in retrospectives.
 
 ## Development Workflow
 
+### Pull Request Requirement
+
+**All changes to the codebase MUST be submitted via Pull Requests.** Direct commits
+to any branch are prohibited. This applies to all contributors regardless of role.
+
+- No exceptions for "small fixes" or "trivial changes"
+- Emergency hotfixes still require PRs (expedited review permitted)
+- Automated updates (e.g., Renovate) are submitted as PRs
+
+**Rationale**: PRs ensure all changes are reviewed, tested by CI, and tracked in
+project history with proper context.
+
 ### Branch Strategy
 
 - `main`: Production-ready code; direct pushes prohibited
@@ -196,4 +205,4 @@ When Constitution principles conflict with external requirements:
 3. Obtain maintainer approval for the exception
 4. Track exception in project backlog for future resolution
 
-**Version**: 1.0.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
+**Version**: 1.1.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-21
