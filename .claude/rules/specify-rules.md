@@ -1,6 +1,6 @@
 # swimstats Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-01-19
+Auto-generated from all feature plans. Last updated: 2026-01-21
 
 ## Active Technologies
 
@@ -84,7 +84,7 @@ docker-compose.yaml          # Local development environment
 
 ## Current Implementation Status
 
-**✅ Phases 1-6 Complete** (MVP + Standards + Comparison):
+**✅ All Phases Complete** (Full Feature Set):
 - Phase 1: Setup (project scaffolding, Docker, CI)
 - Phase 2: Foundational (DB, Auth, Core UI, Test setup)
 - Phase 3: US1 - Record Swim Times (meets, times, course filtering)
@@ -92,10 +92,8 @@ docker-compose.yaml          # Local development environment
 - Phase 4b: All Times View (event-based history with PB badges, ranking)
 - Phase 5: US3 - Manage Time Standards (CRUD, JSON import, data files)
 - Phase 6: US4 + US6 - Compare Times Against Standards (includes standing dashboard)
-
-**⏳ Next Phases**:
-- Phase 7: US5 - View Progress Graphs (line charts with standard reference lines)
-- Phase 8: Polish (data export/import, accessibility verification, documentation)
+- Phase 7: US5 - View Progress Graphs (line charts with recharts, standard reference lines, date filtering)
+- Phase 8: Polish (data export/import with preview, accessibility with ARIA labels, USER-GUIDE.md)
 
 ## Key Patterns
 
@@ -129,6 +127,9 @@ docker-compose.yaml          # Local development environment
 
 ## Recent Changes
 
+- 2026-01-21: All phases complete - project feature-complete
+- 2026-01-21: Completed Phase 8 (data export/import, accessibility, documentation)
+- 2026-01-21: Completed Phase 7 (progress graphs with recharts)
 - 2026-01-19: Completed Phase 6 (US4 + US6 - Compare Times Against Standards with standing dashboard)
 - 2026-01-19: Integrated speckit from .cursor to .claude
 - 2026-01-17: Completed Phase 5 (US3 - Time Standards with JSON import)
