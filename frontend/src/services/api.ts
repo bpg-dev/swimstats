@@ -40,9 +40,10 @@ function createApiClient(): AxiosInstance {
   // Request interceptor for auth
   client.interceptors.request.use(
     (config) => {
-      // In development mode, add mock user header if no auth token
+      const authStore = useAuthStore.getState();
+
+      // In development mode, add mock user header
       if (import.meta.env.DEV) {
-        const authStore = useAuthStore.getState();
         if (!config.headers.Authorization && authStore.isAuthenticated) {
           // For dev mode, we use mock auth
           // Base64 encode to avoid "Invalid header value char" errors with Vite proxy
@@ -52,6 +53,11 @@ function createApiClient(): AxiosInstance {
             access: authStore.canWrite() ? 'full' : 'view_only',
           };
           config.headers['X-Mock-User'] = btoa(JSON.stringify(mockUser));
+        }
+      } else {
+        // In production mode, add Authorization header with id_token
+        if (!config.headers.Authorization && authStore.token) {
+          config.headers.Authorization = `Bearer ${authStore.token}`;
         }
       }
       return config;

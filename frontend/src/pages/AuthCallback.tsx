@@ -12,7 +12,7 @@ export function AuthCallback() {
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { setUser, setLoading, setError } = useAuthStore();
+  const { setUser, setToken, setLoading, setError } = useAuthStore();
 
   useEffect(() => {
     async function handleCallback() {
@@ -30,9 +30,12 @@ export function AuthCallback() {
           return;
         }
 
-        if (auth.isAuthenticated && auth.user?.access_token) {
-          // Fetch user info from our API
-          const user = await authService.getCurrentUser(auth.user.access_token);
+        if (auth.isAuthenticated && auth.user?.id_token) {
+          // Store the id_token for API requests
+          setToken(auth.user.id_token);
+
+          // Fetch user info from our API (use id_token, not access_token)
+          const user = await authService.getCurrentUser(auth.user.id_token);
           setUser(user);
 
           // Redirect to the original destination or home
@@ -60,6 +63,7 @@ export function AuthCallback() {
     navigate,
     location,
     setUser,
+    setToken,
     setLoading,
     setError,
   ]);
