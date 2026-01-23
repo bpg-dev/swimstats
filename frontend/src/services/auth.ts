@@ -1,6 +1,6 @@
 import { User } from '@/types/auth';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Authentication service for interacting with the backend API.
@@ -18,7 +18,7 @@ export const authService = {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_URL}/auth/me`, {
+    const response = await fetch(`${API_URL}/v1/auth/me`, {
       method: 'GET',
       headers,
       credentials: 'include',
