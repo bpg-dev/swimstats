@@ -1,6 +1,6 @@
 # swimstats Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-01-21
+Auto-generated from all feature plans. Last updated: 2026-01-23
 
 ## Active Technologies
 
@@ -127,6 +127,7 @@ docker-compose.yaml          # Local development environment
 
 ## Recent Changes
 
+- 2026-01-23: Added release-please for automated releases and versioned Docker images
 - 2026-01-21: All phases complete - project feature-complete
 - 2026-01-21: Completed Phase 8 (data export/import, accessibility, documentation)
 - 2026-01-21: Completed Phase 7 (progress graphs with recharts)
@@ -179,5 +180,36 @@ docker-compose.yaml          # Local development environment
 3. **Verify Constitution Compliance** before completing any task
 
 Failure to follow these requirements may result in rejected changes or rework.
+
+## Commit Message Requirements (CRITICAL)
+
+Commit messages drive the automated release process. **Conventional Commits format is mandatory.**
+
+**Format**: `type(scope): description`
+
+| Type | Version Bump | Changelog Section |
+|------|--------------|-------------------|
+| `feat` | Minor (0.x.0) | Features |
+| `fix` | Patch (0.0.x) | Bug Fixes |
+| `perf` | Patch | Performance |
+| `chore` | None | Miscellaneous |
+| `docs`, `style`, `refactor`, `test` | None | Excluded |
+
+**Breaking Changes**: Add `!` after type (e.g., `feat!:`) for major version bump.
+
+**Examples**:
+```
+feat(api): add bulk import endpoint
+fix(ui): correct timezone in date picker
+chore(deps): update dependencies
+```
+
+## Release Process
+
+Releases are automated via release-please:
+1. Merge PRs to `main` with conventional commits
+2. Release-please creates a "Release PR" with changelog
+3. Merging the Release PR creates a GitHub release + version tag
+4. Docker images are automatically built with version tags
 
 <!-- MANUAL ADDITIONS END -->

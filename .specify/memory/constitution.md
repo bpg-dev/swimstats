@@ -2,12 +2,15 @@
 ================================================================================
 SYNC IMPACT REPORT
 ================================================================================
-Version Change: 1.0.0 → 1.1.0
+Version Change: 1.1.0 → 1.2.0
 
 Modified Principles: N/A
 
 Added Sections:
-  - Pull Request Requirement (under Development Workflow)
+  - Release Process (under Development Workflow)
+
+Modified Sections:
+  - Commit Standards (expanded with release impact details and examples)
 
 Removed Sections: N/A
 
@@ -151,10 +154,33 @@ project history with proper context.
 
 ### Commit Standards
 
-- Commits MUST follow Conventional Commits format: `type(scope): description`
-- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `perf`, `chore`
+Commits MUST follow the [Conventional Commits](https://www.conventionalcommits.org/)
+format. This is **mandatory** because the automated release process uses commit messages
+to generate changelogs and determine version bumps.
+
+- **Format**: `type(scope): description`
+- **Types** (with release impact):
+  - `feat`: New feature → triggers **minor** version bump, appears in "Features" section
+  - `fix`: Bug fix → triggers **patch** version bump, appears in "Bug Fixes" section
+  - `perf`: Performance improvement → triggers **patch** version bump, appears in "Performance" section
+  - `chore`: Maintenance tasks → no version bump, appears in "Miscellaneous" section
+  - `docs`: Documentation only → no version bump, excluded from changelog
+  - `style`: Code style changes → no version bump, excluded from changelog
+  - `refactor`: Code refactoring → no version bump, excluded from changelog
+  - `test`: Test additions/changes → no version bump, excluded from changelog
+- **Breaking Changes**: Add `!` after type or include `BREAKING CHANGE:` in footer
+  to trigger a **major** version bump (e.g., `feat!: remove deprecated API`)
 - Each commit MUST represent a single logical change
 - Commit messages MUST be descriptive; "fix bug" or "update" are prohibited
+
+**Examples**:
+```
+feat(api): add endpoint for bulk time import
+fix(frontend): correct date picker timezone handling
+perf(db): add index for swimmer lookup queries
+chore(ci): update GitHub Actions versions
+feat!: change authentication to require OIDC
+```
 
 ### Code Review Requirements
 
@@ -173,6 +199,36 @@ A feature is complete when:
 4. Performance targets are verified
 5. Accessibility requirements are validated
 6. Code review is approved
+
+### Release Process
+
+Releases are automated using [release-please](https://github.com/googleapis/release-please).
+The process is driven entirely by conventional commit messages.
+
+**How it works**:
+
+1. **Accumulate Changes**: Merge PRs to `main` with conventional commit messages
+2. **Release PR**: release-please automatically creates/updates a "Release PR" that:
+   - Aggregates all changes since the last release
+   - Generates a changelog grouped by commit type
+   - Bumps the version based on commit types (feat→minor, fix→patch, breaking→major)
+3. **Create Release**: When the Release PR is merged:
+   - A GitHub Release is created with the changelog
+   - A version tag is created (e.g., `v0.2.0`)
+   - Docker images are built and tagged with the version
+
+**Version Tracking**:
+- Current version is tracked in `.release-please-manifest.json`
+- Changelog is maintained in `CHANGELOG.md`
+- Configuration is in `release-please-config.json`
+
+**Docker Image Tags** (on release):
+- `ghcr.io/bpg/swimstats/backend:0.2.0` - exact version
+- `ghcr.io/bpg/swimstats/backend:0.2` - minor version (latest patch)
+- `ghcr.io/bpg/swimstats/backend:latest` - most recent release
+
+**Important**: The quality of releases depends entirely on commit message discipline.
+Poorly written commit messages result in unclear changelogs.
 
 ## Governance
 
@@ -205,4 +261,4 @@ When Constitution principles conflict with external requirements:
 3. Obtain maintainer approval for the exception
 4. Track exception in project backlog for future resolution
 
-**Version**: 1.1.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-21
+**Version**: 1.2.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-23
