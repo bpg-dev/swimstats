@@ -13,7 +13,8 @@ let config: AppConfig = {};
 
 export async function loadConfig(): Promise<AppConfig> {
   try {
-    const response = await fetch('/config.json');
+    // Add cache-busting to ensure fresh config on deployments
+    const response = await fetch('/config.json', { cache: 'no-cache' });
     if (response.ok) {
       config = await response.json();
     }
