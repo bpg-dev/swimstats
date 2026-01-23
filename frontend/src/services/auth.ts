@@ -18,7 +18,7 @@ export const authService = {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_URL}/auth/me`, {
+    const response = await fetch(`${API_URL}/v1/auth/me`, {
       method: 'GET',
       headers,
       credentials: 'include',
