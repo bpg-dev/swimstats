@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.1](https://github.com/bpg/swimstats/compare/v0.6.0...v0.6.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* **frontend:** correct API base URL to /api/v1 ([#83](https://github.com/bpg/swimstats/issues/83)) ([9aa0a65](https://github.com/bpg/swimstats/commit/9aa0a6584623fc753e3738852a6bea4a59cbff1f))
+* **frontend:** correct API URL paths to fix auth loop ([#84](https://github.com/bpg/swimstats/issues/84)) ([4c09bdf](https://github.com/bpg/swimstats/commit/4c09bdf7a3f4217daf3919b908aeba490cb20678))
+
+
+### Miscellaneous
+
+* **ci:** temporarily disable Docker attestation ([#86](https://github.com/bpg/swimstats/issues/86)) ([88405ec](https://github.com/bpg/swimstats/commit/88405eca90c326e46011a734f4f50580864cd933))
+
 ## [0.5.0](https://github.com/bpg/swimstats/compare/v0.4.0...v0.5.0) (2026-01-23)
 
 
