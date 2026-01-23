@@ -65,12 +65,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: mode=max
-          cache-from: |
-            type=gha,scope=backend-publish
-            type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/backend:buildcache
-          cache-to: |
-            type=gha,mode=max,scope=backend-publish
-            type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/backend:buildcache,mode=max
+          cache-from: type=gha,scope=backend-publish
+          cache-to: type=gha,mode=max,scope=backend-publish
 
       - name: Attest
         uses: actions/attest-build-provenance@6c21c04075c6cc787fe4ab1e9dcf856f6d09d25c # v2
@@ -130,12 +126,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: mode=max
-          cache-from: |
-            type=gha,scope=frontend-publish
-            type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/frontend:buildcache
-          cache-to: |
-            type=gha,mode=max,scope=frontend-publish
-            type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/frontend:buildcache,mode=max
+          cache-from: type=gha,scope=frontend-publish
+          cache-to: type=gha,mode=max,scope=frontend-publish
 
       - name: Attest
         uses: actions/attest-build-provenance@6c21c04075c6cc787fe4ab1e9dcf856f6d09d25c # v2
