@@ -36,7 +36,7 @@ export function Settings() {
   const handleExportData = async () => {
     try {
       setIsExporting(true);
-      const data = await get<unknown>('/v1/data/export');
+      const data = await get<unknown>('/data/export');
 
       // Create a blob and download it
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -67,7 +67,7 @@ export function Settings() {
       const data = JSON.parse(text);
 
       // Call preview endpoint
-      const preview = await post<ImportPreview>('/v1/data/import/preview', data);
+      const preview = await post<ImportPreview>('/data/import/preview', data);
       setImportPreview(preview);
       setImportData(data);
     } catch (error) {
@@ -90,7 +90,7 @@ export function Settings() {
 
     try {
       setIsImporting(true);
-      await post('/v1/data/import', { data: importData, confirmed: true });
+      await post('/data/import', { data: importData, confirmed: true });
       setImportPreview(null);
       setImportData(null);
       setShowSuccessDialog(true);

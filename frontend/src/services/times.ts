@@ -10,26 +10,26 @@ import {
 
 export const timeService = {
   async listTimes(params?: TimeListParams): Promise<TimeList> {
-    return get<TimeList>('/v1/times', params as Record<string, unknown>);
+    return get<TimeList>('/times', params as Record<string, unknown>);
   },
 
   async getTime(id: string): Promise<TimeRecord> {
-    return get<TimeRecord>(`/v1/times/${id}`);
+    return get<TimeRecord>(`/times/${id}`);
   },
 
   async createTime(input: TimeInput): Promise<TimeRecord> {
-    return post<TimeRecord>('/v1/times', input);
+    return post<TimeRecord>('/times', input);
   },
 
   async createBatch(input: TimeBatchInput): Promise<BatchResult> {
-    return post<BatchResult>('/v1/times/batch', input);
+    return post<BatchResult>('/times/batch', input);
   },
 
   async updateTime(id: string, input: TimeInput): Promise<TimeRecord> {
-    return put<TimeRecord>(`/v1/times/${id}`, input);
+    return put<TimeRecord>(`/times/${id}`, input);
   },
 
   async deleteTime(id: string): Promise<void> {
-    await del<void>(`/v1/times/${id}`);
+    await del<void>(`/times/${id}`);
   },
 };
