@@ -2,7 +2,8 @@ name: Publish Docker Images
 
 on:
   push:
-    branches: [main]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 env:
@@ -46,7 +47,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}/backend
           tags: |
-            type=raw,value=${{ steps.date.outputs.date }}-{{sha}}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ steps.date.outputs.date }}-{{sha}},enable=${{ github.ref_type != 'tag' }}
             type=raw,value=latest
 
       - name: Build and push
@@ -97,7 +100,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}/frontend
           tags: |
-            type=raw,value=${{ steps.date.outputs.date }}-{{sha}}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ steps.date.outputs.date }}-{{sha}},enable=${{ github.ref_type != 'tag' }}
             type=raw,value=latest
 
       - name: Build and push
