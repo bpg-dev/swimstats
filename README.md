@@ -1,5 +1,22 @@
 # SwimStats - Swim Progress Tracker
 
+[![CI](https://github.com/bpg/swimstats/actions/workflows/ci.yaml/badge.svg)](https://github.com/bpg/swimstats/actions/workflows/ci.yaml)
+[![Release](https://img.shields.io/github/v/release/bpg/swimstats)](https://github.com/bpg/swimstats/releases)
+[![codecov](https://codecov.io/gh/bpg/swimstats/branch/main/graph/badge.svg)](https://codecov.io/gh/bpg/swimstats)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
+[![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
+[![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet?logo=anthropic)](https://claude.ai/claude-code)
+
+[![Go](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go&logoColor=white)](https://go.dev)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+
+[![GHCR Backend](https://img.shields.io/badge/ghcr.io-backend-blue?logo=docker)](https://ghcr.io/bpg/swimstats/backend)
+[![GHCR Frontend](https://img.shields.io/badge/ghcr.io-frontend-blue?logo=docker)](https://ghcr.io/bpg/swimstats/frontend)
+
 A web application for competitive swimmers to track their times, view personal bests, and visualize their progress over time.
 
 ## Features
