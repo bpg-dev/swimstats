@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/bpg/swimstats/compare/v0.2.0...v0.3.0) (2026-01-23)
+
+
+### Features
+
+* **ci:** add SBOM and provenance attestations for Docker images ([#72](https://github.com/bpg/swimstats/issues/72)) ([294b75e](https://github.com/bpg/swimstats/commit/294b75e2a8016cc7006f59fde59513e018825292))
+
+
+### Miscellaneous
+
+* **docs:** clarify commit convention for documentation changes ([#75](https://github.com/bpg/swimstats/issues/75)) ([858109b](https://github.com/bpg/swimstats/commit/858109b93c7dbe9bddb286b3a310ba1920f9754d))
+
 ## [0.2.0](https://github.com/bpg/swimstats/compare/v0.1.0...v0.2.0) (2026-01-23)
 
 
