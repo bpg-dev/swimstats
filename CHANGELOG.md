@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/bpg/swimstats/compare/v0.4.0...v0.5.0) (2026-01-23)
+
+
+### Features
+
+* **ci:** add OIDC build args for frontend Docker image ([cb6ef2f](https://github.com/bpg/swimstats/commit/cb6ef2fdeac1b46f74bd60ab0faf69a0442209b3))
+
 ## [0.4.0](https://github.com/bpg/swimstats/compare/v0.3.0...v0.4.0) (2026-01-23)
 
 
