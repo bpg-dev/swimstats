@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { AppShell } from '@/components/layout/AppShell';
 import { AuthCallback } from '@/pages/AuthCallback';
 import { PageLoading } from '@/components/ui/Loading';
+import { isOidcConfigured } from './config';
 
 // Lazy load pages for code splitting
 import { lazy, Suspense } from 'react';
@@ -20,11 +21,6 @@ const Standards = lazy(() => import('@/pages/Standards'));
 const StandardDetail = lazy(() => import('@/pages/StandardDetail'));
 const Compare = lazy(() => import('@/pages/Compare'));
 const Settings = lazy(() => import('@/pages/Settings'));
-
-// Check if OIDC is configured
-const isOidcConfigured = Boolean(
-  import.meta.env.VITE_OIDC_AUTHORITY && import.meta.env.VITE_OIDC_CLIENT_ID
-);
 
 // Dev mode login page
 function DevModeLoginPage() {
@@ -216,7 +212,7 @@ function OidcApp() {
 
 // Main App component - chooses between OIDC and dev mode
 function App() {
-  if (isOidcConfigured) {
+  if (isOidcConfigured()) {
     return <OidcApp />;
   }
   return <DevModeApp />;
