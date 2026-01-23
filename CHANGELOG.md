@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.2](https://github.com/bpg/swimstats/compare/v0.6.1...v0.6.2) (2026-01-23)
+
+
+### Bug Fixes
+
+* **auth:** use id_token instead of access_token for API authentication ([#88](https://github.com/bpg/swimstats/issues/88)) ([0a9435e](https://github.com/bpg/swimstats/commit/0a9435e86b657580019de25450d65122702e8c94))
+
+
+### Performance
+
+* **ci:** use native ARM64 runners for Docker builds ([#87](https://github.com/bpg/swimstats/issues/87)) ([ec76c6c](https://github.com/bpg/swimstats/commit/ec76c6ccbd806531c7f1d0d3e00739e58b066b99))
+
 ## [0.6.1](https://github.com/bpg/swimstats/compare/v0.6.0...v0.6.1) (2026-01-23)
 
 
