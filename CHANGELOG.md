@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/bpg/swimstats/compare/v0.3.0...v0.4.0) (2026-01-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ci:** Update actions/attest-build-provenance action (v2 → v3) ([#77](https://github.com/bpg/swimstats/issues/77))
+
+### Miscellaneous
+
+* **ci:** Update actions/attest-build-provenance action (v2 → v3) ([#77](https://github.com/bpg/swimstats/issues/77)) ([de97120](https://github.com/bpg/swimstats/commit/de97120a1b757888f2b76be9899c85244ef23383))
+* **ci:** update actions/attest-build-provenance digest (6c21c04 → e8998f9) ([#76](https://github.com/bpg/swimstats/issues/76)) ([511b887](https://github.com/bpg/swimstats/commit/511b887d347bc343320960438cb6263029fa25e6))
+
 ## [0.3.0](https://github.com/bpg/swimstats/compare/v0.2.0...v0.3.0) (2026-01-23)
 
 
