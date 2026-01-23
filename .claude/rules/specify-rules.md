@@ -193,7 +193,9 @@ Commit messages drive the automated release process. **Conventional Commits form
 | `fix` | Patch (0.0.x) | Bug Fixes |
 | `perf` | Patch | Performance |
 | `chore` | None | Miscellaneous |
-| `docs`, `style`, `refactor`, `test` | None | Excluded |
+| `style`, `refactor`, `test` | None | Excluded |
+
+**Note**: Use `chore(docs):` for documentation changes (not `docs:`) so they appear in Miscellaneous.
 
 **Breaking Changes**: Add `!` after type (e.g., `feat!:`) for major version bump.
 
@@ -202,6 +204,7 @@ Commit messages drive the automated release process. **Conventional Commits form
 feat(api): add bulk import endpoint
 fix(ui): correct timezone in date picker
 chore(deps): update dependencies
+chore(docs): update README badges
 ```
 
 ## Release Process
