@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/bpg/swimstats/compare/v0.4.0...v0.5.0) (2026-01-23)
+
+
+### Features
+
+* **frontend:** use runtime configuration for OIDC settings ([#80](https://github.com/bpg/swimstats/issues/80)) ([d17b957](https://github.com/bpg/swimstats/commit/d17b95765de3da732138634b970b350f899f8c59))
+
 ## [0.4.0](https://github.com/bpg/swimstats/compare/v0.3.0...v0.4.0) (2026-01-23)
 
 
