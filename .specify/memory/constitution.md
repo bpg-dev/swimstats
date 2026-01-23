@@ -164,10 +164,10 @@ to generate changelogs and determine version bumps.
   - `fix`: Bug fix → triggers **patch** version bump, appears in "Bug Fixes" section
   - `perf`: Performance improvement → triggers **patch** version bump, appears in "Performance" section
   - `chore`: Maintenance tasks → no version bump, appears in "Miscellaneous" section
-  - `docs`: Documentation only → no version bump, excluded from changelog
   - `style`: Code style changes → no version bump, excluded from changelog
   - `refactor`: Code refactoring → no version bump, excluded from changelog
   - `test`: Test additions/changes → no version bump, excluded from changelog
+- **Note**: Use `chore(docs):` for documentation changes so they appear in "Miscellaneous"
 - **Breaking Changes**: Add `!` after type or include `BREAKING CHANGE:` in footer
   to trigger a **major** version bump (e.g., `feat!: remove deprecated API`)
 - Each commit MUST represent a single logical change
@@ -179,6 +179,7 @@ feat(api): add endpoint for bulk time import
 fix(frontend): correct date picker timezone handling
 perf(db): add index for swimmer lookup queries
 chore(ci): update GitHub Actions versions
+chore(docs): update README badges
 feat!: change authentication to require OIDC
 ```
 
