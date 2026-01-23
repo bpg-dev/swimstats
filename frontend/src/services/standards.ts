@@ -13,34 +13,34 @@ import {
 
 export const standardService = {
   async listStandards(params?: StandardListParams): Promise<StandardList> {
-    return get<StandardList>('/standards', params as Record<string, unknown>);
+    return get<StandardList>('/v1/standards', params as Record<string, unknown>);
   },
 
   async getStandard(id: string): Promise<StandardWithTimes> {
-    return get<StandardWithTimes>(`/standards/${id}`);
+    return get<StandardWithTimes>(`/v1/standards/${id}`);
   },
 
   async createStandard(input: StandardInput): Promise<Standard> {
-    return post<Standard>('/standards', input);
+    return post<Standard>('/v1/standards', input);
   },
 
   async updateStandard(id: string, input: StandardInput): Promise<Standard> {
-    return put<Standard>(`/standards/${id}`, input);
+    return put<Standard>(`/v1/standards/${id}`, input);
   },
 
   async deleteStandard(id: string): Promise<void> {
-    await del<void>(`/standards/${id}`);
+    await del<void>(`/v1/standards/${id}`);
   },
 
   async setStandardTimes(id: string, times: StandardTimeInput[]): Promise<StandardWithTimes> {
-    return put<StandardWithTimes>(`/standards/${id}/times`, { times });
+    return put<StandardWithTimes>(`/v1/standards/${id}/times`, { times });
   },
 
   async importStandard(input: StandardImportInput): Promise<StandardWithTimes> {
-    return post<StandardWithTimes>('/standards/import', input);
+    return post<StandardWithTimes>('/v1/standards/import', input);
   },
 
   async importFromJSON(input: JSONFileInput): Promise<JSONImportResult> {
-    return post<JSONImportResult>('/standards/import/json', input);
+    return post<JSONImportResult>('/v1/standards/import/json', input);
   },
 };

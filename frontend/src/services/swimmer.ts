@@ -3,11 +3,11 @@ import { Swimmer, SwimmerInput } from '@/types/swimmer';
 
 export const swimmerService = {
   async getSwimmer(): Promise<Swimmer> {
-    return get<Swimmer>('/swimmer');
+    return get<Swimmer>('/v1/swimmer');
   },
 
   async createOrUpdateSwimmer(input: SwimmerInput): Promise<Swimmer> {
-    return put<Swimmer>('/swimmer', input);
+    return put<Swimmer>('/v1/swimmer', input);
   },
 
   async swimmerExists(): Promise<boolean> {

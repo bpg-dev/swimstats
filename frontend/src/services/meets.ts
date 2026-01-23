@@ -3,22 +3,22 @@ import { Meet, MeetInput, MeetList, MeetListParams } from '@/types/meet';
 
 export const meetService = {
   async listMeets(params?: MeetListParams): Promise<MeetList> {
-    return get<MeetList>('/meets', params as Record<string, unknown>);
+    return get<MeetList>('/v1/meets', params as Record<string, unknown>);
   },
 
   async getMeet(id: string): Promise<Meet> {
-    return get<Meet>(`/meets/${id}`);
+    return get<Meet>(`/v1/meets/${id}`);
   },
 
   async createMeet(input: MeetInput): Promise<Meet> {
-    return post<Meet>('/meets', input);
+    return post<Meet>('/v1/meets', input);
   },
 
   async updateMeet(id: string, input: MeetInput): Promise<Meet> {
-    return put<Meet>(`/meets/${id}`, input);
+    return put<Meet>(`/v1/meets/${id}`, input);
   },
 
   async deleteMeet(id: string): Promise<void> {
-    await del<void>(`/meets/${id}`);
+    await del<void>(`/v1/meets/${id}`);
   },
 };

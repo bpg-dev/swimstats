@@ -9,6 +9,6 @@ export const comparisonService = {
     if (params.course_type) {
       queryParams.course_type = params.course_type;
     }
-    return get<ComparisonResult>('/comparisons', queryParams);
+    return get<ComparisonResult>('/v1/comparisons', queryParams);
   },
 };

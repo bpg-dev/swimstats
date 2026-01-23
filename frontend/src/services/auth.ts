@@ -1,6 +1,6 @@
 import { User } from '@/types/auth';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Authentication service for interacting with the backend API.

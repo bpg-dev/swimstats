@@ -14,6 +14,6 @@ export const progressService = {
       queryParams.end_date = params.end_date;
     }
 
-    return get<ProgressData>(`/progress/${params.event}`, queryParams);
+    return get<ProgressData>(`/v1/progress/${params.event}`, queryParams);
   },
 };

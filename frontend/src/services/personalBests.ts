@@ -4,6 +4,6 @@ import { PersonalBestList } from '@/types/personalbest';
 
 export const personalBestService = {
   async getPersonalBests(courseType: CourseType): Promise<PersonalBestList> {
-    return get<PersonalBestList>('/personal-bests', { course_type: courseType });
+    return get<PersonalBestList>('/v1/personal-bests', { course_type: courseType });
   },
 };

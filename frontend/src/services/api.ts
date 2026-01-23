@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/stores/authStore';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * API error response structure.
