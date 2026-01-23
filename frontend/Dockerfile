@@ -17,23 +17,22 @@ COPY . .
 RUN npm run build
 
 # Runtime stage
-FROM nginx:1.29-alpine@sha256:b0f7830b6bfaa1258f45d94c240ab668ced1b3651c8a222aefe6683447c7bf55
+FROM caddy:2-alpine@sha256:f2b257f20955d6be2229bed86bad24193eeb8c4dc962a4031a6eb42344ffa457
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy Caddyfile
+COPY Caddyfile /etc/caddy/Caddyfile
 
 # Copy built assets from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/caddy
 
-# Create non-root user
-RUN addgroup -S swimstats && adduser -S swimstats -G swimstats && \
-    chown -R swimstats:swimstats /usr/share/nginx/html && \
-    chown -R swimstats:swimstats /var/cache/nginx && \
-    touch /var/run/nginx.pid && \
-    chown -R swimstats:swimstats /var/run/nginx.pid
+# Set ownership for non-root user (nobody:nobody = 65534:65534)
+RUN chown -R 65534:65534 /usr/share/caddy /etc/caddy
 
-USER swimstats
+USER 65534:65534
 
-EXPOSE 80
+EXPOSE 80 2019
 
-CMD ["nginx", "-g", "daemon off;"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:2019/health || exit 1
+
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
