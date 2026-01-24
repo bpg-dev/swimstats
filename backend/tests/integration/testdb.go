@@ -4,6 +4,8 @@ package integration
 import (
 	"context"
 	"fmt"
+	"os"
+	"strconv"
 	"testing"
 	"time"
 
@@ -118,13 +120,18 @@ func (db *TestDB) ExecSQL(t *testing.T, sql string, args ...interface{}) {
 
 // Helper functions for environment variables
 func getEnvOrDefault(key, defaultVal string) string {
-	// Would use os.Getenv in real implementation
-	// For now, return defaults
+	if val := os.Getenv(key); val != "" {
+		return val
+	}
 	return defaultVal
 }
 
 func getEnvIntOrDefault(key string, defaultVal int) int {
-	// Would parse os.Getenv in real implementation
+	if val := os.Getenv(key); val != "" {
+		if intVal, err := strconv.Atoi(val); err == nil {
+			return intVal
+		}
+	}
 	return defaultVal
 }
 

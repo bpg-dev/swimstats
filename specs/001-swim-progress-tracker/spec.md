@@ -227,8 +227,8 @@ As a swim parent, I want to export all my daughter's swim data to a JSON file fo
 
 - What happens when no times have been recorded yet? Display helpful empty state with guidance on how to add first time
 - What happens when a time standard has no qualifying time for a specific event? Show "N/A" for that event in comparisons
-- How does the system handle times recorded before the swimmer's birthday when comparing age-based standards? Use the swimmer's age at the time of the swim for standard comparisons
-- What happens when a swimmer ages into a new age group mid-season? Automatically apply appropriate age group standards based on swim date and swimmer's age at time of competition (following Swimming Canada age determination rules: age as of December 31 of the competition year)
+- How does the system handle times recorded before the swimmer's birthday when comparing age-based standards? Use the swimmer's current age group for standard comparisons, showing what standards they should be working toward now
+- What happens when a swimmer ages into a new age group mid-season? The comparison page automatically shows standards for the swimmer's current age group, with previous and next age group standards displayed adjacently for reference
 - How are tied times handled for personal bests? Display the most recent occurrence as the personal best
 - What happens if historical import retrieves hundreds of times? Show progress indicator and allow cancellation; process in batches to avoid browser timeouts
 - What happens when user changes the course filter while viewing data? Filter updates immediately; any unsaved data entry remains tied to its original meet
@@ -337,7 +337,7 @@ As a swim parent, I want to export all my daughter's swim data to a JSON file fo
 - **FR-060**: System MUST compare swimmer's personal bests against a selected time standard within the current course context
 - **FR-061**: System MUST calculate and display time difference between swimmer's time and standard
 - **FR-062**: System MUST visually indicate when a standard has been achieved
-- **FR-063**: System MUST use age-appropriate standard times based on swimmer's age at time of swim
+- **FR-063**: System MUST use age-appropriate standard times based on swimmer's current age group, with adjacent age group standards shown for reference
 - **FR-064**: System MUST allow switching between different standards for comparison (within current course)
 - **FR-065**: System MUST highlight times within a configurable threshold of qualifying (default: 3%) as "almost there"
 - **FR-066**: System MUST allow full-access users to configure the "almost there" threshold percentage
@@ -413,7 +413,7 @@ As a swim parent, I want to export all my daughter's swim data to a JSON file fo
 - **SC-005**: Users can see comparison against a standard within 2 clicks from any screen
 - **SC-006**: Progress graphs load and display within 2 seconds for up to 500 recorded times
 - **SC-007**: System correctly identifies personal bests 100% of the time when new times are entered
-- **SC-008**: Age-based standard comparisons correctly apply the swimmer's age at time of swim
+- **SC-008**: Age-based standard comparisons correctly apply the swimmer's current age group
 - **SC-009**: All data persists correctly across application restarts with zero data loss
 - **SC-010**: Users can export and re-import all their data without any loss or corruption
 - **SC-011**: New users can understand how to add their first time without external documentation

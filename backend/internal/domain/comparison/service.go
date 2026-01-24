@@ -159,14 +159,6 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 		pb, hasPB := pbMap[string(event)]
 
 		if hasPB {
-			// Determine age group at time of swim for this PB
-			ageAtSwim := currentAge
-			if pb.MeetDate.Valid {
-				ageAtSwim = domain.AgeAtDate(swimmer.BirthDate.Time, pb.MeetDate.Time)
-			}
-			ageGroupAtSwim := string(domain.AgeGroupFromAge(ageAtSwim))
-			comp.AgeGroup = ageGroupAtSwim
-
 			swimmerTime := int(pb.TimeMs)
 			swimmerTimeFormatted := domain.FormatTime(swimmerTime)
 			comp.SwimmerTimeMS = &swimmerTime
@@ -176,12 +168,13 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 			comp.MeetName = &meetName
 
 			if pb.MeetDate.Valid {
-				date := pb.MeetDate.Time.Format("2006-01-02")
+				date := pb.MeetDate.Time.Format("Jan 2, 2006")
 				comp.Date = &date
 			}
 
-			// Get standard time for this event and age group
-			stdTimeMS, actualAgeGroup, hasStandard := getStandardTime(stdTimesMap, string(event), ageGroupAtSwim)
+			// Get standard time for this event using swimmer's CURRENT age group
+			// (not the age when the PB was achieved)
+			stdTimeMS, actualAgeGroup, hasStandard := getStandardTime(stdTimesMap, string(event), currentAgeGroup)
 
 			if hasStandard {
 				// Update the age group to the one actually used (may be OPEN if it fell back)
@@ -218,8 +211,8 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 				comp.Status = StatusNoStandard
 			}
 
-			// Check previous age group
-			prevAG := domain.PreviousAgeGroup(domain.AgeGroup(ageGroupAtSwim))
+			// Check previous age group (relative to current age)
+			prevAG := domain.PreviousAgeGroup(domain.AgeGroup(currentAgeGroup))
 			if prevAG != "" {
 				prevStdTimeMS, hasPrevStandard := getStandardTimeExact(stdTimesMap, string(event), string(prevAG))
 				if hasPrevStandard {
@@ -234,8 +227,8 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 				}
 			}
 
-			// Check next age group
-			nextAG := domain.NextAgeGroup(domain.AgeGroup(ageGroupAtSwim))
+			// Check next age group (relative to current age)
+			nextAG := domain.NextAgeGroup(domain.AgeGroup(currentAgeGroup))
 			if nextAG != "" {
 				nextStdTimeMS, hasNextStandard := getStandardTimeExact(stdTimesMap, string(event), string(nextAG))
 				if hasNextStandard {
