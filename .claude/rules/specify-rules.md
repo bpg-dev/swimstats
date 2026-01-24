@@ -180,10 +180,10 @@ docker-compose.yaml          # Local development environment
    - Never commit directly to `main`
 
 3. **AI Assistant Git Rules** (Constitution §AI Assistant Guidelines):
-   - **NEVER push code** - Do not execute `git push`. Leave pushing to the human developer.
    - **NEVER commit to main** - All work must be on feature (`feature/*`) or fix (`fix/*`) branches.
    - **ALWAYS create a branch first** - Before making any commits, create an appropriately named branch.
-   - Prepare commits with proper conventional commit messages, but leave PR creation and pushing to the human.
+   - **Push and create PRs when done** - You MAY push branches and create PRs to streamline workflow.
+   - **NEVER merge PRs** - Merging is the sole responsibility of human maintainers.
 
 4. **Verify Constitution Compliance** before completing any task
 
