@@ -133,11 +133,11 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
             min={0}
             max={100}
             step={0.5}
-            value={formData.threshold_percent?.toString() ?? '3'}
+            value={formData.threshold_percent ?? ''}
             onChange={(e) =>
               setFormData((prev) => ({
                 ...prev,
-                threshold_percent: e.target.value ? parseFloat(e.target.value) : 3.0,
+                threshold_percent: e.target.value === '' ? undefined : parseFloat(e.target.value),
               }))
             }
             error={errors.threshold_percent}
