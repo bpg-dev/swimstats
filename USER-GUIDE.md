@@ -87,11 +87,17 @@ View your fastest times across all events, organized by stroke.
 - **Grouped by Stroke**: Freestyle, Backstroke, Breaststroke, Butterfly, Individual Medley
 - **PB Times**: Your fastest time for each event
 - **Achieved Standards**: Green badges showing which standards you've achieved
-- **Quick Navigation**: Click a standard badge to see the full comparison
+- **Quick Navigation**: Click any PB card to view all times for that event
+- **Keyboard Accessible**: Use Tab to navigate and Enter/Space to activate cards
+
+### Navigating from Personal Bests
+
+- **Click a PB Card**: Opens the All Times page filtered to that event, showing your complete history
+- **Click a Standard Badge**: Opens the comparison view for that specific standard
 
 ### Achieved Standards Badges
 
-When your PB meets or exceeds a time standard, you'll see a green badge. Click any badge to navigate directly to the comparison view for that standard.
+When your PB meets or exceeds a time standard, you'll see an emerald green badge with white text. Click any badge to navigate directly to the comparison view for that standard.
 
 ---
 
@@ -107,6 +113,14 @@ Browse your complete time history for any event.
   - By Time (fastest first)
 - **PB Badge**: Gold "PB" badge marks your personal best
 - **Rank Badges**: When sorted by fastest, see gold/silver/bronze ranks
+- **Deep Linking**: URL supports `?event=CODE` parameter for direct navigation
+
+### URL Parameter Support
+
+The All Times page supports deep linking via URL parameters:
+- Navigate directly to an event: `/all-times?event=100FR`
+- This is used when clicking a PB card from the Personal Bests page
+- Bookmarkable for quick access to specific events
 
 ### Understanding the Display
 
@@ -207,7 +221,7 @@ See how your personal bests stack up against time standards.
 
 ### Status Indicators
 
-- **Achieved** (Green): Your PB meets or beats the standard
+- **Achieved** (Emerald with white text): Your PB meets or beats the standard
 - **Almost** (Amber): Within 3% of the standard
 - **Not Yet** (Gray): More than 3% away from the standard
 
@@ -350,7 +364,7 @@ Your current access level is shown in the header as a badge (displayed only for 
 SwimStats supports keyboard navigation:
 
 - **Tab**: Move between interactive elements
-- **Enter/Space**: Activate buttons and links
+- **Enter/Space**: Activate buttons, links, and clickable cards (like PB cards)
 - **Escape**: Close dialogs and dropdowns
 
 ---

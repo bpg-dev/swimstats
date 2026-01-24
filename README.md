@@ -21,7 +21,7 @@ A web application for competitive swimmers to track their times, view personal b
 
 ## Features
 
-- 🏆 **Personal Bests** - Track fastest times across all events with achieved standards badges
+- 🏆 **Personal Bests** - Track fastest times across all events with achieved standards badges; click to view all times
 - 🏊 **Record Swim Times** - Log race results with event, time, and meet details
 - ⏱️ **All Times** - Browse complete time history by event with PB indicators and ranking
 - 📅 **Meets** - Organize times by competition with inline quick-add during time entry
