@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.8.0](https://github.com/bpg/swimstats/compare/v0.7.0...v0.8.0) (2026-01-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ci:** Update GitHub Artifact Actions ([#96](https://github.com/bpg/swimstats/issues/96))
+
+### Features
+
+* **swimmer:** add configurable 'almost there' threshold ([#99](https://github.com/bpg/swimstats/issues/99)) ([48bd77b](https://github.com/bpg/swimstats/commit/48bd77b886644a41863efdf73f19eea352af0567))
+
+
+### Bug Fixes
+
+* **ui:** allow clearing threshold input field ([#100](https://github.com/bpg/swimstats/issues/100)) ([b0c5b0d](https://github.com/bpg/swimstats/commit/b0c5b0d2736d9c90abafe767d079d044102c2ebf))
+* **ui:** soften achieved standards badge colors on PB page ([#98](https://github.com/bpg/swimstats/issues/98)) ([737eaf7](https://github.com/bpg/swimstats/commit/737eaf7b2da77d8d50096985cb0c3f7f3face15d))
+
+
+### Miscellaneous
+
+* **ci:** Update GitHub Artifact Actions ([#96](https://github.com/bpg/swimstats/issues/96)) ([7cfb48b](https://github.com/bpg/swimstats/commit/7cfb48b891a8c5fd15c9253e8b14190e30a8922e))
+
 ## [0.7.0](https://github.com/bpg/swimstats/compare/v0.6.2...v0.7.0) (2026-01-24)
 
 
