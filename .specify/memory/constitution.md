@@ -2,15 +2,14 @@
 ================================================================================
 SYNC IMPACT REPORT
 ================================================================================
-Version Change: 1.1.0 → 1.2.0
+Version Change: 1.2.0 → 1.3.0
 
 Modified Principles: N/A
 
 Added Sections:
-  - Release Process (under Development Workflow)
+  - AI Assistant Guidelines (under Development Workflow)
 
-Modified Sections:
-  - Commit Standards (expanded with release impact details and examples)
+Modified Sections: N/A
 
 Removed Sections: N/A
 
@@ -152,6 +151,22 @@ project history with proper context.
 - `fix/*`: Bug fixes; branch from and merge to `main`
 - `release/*`: Release preparation; created from `main` when stabilizing
 
+### AI Assistant Guidelines
+
+When Claude Code or other AI assistants work on this codebase, they MUST follow these rules:
+
+- **Never push code directly**: AI assistants MUST NOT execute `git push` commands. All code
+  pushing is the responsibility of the human developer after review.
+- **Never commit to main**: AI assistants MUST NOT commit directly to the `main` branch.
+  All work MUST be done on feature or fix branches.
+- **Always create a new branch**: When starting work on a new feature or fix, AI assistants
+  MUST create an appropriately named branch (`feature/*` or `fix/*`) before making any commits.
+- **Prepare for PR**: AI assistants should prepare commits with proper conventional commit
+  messages, but leave the PR creation and pushing to the human developer.
+
+**Rationale**: These constraints ensure human oversight of all code changes entering the
+repository, maintain audit trails, and prevent accidental modifications to protected branches.
+
 ### Commit Standards
 
 Commits MUST follow the [Conventional Commits](https://www.conventionalcommits.org/)
@@ -262,4 +277,4 @@ When Constitution principles conflict with external requirements:
 3. Obtain maintainer approval for the exception
 4. Track exception in project backlog for future resolution
 
-**Version**: 1.2.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-23
+**Version**: 1.3.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-24

@@ -1,6 +1,6 @@
 # swimstats Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-01-23
+Auto-generated from all feature plans. Last updated: 2026-01-24
 
 ## Active Technologies
 
@@ -179,7 +179,13 @@ docker-compose.yaml          # Local development environment
    - Create feature branches: `feature/*` for features, `fix/*` for bug fixes
    - Never commit directly to `main`
 
-3. **Verify Constitution Compliance** before completing any task
+3. **AI Assistant Git Rules** (Constitution §AI Assistant Guidelines):
+   - **NEVER push code** - Do not execute `git push`. Leave pushing to the human developer.
+   - **NEVER commit to main** - All work must be on feature (`feature/*`) or fix (`fix/*`) branches.
+   - **ALWAYS create a branch first** - Before making any commits, create an appropriately named branch.
+   - Prepare commits with proper conventional commit messages, but leave PR creation and pushing to the human.
+
+4. **Verify Constitution Compliance** before completing any task
 
 Failure to follow these requirements may result in rejected changes or rework.
 
