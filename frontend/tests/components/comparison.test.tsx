@@ -158,11 +158,12 @@ describe('ComparisonTable', () => {
     expect(screen.getByText('Almost')).toBeInTheDocument();
   });
 
-  it('shows time differences', () => {
+  it('shows time differences beneath standard times', () => {
     render(<ComparisonTable comparisons={mockComparisons} />);
 
-    expect(screen.getByText('-0.50')).toBeInTheDocument();
-    expect(screen.getByText('+1.50')).toBeInTheDocument();
+    // Differences are now shown inline with percentage beneath standard time
+    expect(screen.getByText(/-0\.50/)).toBeInTheDocument();
+    expect(screen.getByText(/\+1\.50/)).toBeInTheDocument();
   });
 
   it('shows meet names', () => {
@@ -243,14 +244,13 @@ describe('Compare Page', () => {
     const select = screen.getByRole('combobox');
     await user.selectOptions(select, 'standard-1');
 
-    // Wait for comparison to load
+    // Wait for comparison to load - standard name appears as card title
     await waitFor(() => {
-      expect(screen.getByText('Summary: Test Standard')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Test Standard' })).toBeInTheDocument();
     });
 
-    // Check summary is displayed (look for the summary card labels)
+    // Check summary counts are displayed in header
     expect(screen.getAllByText('Achieved').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Almost').length).toBeGreaterThan(0);
   });
 
   it('has toggle to show events without times', async () => {
@@ -266,9 +266,9 @@ describe('Compare Page', () => {
     const select = screen.getByRole('combobox');
     await user.selectOptions(select, 'standard-1');
 
-    // Wait for comparison to load
+    // Wait for comparison to load - standard name appears as card title
     await waitFor(() => {
-      expect(screen.getByText('Summary: Test Standard')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Test Standard' })).toBeInTheDocument();
     });
 
     // Find the checkbox

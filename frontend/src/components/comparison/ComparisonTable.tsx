@@ -38,6 +38,24 @@ const eventsByStroke: Record<string, string[]> = {
   IM: ['200IM', '400IM'],
 };
 
+// Helper to format time difference in ms to a display string
+function formatDifference(diffMs: number): string {
+  const sign = diffMs <= 0 ? '' : '+';
+  const absDiff = Math.abs(diffMs);
+  const seconds = absDiff / 1000;
+  if (seconds >= 60) {
+    const mins = Math.floor(seconds / 60);
+    const secs = (seconds % 60).toFixed(2);
+    return `${sign}${diffMs <= 0 ? '-' : ''}${mins}:${secs.padStart(5, '0')}`;
+  }
+  return `${diffMs <= 0 ? '-' : '+'}${seconds.toFixed(2)}`;
+}
+
+// Helper to calculate percentage difference
+function calcPercent(swimmerMs: number, standardMs: number): number {
+  return ((swimmerMs - standardMs) / standardMs) * 100;
+}
+
 export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonTableProps) {
   // Filter and organize comparisons
   const comparisonMap = new Map(comparisons.map((c) => [c.event, c]));
@@ -68,39 +86,57 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
   const hasPrevAgeGroup = comparisons.some((c) => !!c.prev_age_group);
   const hasNextAgeGroup = comparisons.some((c) => !!c.next_age_group);
 
+  // Get age groups for headers (from first comparison that has them)
+  const firstComp = comparisons.find((c) => c.age_group);
+  const currentAgeGroup = firstComp?.age_group || '';
+  const prevAgeGroup = comparisons.find((c) => c.prev_age_group)?.prev_age_group || '';
+  const nextAgeGroup = comparisons.find((c) => c.next_age_group)?.next_age_group || '';
+
   // Calculate colspan for stroke header
-  const baseColspan = 4; // Event, Your Time, Difference, Status
+  const baseColspan = 3; // Event, Your Time, Status
   const standardCols = (hasPrevAgeGroup ? 1 : 0) + 1 + (hasNextAgeGroup ? 1 : 0);
   const totalColspan = baseColspan + standardCols;
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-slate-200">
+      <table className="w-full divide-y divide-slate-200 table-fixed" style={{ minWidth: '800px' }}>
         <thead className="bg-slate-50">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-48">
+            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-52 align-top">
               Event
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-32">
+            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-28 align-top">
               Your Time
             </th>
             {hasPrevAgeGroup && (
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-28">
-                Prev Standard
+              <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-32 align-top">
+                <div>Prev Standard</div>
+                {prevAgeGroup && prevAgeGroup !== 'OPEN' && (
+                  <div className="text-xs font-normal normal-case text-slate-400">
+                    ({prevAgeGroup})
+                  </div>
+                )}
               </th>
             )}
-            <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider bg-indigo-50 border-x-2 border-indigo-200 w-28">
-              Current Standard
+            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider bg-indigo-50 border-x-2 border-indigo-200 w-36 align-top">
+              <div>Current Standard</div>
+              {currentAgeGroup && currentAgeGroup !== 'OPEN' && (
+                <div className="text-xs font-normal normal-case text-slate-400">
+                  ({currentAgeGroup})
+                </div>
+              )}
             </th>
             {hasNextAgeGroup && (
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-28">
-                Next Standard
+              <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-32 align-top">
+                <div>Next Standard</div>
+                {nextAgeGroup && nextAgeGroup !== 'OPEN' && (
+                  <div className="text-xs font-normal normal-case text-slate-400">
+                    ({nextAgeGroup})
+                  </div>
+                )}
               </th>
             )}
-            <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-32">
-              Difference
-            </th>
-            <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-24">
+            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-24 align-top">
               Status
             </th>
           </tr>
@@ -131,7 +167,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                   <td className="px-4 py-3 whitespace-nowrap align-top">
                     {comp.swimmer_time_formatted ? (
                       <div>
-                        <div className="text-sm font-mono tabular-nums text-slate-900">
+                        <div className="text-sm font-mono tabular-nums text-slate-900 font-semibold">
                           {comp.swimmer_time_formatted}
                         </div>
                         {comp.date && (
@@ -152,22 +188,45 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                   {hasPrevAgeGroup && (
                     <td
                       className={`px-4 py-3 whitespace-nowrap align-top text-center ${
-                        comp.prev_achieved ? 'bg-green-50' : ''
+                        comp.prev_achieved ? 'bg-slate-100' : ''
                       }`}
                     >
                       {comp.prev_standard_time_formatted ? (
                         <div>
-                          <span
-                            className={`text-sm font-mono tabular-nums ${
-                              comp.prev_achieved ? 'text-green-700 font-semibold' : 'text-slate-600'
-                            }`}
-                          >
-                            {comp.prev_standard_time_formatted}
-                          </span>
-                          {comp.prev_age_group !== 'OPEN' && (
-                            <span className="text-xs text-slate-400 ml-1">
-                              ({comp.prev_age_group})
+                          <div>
+                            <span
+                              className={`text-sm font-mono tabular-nums ${
+                                comp.prev_achieved
+                                  ? 'text-slate-700 font-semibold'
+                                  : 'text-slate-600'
+                              }`}
+                            >
+                              {comp.prev_standard_time_formatted}
                             </span>
+                          </div>
+                          {comp.swimmer_time_ms != null && comp.prev_standard_time_ms != null && (
+                            <div className="text-xs mt-0.5 tabular-nums">
+                              <span
+                                className={
+                                  comp.swimmer_time_ms <= comp.prev_standard_time_ms
+                                    ? 'text-slate-600'
+                                    : 'text-slate-400'
+                                }
+                              >
+                                {formatDifference(
+                                  comp.swimmer_time_ms - comp.prev_standard_time_ms
+                                )}{' '}
+                                (
+                                {calcPercent(comp.swimmer_time_ms, comp.prev_standard_time_ms) > 0
+                                  ? '+'
+                                  : ''}
+                                {calcPercent(
+                                  comp.swimmer_time_ms,
+                                  comp.prev_standard_time_ms
+                                ).toFixed(1)}
+                                %)
+                              </span>
+                            </div>
                           )}
                         </div>
                       ) : (
@@ -175,15 +234,48 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                       )}
                     </td>
                   )}
-                  {/* Current age group column (highlighted) */}
-                  <td className="px-4 py-3 whitespace-nowrap align-top text-center bg-indigo-50 border-x-2 border-indigo-200">
+                  {/* Current age group column (highlighted based on status) */}
+                  <td
+                    className={`px-4 py-3 whitespace-nowrap align-top text-center border-x-2 border-indigo-200 ${
+                      comp.status === 'achieved'
+                        ? 'bg-green-50'
+                        : comp.status === 'almost'
+                          ? 'bg-amber-50'
+                          : ''
+                    }`}
+                  >
                     {comp.standard_time_formatted ? (
                       <div>
-                        <span className="text-sm font-mono tabular-nums text-slate-900 font-semibold">
-                          {comp.standard_time_formatted}
-                        </span>
-                        {comp.age_group !== 'OPEN' && (
-                          <span className="text-xs text-slate-500 ml-1">({comp.age_group})</span>
+                        <div>
+                          <span
+                            className={`text-sm font-mono tabular-nums ${
+                              comp.status === 'achieved'
+                                ? 'text-green-700 font-semibold'
+                                : comp.status === 'almost'
+                                  ? 'text-amber-700 font-semibold'
+                                  : 'text-slate-600'
+                            }`}
+                          >
+                            {comp.standard_time_formatted}
+                          </span>
+                        </div>
+                        {comp.difference_formatted && (
+                          <div className="text-xs mt-0.5 tabular-nums">
+                            <span
+                              className={
+                                (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-500'
+                              }
+                            >
+                              {comp.difference_formatted}
+                              {comp.difference_percent != null && (
+                                <>
+                                  {' '}
+                                  ({comp.difference_percent > 0 ? '+' : ''}
+                                  {comp.difference_percent.toFixed(1)}%)
+                                </>
+                              )}
+                            </span>
+                          </div>
                         )}
                       </div>
                     ) : (
@@ -199,17 +291,40 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                     >
                       {comp.next_standard_time_formatted ? (
                         <div>
-                          <span
-                            className={`text-sm font-mono tabular-nums ${
-                              comp.next_achieved ? 'text-blue-700 font-semibold' : 'text-slate-600'
-                            }`}
-                          >
-                            {comp.next_standard_time_formatted}
-                          </span>
-                          {comp.next_age_group !== 'OPEN' && (
-                            <span className="text-xs text-slate-400 ml-1">
-                              ({comp.next_age_group})
+                          <div>
+                            <span
+                              className={`text-sm font-mono tabular-nums ${
+                                comp.next_achieved
+                                  ? 'text-blue-700 font-semibold'
+                                  : 'text-slate-600'
+                              }`}
+                            >
+                              {comp.next_standard_time_formatted}
                             </span>
+                          </div>
+                          {comp.swimmer_time_ms != null && comp.next_standard_time_ms != null && (
+                            <div className="text-xs mt-0.5 tabular-nums">
+                              <span
+                                className={
+                                  comp.swimmer_time_ms <= comp.next_standard_time_ms
+                                    ? 'text-blue-600'
+                                    : 'text-slate-400'
+                                }
+                              >
+                                {formatDifference(
+                                  comp.swimmer_time_ms - comp.next_standard_time_ms
+                                )}{' '}
+                                (
+                                {calcPercent(comp.swimmer_time_ms, comp.next_standard_time_ms) > 0
+                                  ? '+'
+                                  : ''}
+                                {calcPercent(
+                                  comp.swimmer_time_ms,
+                                  comp.next_standard_time_ms
+                                ).toFixed(1)}
+                                %)
+                              </span>
+                            </div>
                           )}
                         </div>
                       ) : (
@@ -218,32 +333,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                     </td>
                   )}
                   <td className="px-4 py-3 whitespace-nowrap align-top text-center">
-                    {comp.difference_formatted ? (
-                      <div>
-                        <span
-                          className={`text-sm font-mono tabular-nums ${
-                            (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-600'
-                          }`}
-                        >
-                          {comp.difference_formatted}
-                        </span>
-                        {comp.difference_percent != null && (
-                          <span
-                            className={`text-xs ml-1 tabular-nums ${
-                              (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-500'
-                            }`}
-                          >
-                            ({comp.difference_percent > 0 ? '+' : ''}
-                            {comp.difference_percent.toFixed(1)}%)
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <span className="text-sm text-slate-400">—</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap align-top text-center">
-                    <StatusBadge status={comp.status} />
+                    <StatusBadge status={comp.status} nextAchieved={comp.next_achieved} />
                   </td>
                 </tr>
               ))}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent, Loading, ErrorBanner } from '@/components/ui';
-import { StandardSelector, ComparisonTable, ComparisonSummary } from '@/components/comparison';
+import { StandardSelector, ComparisonTable } from '@/components/comparison';
 import { useComparison } from '@/hooks/useComparison';
 import { useSwimmer } from '@/hooks/useSwimmer';
 import { useCourseType } from '@/stores/courseFilterStore';
@@ -75,31 +75,35 @@ export function Compare() {
       {/* Comparison results */}
       {comparison && (
         <>
-          {/* Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Summary: {comparison.standard_name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ComparisonSummary
-                summary={comparison.summary}
-                thresholdPercent={comparison.threshold_percent}
-              />
-              <div className="mt-4 text-sm text-slate-500">
-                Comparing {comparison.swimmer_name}'s times
-                {comparison.swimmer_age_group !== 'OPEN' && (
-                  <> (age group: {comparison.swimmer_age_group})</>
-                )}{' '}
-                against {comparison.standard_name} for{' '}
-                {comparison.course_type === '25m' ? 'Short Course' : 'Long Course'}.
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Detailed comparison table */}
+          {/* Comparison table */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Event Details</CardTitle>
+              <div>
+                <CardTitle>{comparison.standard_name}</CardTitle>
+                <p className="text-sm text-slate-500 mt-1">
+                  {comparison.swimmer_name}
+                  {comparison.swimmer_age_group !== 'OPEN' && (
+                    <> ({comparison.swimmer_age_group})</>
+                  )}
+                  {' · '}
+                  {comparison.course_type === '25m' ? 'Short Course' : 'Long Course'}
+                  {' · '}
+                  <span className="text-green-600">{comparison.summary.achieved} achieved</span>
+                  {comparison.summary.almost > 0 && (
+                    <>
+                      , <span className="text-amber-600">{comparison.summary.almost} almost</span>
+                    </>
+                  )}
+                  {comparison.summary.not_achieved > 0 && (
+                    <>
+                      ,{' '}
+                      <span className="text-slate-500">
+                        {comparison.summary.not_achieved} not yet
+                      </span>
+                    </>
+                  )}
+                </p>
+              </div>
               <label className="flex items-center gap-2 text-sm font-normal">
                 <input
                   type="checkbox"
