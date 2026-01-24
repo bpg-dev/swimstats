@@ -57,7 +57,7 @@ export function PersonalBestCard({ pb, achievedStandards }: PersonalBestCardProp
               <Link
                 key={standard.id}
                 to={`/compare?standard_id=${standard.id}`}
-                className="inline-flex items-center px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500 transition-colors"
+                className="inline-flex items-center px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-emerald-50 text-slate-600 hover:bg-emerald-100 dark:bg-emerald-900 dark:text-slate-300 dark:hover:bg-emerald-800 transition-colors"
                 title={`View comparison with ${standard.name}`}
                 onClick={(e) => e.stopPropagation()}
               >
