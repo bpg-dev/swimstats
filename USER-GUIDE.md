@@ -227,9 +227,11 @@ Each standard column shows the qualifying time and, when you have a recorded tim
 
 - **Achieved** (Emerald badge): Your PB meets or beats the current standard
 - **Achieved with Star** (Emerald badge with gold star): Your PB also meets the next age group standard
-- **Almost** (Amber badge and highlight): Within 3% of the standard
-- **Not Yet** (Gray badge): More than 3% away from the standard
+- **Almost** (Amber badge and highlight): Within your configured threshold of the standard
+- **Not Yet** (Gray badge): More than your threshold away from the standard
 - **No Time** (Light gray): No recorded time for this event
+
+The "almost" threshold is configurable in your swimmer profile (Settings). Default is 3%.
 
 ### Column Highlighting
 
@@ -242,7 +244,7 @@ Standard columns are highlighted based on achievement:
 
 The header shows your overall standing inline:
 - Number of standards achieved (green)
-- Number "almost there" within 3% (amber)
+- Number "almost there" within your threshold (amber)
 - Number not yet achieved (gray)
 
 ---
@@ -328,6 +330,7 @@ Edit your swimmer profile:
 - Name
 - Birth Date
 - Gender
+- "Almost There" Threshold (%) - Configures when times are marked as "almost achieved" relative to standards (default: 3%)
 
 ### Access Levels
 
