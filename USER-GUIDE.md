@@ -212,12 +212,16 @@ See how your personal bests stack up against time standards.
 
 | Column | Description |
 |--------|-------------|
-| Event | The swimming event |
-| Your Time | Your personal best (with date achieved) |
-| Prev Standard | Previous age group standard (gray highlight when achieved) |
-| Current Standard | Target time with difference shown below (green/amber highlight based on status) |
-| Next Standard | Next age group standard (blue highlight when achieved) |
+| Event | The swimming event with meet name |
+| Your Time | Your personal best with date achieved |
+| Prev Standard | Previous age group standard time with difference |
+| Current Standard | Target time for your age group with difference |
+| Next Standard | Next age group standard time with difference |
 | Status | Achievement status badge |
+
+Age groups are displayed in the column headers (e.g., "Prev Standard (11-12)").
+
+Each standard column shows the qualifying time and, when you have a recorded time, the difference to that standard with percentage.
 
 ### Status Indicators
 
@@ -230,9 +234,9 @@ See how your personal bests stack up against time standards.
 ### Column Highlighting
 
 Standard columns are highlighted based on achievement:
-- **Prev Standard**: Gray background when achieved
+- **Prev Standard**: Gray background and text when achieved
 - **Current Standard**: Green background when achieved, amber when almost
-- **Next Standard**: Blue background when achieved
+- **Next Standard**: Blue background and text when achieved
 
 ### Standing Summary
 
