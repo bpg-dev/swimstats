@@ -102,14 +102,14 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
       <table className="w-full divide-y divide-slate-200 table-fixed" style={{ minWidth: '800px' }}>
         <thead className="bg-slate-50">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-52">
+            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-52 align-bottom">
               Event
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-28">
+            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-28 align-bottom">
               Your Time
             </th>
             {hasPrevAgeGroup && (
-              <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-32">
+              <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-32 align-bottom">
                 <div>Prev Standard</div>
                 {prevAgeGroup && prevAgeGroup !== 'OPEN' && (
                   <div className="text-xs font-normal normal-case text-slate-400">
@@ -118,7 +118,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                 )}
               </th>
             )}
-            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider bg-indigo-50 border-x-2 border-indigo-200 w-36">
+            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider bg-indigo-50 border-x-2 border-indigo-200 w-36 align-bottom">
               <div>Current Standard</div>
               {currentAgeGroup && currentAgeGroup !== 'OPEN' && (
                 <div className="text-xs font-normal normal-case text-slate-400">
@@ -127,7 +127,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
               )}
             </th>
             {hasNextAgeGroup && (
-              <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-32">
+              <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-32 align-bottom">
                 <div>Next Standard</div>
                 {nextAgeGroup && nextAgeGroup !== 'OPEN' && (
                   <div className="text-xs font-normal normal-case text-slate-400">
@@ -136,7 +136,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                 )}
               </th>
             )}
-            <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-24">
+            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-24 align-bottom">
               Status
             </th>
           </tr>
