@@ -103,6 +103,20 @@ export function parseTimeToMs(timeStr: string): number {
 }
 
 /**
+ * Format a date string for display.
+ * @param dateStr - Date string (YYYY-MM-DD)
+ * @returns Formatted date (e.g., "Jan 22, 2013")
+ */
+export function formatDate(dateStr: string): string {
+  const date = new Date(dateStr + 'T00:00:00');
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+/**
  * Format a meet date range for display.
  * @param startDate - Start date string (YYYY-MM-DD)
  * @param endDate - End date string (YYYY-MM-DD)
