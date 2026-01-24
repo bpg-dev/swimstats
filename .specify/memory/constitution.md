@@ -155,17 +155,18 @@ project history with proper context.
 
 When Claude Code or other AI assistants work on this codebase, they MUST follow these rules:
 
-- **Never push code directly**: AI assistants MUST NOT execute `git push` commands. All code
-  pushing is the responsibility of the human developer after review.
 - **Never commit to main**: AI assistants MUST NOT commit directly to the `main` branch.
   All work MUST be done on feature or fix branches.
 - **Always create a new branch**: When starting work on a new feature or fix, AI assistants
   MUST create an appropriately named branch (`feature/*` or `fix/*`) before making any commits.
-- **Prepare for PR**: AI assistants should prepare commits with proper conventional commit
-  messages, but leave the PR creation and pushing to the human developer.
+- **Push and create PRs when done**: AI assistants MAY push branches and create Pull Requests
+  when work is complete, to streamline the workflow.
+- **Never merge PRs**: AI assistants MUST NOT merge Pull Requests. Merging is the sole
+  responsibility of human maintainers who provide final review and approval.
 
 **Rationale**: These constraints ensure human oversight of all code changes entering the
-repository, maintain audit trails, and prevent accidental modifications to protected branches.
+main branch while allowing AI assistants to complete the development workflow up to the
+point of final approval.
 
 ### Commit Standards
 
