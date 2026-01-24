@@ -69,13 +69,13 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
   const hasNextAgeGroup = comparisons.some((c) => !!c.next_age_group);
 
   // Calculate colspan for stroke header
-  const baseColspan = 4; // Event, Your Time, Difference, Status
+  const baseColspan = 3; // Event, Your Time, Status
   const standardCols = (hasPrevAgeGroup ? 1 : 0) + 1 + (hasNextAgeGroup ? 1 : 0);
   const totalColspan = baseColspan + standardCols;
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full divide-y divide-slate-200 table-fixed" style={{ minWidth: '900px' }}>
+      <table className="w-full divide-y divide-slate-200 table-fixed" style={{ minWidth: '800px' }}>
         <thead className="bg-slate-50">
           <tr>
             <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-52">
@@ -97,9 +97,6 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                 Next Standard
               </th>
             )}
-            <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-32">
-              Difference
-            </th>
             <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap w-24">
               Status
             </th>
@@ -187,19 +184,39 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                   >
                     {comp.standard_time_formatted ? (
                       <div>
-                        <span
-                          className={`text-sm font-mono tabular-nums ${
-                            comp.status === 'achieved'
-                              ? 'text-green-700 font-semibold'
-                              : comp.status === 'almost'
-                                ? 'text-amber-700 font-semibold'
-                                : 'text-slate-600'
-                          }`}
-                        >
-                          {comp.standard_time_formatted}
-                        </span>
-                        {comp.age_group !== 'OPEN' && (
-                          <span className="text-xs text-slate-500 ml-1">({comp.age_group})</span>
+                        <div>
+                          <span
+                            className={`text-sm font-mono tabular-nums ${
+                              comp.status === 'achieved'
+                                ? 'text-green-700 font-semibold'
+                                : comp.status === 'almost'
+                                  ? 'text-amber-700 font-semibold'
+                                  : 'text-slate-600'
+                            }`}
+                          >
+                            {comp.standard_time_formatted}
+                          </span>
+                          {comp.age_group !== 'OPEN' && (
+                            <span className="text-xs text-slate-500 ml-1">({comp.age_group})</span>
+                          )}
+                        </div>
+                        {comp.difference_formatted && (
+                          <div className="text-xs mt-0.5 tabular-nums">
+                            <span
+                              className={
+                                (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-500'
+                              }
+                            >
+                              {comp.difference_formatted}
+                              {comp.difference_percent != null && (
+                                <>
+                                  {' '}
+                                  ({comp.difference_percent > 0 ? '+' : ''}
+                                  {comp.difference_percent.toFixed(1)}%)
+                                </>
+                              )}
+                            </span>
+                          </div>
                         )}
                       </div>
                     ) : (
@@ -233,31 +250,6 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                       )}
                     </td>
                   )}
-                  <td className="px-4 py-3 whitespace-nowrap align-top text-center">
-                    {comp.difference_formatted ? (
-                      <div>
-                        <span
-                          className={`text-sm font-mono tabular-nums ${
-                            (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-600'
-                          }`}
-                        >
-                          {comp.difference_formatted}
-                        </span>
-                        {comp.difference_percent != null && (
-                          <span
-                            className={`text-xs ml-1 tabular-nums ${
-                              (comp.difference_ms ?? 0) <= 0 ? 'text-green-600' : 'text-slate-500'
-                            }`}
-                          >
-                            ({comp.difference_percent > 0 ? '+' : ''}
-                            {comp.difference_percent.toFixed(1)}%)
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <span className="text-sm text-slate-400">—</span>
-                    )}
-                  </td>
                   <td className="px-4 py-3 whitespace-nowrap align-top text-center">
                     <StatusBadge status={comp.status} nextAchieved={comp.next_achieved} />
                   </td>

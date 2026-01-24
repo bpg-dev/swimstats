@@ -158,11 +158,12 @@ describe('ComparisonTable', () => {
     expect(screen.getByText('Almost')).toBeInTheDocument();
   });
 
-  it('shows time differences', () => {
+  it('shows time differences beneath standard times', () => {
     render(<ComparisonTable comparisons={mockComparisons} />);
 
-    expect(screen.getByText('-0.50')).toBeInTheDocument();
-    expect(screen.getByText('+1.50')).toBeInTheDocument();
+    // Differences are now shown inline with percentage beneath standard time
+    expect(screen.getByText(/-0\.50/)).toBeInTheDocument();
+    expect(screen.getByText(/\+1\.50/)).toBeInTheDocument();
   });
 
   it('shows meet names', () => {

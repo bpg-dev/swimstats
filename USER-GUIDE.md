@@ -215,9 +215,8 @@ See how your personal bests stack up against time standards.
 | Event | The swimming event |
 | Your Time | Your personal best (with date achieved) |
 | Prev Standard | Previous age group standard (gray highlight when achieved) |
-| Current Standard | Target time for your age group (green/amber highlight based on status) |
+| Current Standard | Target time with difference shown below (green/amber highlight based on status) |
 | Next Standard | Next age group standard (blue highlight when achieved) |
-| Difference | Time gap to current standard (with percentage) |
 | Status | Achievement status badge |
 
 ### Status Indicators
