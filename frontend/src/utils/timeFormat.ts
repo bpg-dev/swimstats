@@ -103,38 +103,34 @@ export function parseTimeToMs(timeStr: string): number {
 }
 
 /**
- * Format a meet date range for display.
+ * Format a date string for display in YYYY-MM-DD format.
+ * @param dateStr - Date string (YYYY-MM-DD)
+ * @returns Formatted date (e.g., "2013-01-22")
+ */
+export function formatDate(dateStr: string): string {
+  // Already in YYYY-MM-DD format, just return it
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+  // Parse and reformat if needed
+  const date = new Date(dateStr + 'T00:00:00');
+  return date.toISOString().split('T')[0];
+}
+
+/**
+ * Format a meet date range for display in YYYY-MM-DD format.
  * @param startDate - Start date string (YYYY-MM-DD)
  * @param endDate - End date string (YYYY-MM-DD)
- * @returns Formatted date range (e.g., "Jan 15, 2026" or "Jan 15-17, 2026")
+ * @returns Formatted date range (e.g., "2026-01-15" or "2026-01-15 to 2026-01-17")
  */
 export function formatDateRange(startDate: string, endDate: string): string {
-  const start = new Date(startDate + 'T00:00:00');
-  const end = new Date(endDate + 'T00:00:00');
-
-  const options: Intl.DateTimeFormatOptions = {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  };
-
   // Single day meet
   if (startDate === endDate) {
-    return start.toLocaleDateString('en-CA', options);
+    return startDate;
   }
 
   // Multi-day meet
-  const startFormatted = start.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
-  const endFormatted = end.toLocaleDateString('en-CA', options);
-
-  // Same month/year - show "Jan 15-17, 2026"
-  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
-    const endDay = end.getDate();
-    return `${startFormatted}-${endDay}, ${end.getFullYear()}`;
-  }
-
-  // Different months or years - show "Jan 15 - Feb 2, 2026"
-  return `${startFormatted} - ${endFormatted}`;
+  return `${startDate} to ${endDate}`;
 }
 
 /**

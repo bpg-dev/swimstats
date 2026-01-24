@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -24,25 +25,42 @@ func (q *Queries) CountSwimmers(ctx context.Context) (int64, error) {
 }
 
 const createSwimmer = `-- name: CreateSwimmer :one
-INSERT INTO swimmers (name, birth_date, gender)
-VALUES ($1, $2, $3)
-RETURNING id, name, birth_date, gender, created_at, updated_at
+INSERT INTO swimmers (name, birth_date, gender, threshold_percent)
+VALUES ($1, $2, $3, $4)
+RETURNING id, name, birth_date, gender, threshold_percent, created_at, updated_at
 `
 
 type CreateSwimmerParams struct {
-	Name      string      `json:"name"`
-	BirthDate pgtype.Date `json:"birth_date"`
-	Gender    string      `json:"gender"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
 }
 
-func (q *Queries) CreateSwimmer(ctx context.Context, arg CreateSwimmerParams) (Swimmer, error) {
-	row := q.db.QueryRow(ctx, createSwimmer, arg.Name, arg.BirthDate, arg.Gender)
-	var i Swimmer
+type CreateSwimmerRow struct {
+	ID               uuid.UUID      `json:"id"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+}
+
+func (q *Queries) CreateSwimmer(ctx context.Context, arg CreateSwimmerParams) (CreateSwimmerRow, error) {
+	row := q.db.QueryRow(ctx, createSwimmer,
+		arg.Name,
+		arg.BirthDate,
+		arg.Gender,
+		arg.ThresholdPercent,
+	)
+	var i CreateSwimmerRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.BirthDate,
 		&i.Gender,
+		&i.ThresholdPercent,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -60,19 +78,30 @@ func (q *Queries) DeleteSwimmer(ctx context.Context, id uuid.UUID) error {
 }
 
 const getSwimmer = `-- name: GetSwimmer :one
-SELECT id, name, birth_date, gender, created_at, updated_at
+SELECT id, name, birth_date, gender, threshold_percent, created_at, updated_at
 FROM swimmers
 WHERE id = $1
 `
 
-func (q *Queries) GetSwimmer(ctx context.Context, id uuid.UUID) (Swimmer, error) {
+type GetSwimmerRow struct {
+	ID               uuid.UUID      `json:"id"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+}
+
+func (q *Queries) GetSwimmer(ctx context.Context, id uuid.UUID) (GetSwimmerRow, error) {
 	row := q.db.QueryRow(ctx, getSwimmer, id)
-	var i Swimmer
+	var i GetSwimmerRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.BirthDate,
 		&i.Gender,
+		&i.ThresholdPercent,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -80,21 +109,32 @@ func (q *Queries) GetSwimmer(ctx context.Context, id uuid.UUID) (Swimmer, error)
 }
 
 const getSwimmerByUserID = `-- name: GetSwimmerByUserID :one
-SELECT id, name, birth_date, gender, created_at, updated_at
+SELECT id, name, birth_date, gender, threshold_percent, created_at, updated_at
 FROM swimmers
 LIMIT 1
 `
 
+type GetSwimmerByUserIDRow struct {
+	ID               uuid.UUID      `json:"id"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+}
+
 // In a multi-user scenario, this would filter by user_id
 // For single-user MVP, just return the first swimmer
-func (q *Queries) GetSwimmerByUserID(ctx context.Context) (Swimmer, error) {
+func (q *Queries) GetSwimmerByUserID(ctx context.Context) (GetSwimmerByUserIDRow, error) {
 	row := q.db.QueryRow(ctx, getSwimmerByUserID)
-	var i Swimmer
+	var i GetSwimmerByUserIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.BirthDate,
 		&i.Gender,
+		&i.ThresholdPercent,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -102,25 +142,36 @@ func (q *Queries) GetSwimmerByUserID(ctx context.Context) (Swimmer, error) {
 }
 
 const listSwimmers = `-- name: ListSwimmers :many
-SELECT id, name, birth_date, gender, created_at, updated_at
+SELECT id, name, birth_date, gender, threshold_percent, created_at, updated_at
 FROM swimmers
 ORDER BY name
 `
 
-func (q *Queries) ListSwimmers(ctx context.Context) ([]Swimmer, error) {
+type ListSwimmersRow struct {
+	ID               uuid.UUID      `json:"id"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+}
+
+func (q *Queries) ListSwimmers(ctx context.Context) ([]ListSwimmersRow, error) {
 	rows, err := q.db.Query(ctx, listSwimmers)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Swimmer{}
+	items := []ListSwimmersRow{}
 	for rows.Next() {
-		var i Swimmer
+		var i ListSwimmersRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
 			&i.BirthDate,
 			&i.Gender,
+			&i.ThresholdPercent,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -136,31 +187,44 @@ func (q *Queries) ListSwimmers(ctx context.Context) ([]Swimmer, error) {
 
 const updateSwimmer = `-- name: UpdateSwimmer :one
 UPDATE swimmers
-SET name = $2, birth_date = $3, gender = $4
+SET name = $2, birth_date = $3, gender = $4, threshold_percent = $5
 WHERE id = $1
-RETURNING id, name, birth_date, gender, created_at, updated_at
+RETURNING id, name, birth_date, gender, threshold_percent, created_at, updated_at
 `
 
 type UpdateSwimmerParams struct {
-	ID        uuid.UUID   `json:"id"`
-	Name      string      `json:"name"`
-	BirthDate pgtype.Date `json:"birth_date"`
-	Gender    string      `json:"gender"`
+	ID               uuid.UUID      `json:"id"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
 }
 
-func (q *Queries) UpdateSwimmer(ctx context.Context, arg UpdateSwimmerParams) (Swimmer, error) {
+type UpdateSwimmerRow struct {
+	ID               uuid.UUID      `json:"id"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+}
+
+func (q *Queries) UpdateSwimmer(ctx context.Context, arg UpdateSwimmerParams) (UpdateSwimmerRow, error) {
 	row := q.db.QueryRow(ctx, updateSwimmer,
 		arg.ID,
 		arg.Name,
 		arg.BirthDate,
 		arg.Gender,
+		arg.ThresholdPercent,
 	)
-	var i Swimmer
+	var i UpdateSwimmerRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.BirthDate,
 		&i.Gender,
+		&i.ThresholdPercent,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
