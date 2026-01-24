@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 
 	"github.com/bpg/swimstats/backend/internal/api/middleware"
@@ -13,11 +14,12 @@ import (
 // SwimmerHandler handles swimmer API requests.
 type SwimmerHandler struct {
 	service *swimmer.Service
+	logger  *slog.Logger
 }
 
 // NewSwimmerHandler creates a new swimmer handler.
-func NewSwimmerHandler(service *swimmer.Service) *SwimmerHandler {
-	return &SwimmerHandler{service: service}
+func NewSwimmerHandler(service *swimmer.Service, logger *slog.Logger) *SwimmerHandler {
+	return &SwimmerHandler{service: service, logger: logger}
 }
 
 // GetSwimmer handles GET /swimmer requests.
@@ -30,7 +32,7 @@ func (h *SwimmerHandler) GetSwimmer(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusNotFound, "swimmer profile not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get swimmer", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get swimmer")
 		return
 	}
 
@@ -61,7 +63,7 @@ func (h *SwimmerHandler) PutSwimmer(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to save swimmer", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to save swimmer")
 		return
 	}
 

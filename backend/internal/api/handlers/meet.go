@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -17,11 +18,12 @@ import (
 // MeetHandler handles meet API requests.
 type MeetHandler struct {
 	service *meet.Service
+	logger  *slog.Logger
 }
 
 // NewMeetHandler creates a new meet handler.
-func NewMeetHandler(service *meet.Service) *MeetHandler {
-	return &MeetHandler{service: service}
+func NewMeetHandler(service *meet.Service, logger *slog.Logger) *MeetHandler {
+	return &MeetHandler{service: service, logger: logger}
 }
 
 // ListMeets handles GET /meets requests.
@@ -49,7 +51,7 @@ func (h *MeetHandler) ListMeets(w http.ResponseWriter, r *http.Request) {
 
 	list, err := h.service.List(ctx, params)
 	if err != nil {
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to list meets", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to list meets")
 		return
 	}
 
@@ -73,7 +75,7 @@ func (h *MeetHandler) GetMeet(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusNotFound, "meet not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get meet", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get meet")
 		return
 	}
 
@@ -103,7 +105,7 @@ func (h *MeetHandler) CreateMeet(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to create meet", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to create meet")
 		return
 	}
 
@@ -144,7 +146,7 @@ func (h *MeetHandler) UpdateMeet(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to update meet", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to update meet")
 		return
 	}
 
@@ -175,7 +177,7 @@ func (h *MeetHandler) DeleteMeet(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusNotFound, "meet not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to delete meet", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to delete meet")
 		return
 	}
 

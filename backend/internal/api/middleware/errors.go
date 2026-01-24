@@ -26,6 +26,13 @@ func WriteError(w http.ResponseWriter, status int, message string, code string) 
 	})
 }
 
+// WriteInternalError logs the error and writes a generic 500 response.
+// Use this for unexpected errors that should be logged for debugging.
+func WriteInternalError(w http.ResponseWriter, logger *slog.Logger, err error, message string) {
+	logger.Error(message, "error", err)
+	WriteError(w, http.StatusInternalServerError, message, "INTERNAL_ERROR")
+}
+
 // WriteValidationError writes a validation error response.
 func WriteValidationError(w http.ResponseWriter, errors map[string]string) {
 	w.Header().Set("Content-Type", "application/json")

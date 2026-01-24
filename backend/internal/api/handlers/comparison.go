@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -16,13 +17,15 @@ import (
 type ComparisonHandler struct {
 	comparisonService *comparison.ComparisonService
 	swimmerService    *swimmer.Service
+	logger            *slog.Logger
 }
 
 // NewComparisonHandler creates a new comparison handler.
-func NewComparisonHandler(comparisonService *comparison.ComparisonService, swimmerService *swimmer.Service) *ComparisonHandler {
+func NewComparisonHandler(comparisonService *comparison.ComparisonService, swimmerService *swimmer.Service, logger *slog.Logger) *ComparisonHandler {
 	return &ComparisonHandler{
 		comparisonService: comparisonService,
 		swimmerService:    swimmerService,
+		logger:            logger,
 	}
 }
 
@@ -75,7 +78,7 @@ func (h *ComparisonHandler) GetComparison(w http.ResponseWriter, r *http.Request
 			middleware.WriteError(w, http.StatusNotFound, "swimmer profile not found - please set up your profile first", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get swimmer profile", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get swimmer profile")
 		return
 	}
 
@@ -86,7 +89,7 @@ func (h *ComparisonHandler) GetComparison(w http.ResponseWriter, r *http.Request
 			middleware.WriteError(w, http.StatusNotFound, "standard not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to compare times", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to compare times")
 		return
 	}
 

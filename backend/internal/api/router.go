@@ -76,13 +76,13 @@ func NewRouter(logger *slog.Logger, authProvider *auth.Provider, pool *pgxpool.P
 
 	// Create handlers
 	authHandler := handlers.NewAuthHandler(authProvider)
-	swimmerHandler := handlers.NewSwimmerHandler(swimmerService)
-	meetHandler := handlers.NewMeetHandler(meetService)
-	timeHandler := handlers.NewTimeHandler(timeService, swimmerService)
-	pbHandler := handlers.NewPersonalBestHandler(pbService, swimmerService)
-	comparisonHandler := handlers.NewComparisonHandler(comparisonService, swimmerService)
-	progressHandler := handlers.NewProgressHandler(progressService, swimmerService)
-	standardHandler := handlers.NewStandardHandler(standardService)
+	swimmerHandler := handlers.NewSwimmerHandler(swimmerService, logger)
+	meetHandler := handlers.NewMeetHandler(meetService, logger)
+	timeHandler := handlers.NewTimeHandler(timeService, swimmerService, logger)
+	pbHandler := handlers.NewPersonalBestHandler(pbService, swimmerService, logger)
+	comparisonHandler := handlers.NewComparisonHandler(comparisonService, swimmerService, logger)
+	progressHandler := handlers.NewProgressHandler(progressService, swimmerService, logger)
+	standardHandler := handlers.NewStandardHandler(standardService, logger)
 	importHandler := handlers.NewImportHandler(importService, logger)
 	exportHandler := handlers.NewExportHandler(exportService, logger)
 

@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -25,13 +26,15 @@ func isDuplicateEventInBatchError(err error) bool {
 type TimeHandler struct {
 	timeService    *timeservice.Service
 	swimmerService *swimmer.Service
+	logger         *slog.Logger
 }
 
 // NewTimeHandler creates a new time handler.
-func NewTimeHandler(timeService *timeservice.Service, swimmerService *swimmer.Service) *TimeHandler {
+func NewTimeHandler(timeService *timeservice.Service, swimmerService *swimmer.Service, logger *slog.Logger) *TimeHandler {
 	return &TimeHandler{
 		timeService:    timeService,
 		swimmerService: swimmerService,
+		logger:         logger,
 	}
 }
 
@@ -45,7 +48,7 @@ func (h *TimeHandler) ListTimes(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusNotFound, "swimmer profile not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get swimmer", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get swimmer")
 		return
 	}
 
@@ -82,7 +85,7 @@ func (h *TimeHandler) ListTimes(w http.ResponseWriter, r *http.Request) {
 
 	list, err := h.timeService.List(ctx, params)
 	if err != nil {
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to list times", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to list times")
 		return
 	}
 
@@ -106,7 +109,7 @@ func (h *TimeHandler) GetTime(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusNotFound, "time not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get time", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get time")
 		return
 	}
 
@@ -130,7 +133,7 @@ func (h *TimeHandler) CreateTime(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusBadRequest, "swimmer profile required", "PRECONDITION_FAILED")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get swimmer", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get swimmer")
 		return
 	}
 
@@ -154,7 +157,7 @@ func (h *TimeHandler) CreateTime(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, status, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to create time", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to create time")
 		return
 	}
 
@@ -178,7 +181,7 @@ func (h *TimeHandler) CreateBatchTimes(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusBadRequest, "swimmer profile required", "PRECONDITION_FAILED")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get swimmer", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get swimmer")
 		return
 	}
 
@@ -202,7 +205,7 @@ func (h *TimeHandler) CreateBatchTimes(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, status, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to create times", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to create times")
 		return
 	}
 
@@ -243,7 +246,7 @@ func (h *TimeHandler) UpdateTime(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to update time", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to update time")
 		return
 	}
 
@@ -274,7 +277,7 @@ func (h *TimeHandler) DeleteTime(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusNotFound, "time not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to delete time", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to delete time")
 		return
 	}
 

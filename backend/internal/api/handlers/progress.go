@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -17,13 +18,15 @@ import (
 type ProgressHandler struct {
 	progressService *comparison.ProgressService
 	swimmerService  *swimmer.Service
+	logger          *slog.Logger
 }
 
 // NewProgressHandler creates a new progress handler.
-func NewProgressHandler(progressService *comparison.ProgressService, swimmerService *swimmer.Service) *ProgressHandler {
+func NewProgressHandler(progressService *comparison.ProgressService, swimmerService *swimmer.Service, logger *slog.Logger) *ProgressHandler {
 	return &ProgressHandler{
 		progressService: progressService,
 		swimmerService:  swimmerService,
+		logger:          logger,
 	}
 }
 
@@ -38,7 +41,7 @@ func (h *ProgressHandler) GetProgressData(w http.ResponseWriter, r *http.Request
 			middleware.WriteError(w, http.StatusNotFound, "swimmer profile not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get swimmer", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get swimmer")
 		return
 	}
 
@@ -81,7 +84,7 @@ func (h *ProgressHandler) GetProgressData(w http.ResponseWriter, r *http.Request
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get progress data", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get progress data")
 		return
 	}
 

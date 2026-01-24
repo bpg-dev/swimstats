@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 
 	"github.com/bpg/swimstats/backend/internal/api/middleware"
@@ -14,13 +15,15 @@ import (
 type PersonalBestHandler struct {
 	pbService      *comparison.PersonalBestService
 	swimmerService *swimmer.Service
+	logger         *slog.Logger
 }
 
 // NewPersonalBestHandler creates a new personal best handler.
-func NewPersonalBestHandler(pbService *comparison.PersonalBestService, swimmerService *swimmer.Service) *PersonalBestHandler {
+func NewPersonalBestHandler(pbService *comparison.PersonalBestService, swimmerService *swimmer.Service, logger *slog.Logger) *PersonalBestHandler {
 	return &PersonalBestHandler{
 		pbService:      pbService,
 		swimmerService: swimmerService,
+		logger:         logger,
 	}
 }
 
@@ -35,7 +38,7 @@ func (h *PersonalBestHandler) GetPersonalBests(w http.ResponseWriter, r *http.Re
 			middleware.WriteError(w, http.StatusNotFound, "swimmer profile not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get swimmer", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get swimmer")
 		return
 	}
 
@@ -52,7 +55,7 @@ func (h *PersonalBestHandler) GetPersonalBests(w http.ResponseWriter, r *http.Re
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get personal bests", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get personal bests")
 		return
 	}
 

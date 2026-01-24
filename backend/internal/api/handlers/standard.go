@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -16,11 +17,12 @@ import (
 // StandardHandler handles standard API requests.
 type StandardHandler struct {
 	service *standard.Service
+	logger  *slog.Logger
 }
 
 // NewStandardHandler creates a new standard handler.
-func NewStandardHandler(service *standard.Service) *StandardHandler {
-	return &StandardHandler{service: service}
+func NewStandardHandler(service *standard.Service, logger *slog.Logger) *StandardHandler {
+	return &StandardHandler{service: service, logger: logger}
 }
 
 // ListStandards handles GET /standards requests.
@@ -39,7 +41,7 @@ func (h *StandardHandler) ListStandards(w http.ResponseWriter, r *http.Request) 
 
 	list, err := h.service.List(ctx, params)
 	if err != nil {
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to list standards", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to list standards")
 		return
 	}
 
@@ -63,7 +65,7 @@ func (h *StandardHandler) GetStandard(w http.ResponseWriter, r *http.Request) {
 			middleware.WriteError(w, http.StatusNotFound, "standard not found", "NOT_FOUND")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to get standard", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to get standard")
 		return
 	}
 
@@ -93,7 +95,7 @@ func (h *StandardHandler) CreateStandard(w http.ResponseWriter, r *http.Request)
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to create standard", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to create standard")
 		return
 	}
 
@@ -134,7 +136,7 @@ func (h *StandardHandler) UpdateStandard(w http.ResponseWriter, r *http.Request)
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to update standard", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to update standard")
 		return
 	}
 
@@ -169,7 +171,7 @@ func (h *StandardHandler) DeleteStandard(w http.ResponseWriter, r *http.Request)
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to delete standard", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to delete standard")
 		return
 	}
 
@@ -212,7 +214,7 @@ func (h *StandardHandler) SetStandardTimes(w http.ResponseWriter, r *http.Reques
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to set standard times", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to set standard times")
 		return
 	}
 
@@ -242,7 +244,7 @@ func (h *StandardHandler) ImportStandard(w http.ResponseWriter, r *http.Request)
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to import standard", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to import standard")
 		return
 	}
 
@@ -273,7 +275,7 @@ func (h *StandardHandler) ImportStandardsFromJSON(w http.ResponseWriter, r *http
 			middleware.WriteError(w, http.StatusBadRequest, err.Error(), "VALIDATION_ERROR")
 			return
 		}
-		middleware.WriteError(w, http.StatusInternalServerError, "failed to import standards", "INTERNAL_ERROR")
+		middleware.WriteInternalError(w, h.logger, err, "failed to import standards")
 		return
 	}
 
