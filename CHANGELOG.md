@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.7.0](https://github.com/bpg/swimstats/compare/v0.6.2...v0.7.0) (2026-01-24)
+
+
+### Features
+
+* **backend:** add detailed error logging and OIDC documentation ([#90](https://github.com/bpg/swimstats/issues/90)) ([f78a7fd](https://github.com/bpg/swimstats/commit/f78a7fd22b05782ad3527f8dc0c7d2bfe55b5c12))
+* **ui:** add PB card navigation and improve achieved status colors ([#94](https://github.com/bpg/swimstats/issues/94)) ([e392808](https://github.com/bpg/swimstats/commit/e39280887df6705bae2cbdfa58eddf3fa5b195f5))
+* **ui:** disable add/edit/delete buttons for view-only users ([#93](https://github.com/bpg/swimstats/issues/93)) ([917617d](https://github.com/bpg/swimstats/commit/917617d4deb73017f87cc5c7111b62bbf0785222))
+
+
+### Bug Fixes
+
+* **comparison:** use swimmer's current age group for standard comparison ([#92](https://github.com/bpg/swimstats/issues/92)) ([acc972f](https://github.com/bpg/swimstats/commit/acc972fd793e087717d3cd668ee822b974b04c82))
+* **ui:** improve comparison table styling and status highlighting ([#95](https://github.com/bpg/swimstats/issues/95)) ([7ec0ebe](https://github.com/bpg/swimstats/commit/7ec0ebe5121aa902ad946d7bcbc4974078ee3716))
+
 ## [0.6.2](https://github.com/bpg/swimstats/compare/v0.6.1...v0.6.2) (2026-01-23)
 
 
