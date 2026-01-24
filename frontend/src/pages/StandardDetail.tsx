@@ -8,6 +8,7 @@ import {
 } from '@/hooks/useStandards';
 import { StandardForm, StandardTimesEditor } from '@/components/standards';
 import { StandardInput, StandardTimeInput, AgeGroup } from '@/types/standard';
+import { useAuthStore } from '@/stores/authStore';
 import {
   Card,
   CardContent,
@@ -51,6 +52,7 @@ type ViewMode = 'view' | 'edit' | 'edit-times';
 export function StandardDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const canWrite = useAuthStore((state) => state.canWrite);
   const [mode, setMode] = useState<ViewMode>('view');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -200,7 +202,12 @@ export function StandardDetail() {
             </div>
             {!standard.is_preloaded && (
               <div className="flex items-center gap-2">
-                <Button variant="secondary" size="sm" onClick={() => setMode('edit')}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setMode('edit')}
+                  disabled={!canWrite()}
+                >
                   Edit
                 </Button>
                 <Button
@@ -208,6 +215,7 @@ export function StandardDetail() {
                   size="sm"
                   onClick={() => setShowDeleteConfirm(true)}
                   className="text-red-600 hover:text-red-700"
+                  disabled={!canWrite()}
                 >
                   Delete
                 </Button>
@@ -251,7 +259,12 @@ export function StandardDetail() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Qualifying Times</CardTitle>
-            <Button variant="secondary" size="sm" onClick={() => setMode('edit-times')}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setMode('edit-times')}
+              disabled={!canWrite()}
+            >
               Edit Times
             </Button>
           </div>
@@ -260,7 +273,7 @@ export function StandardDetail() {
           {(standard.times || []).length === 0 ? (
             <div className="text-center py-8 text-slate-500">
               <p>No qualifying times have been added yet.</p>
-              <Button className="mt-4" onClick={() => setMode('edit-times')}>
+              <Button className="mt-4" onClick={() => setMode('edit-times')} disabled={!canWrite()}>
                 Add Times
               </Button>
             </div>

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -8,7 +8,23 @@ import { MeetList } from '@/components/meets/MeetList';
 import { MeetForm } from '@/components/meets/MeetForm';
 import { MeetSelector } from '@/components/meets/MeetSelector';
 import { MeetTimesList } from '@/components/meets/MeetTimesList';
+import * as authStoreModule from '@/stores/authStore';
 import { mockMeet } from '../mocks/handlers';
+
+// Spy on useAuthStore to return full write access
+beforeEach(() => {
+  vi.spyOn(authStoreModule, 'useAuthStore').mockImplementation(
+    (selector?: (state: Record<string, unknown>) => unknown) => {
+      const mockState = {
+        user: { id: 'test-user', name: 'Test User', access_level: 'full' },
+        isAuthenticated: true,
+        canWrite: () => true,
+        accessLevel: () => 'full',
+      };
+      return selector ? selector(mockState) : mockState;
+    }
+  );
+});
 
 // Test wrapper with providers
 function createWrapper() {

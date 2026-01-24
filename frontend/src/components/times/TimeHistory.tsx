@@ -2,6 +2,7 @@ import { TimeRecord, EventCode, getEventInfo } from '@/types/time';
 import { CourseType } from '@/types/meet';
 import { Card, CardContent, CardHeader, CardTitle, Loading, ErrorBanner } from '@/components/ui';
 import { useTimes, useDeleteTime } from '@/hooks/useTimes';
+import { useAuthStore } from '@/stores/authStore';
 import { formatDateRange } from '@/utils/timeFormat';
 
 export interface TimeHistoryProps {
@@ -30,6 +31,7 @@ export function TimeHistory({
     limit,
   });
   const deleteMutation = useDeleteTime();
+  const canWrite = useAuthStore((state) => state.canWrite);
 
   if (isLoading) {
     return <Loading className="py-8" />;
@@ -128,8 +130,9 @@ export function TimeHistory({
                         {onEditTime && (
                           <button
                             onClick={() => onEditTime(time)}
-                            className="p-1 text-slate-400 hover:text-cyan-600"
+                            className="p-1 text-slate-400 hover:text-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-slate-400"
                             aria-label="Edit time"
+                            disabled={!canWrite()}
                           >
                             <svg
                               className="h-4 w-4"
@@ -148,9 +151,9 @@ export function TimeHistory({
                         )}
                         <button
                           onClick={() => handleDelete(time)}
-                          className="p-1 text-slate-400 hover:text-red-600"
+                          className="p-1 text-slate-400 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-slate-400"
                           aria-label="Delete time"
-                          disabled={deleteMutation.isPending}
+                          disabled={deleteMutation.isPending || !canWrite()}
                         >
                           <svg
                             className="h-4 w-4"

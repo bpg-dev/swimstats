@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui';
 import { MeetList, MeetForm } from '@/components/meets';
 import { useCourseType } from '@/stores/courseFilterStore';
+import { useAuthStore } from '@/stores/authStore';
 import { Meet } from '@/types/meet';
 
 /**
@@ -9,6 +10,7 @@ import { Meet } from '@/types/meet';
  */
 export function Meets() {
   const courseType = useCourseType();
+  const canWrite = useAuthStore((state) => state.canWrite);
   const [showForm, setShowForm] = useState(false);
   const [editingMeet, setEditingMeet] = useState<Meet | null>(null);
 
@@ -45,7 +47,7 @@ export function Meets() {
             times.
           </p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
+        <Button onClick={() => setShowForm(true)} disabled={!canWrite()}>
           <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>

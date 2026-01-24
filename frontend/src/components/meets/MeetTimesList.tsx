@@ -3,6 +3,7 @@ import { TimeRecord, getEventInfo, EventCode } from '@/types/time';
 import { Loading, ErrorBanner, Button } from '@/components/ui';
 import { useTimes, useDeleteTime } from '@/hooks/useTimes';
 import { usePersonalBests } from '@/hooks/usePersonalBests';
+import { useAuthStore } from '@/stores/authStore';
 import { CourseType } from '@/types/meet';
 
 interface MeetTimesListProps {
@@ -16,6 +17,7 @@ interface MeetTimesListProps {
 export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const canWrite = useAuthStore((state) => state.canWrite);
   const { data, isLoading, error, refetch } = useTimes({
     meet_id: meetId,
     limit: 100,
@@ -171,6 +173,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
                           isLoading={deletingId === time.id}
                           aria-label={`Delete ${eventInfo?.name || time.event} time`}
                           className="text-slate-400 hover:text-red-600 hover:bg-red-50"
+                          disabled={!canWrite()}
                         >
                           {deletingId !== time.id && (
                             <svg

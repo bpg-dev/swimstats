@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/Button';
 import { StandardList, StandardForm, StandardImportForm } from '@/components/standards';
 import { StandardInput } from '@/types/standard';
 import { useCreateStandard } from '@/hooks/useStandards';
+import { useAuthStore } from '@/stores/authStore';
 import { ErrorBanner } from '@/components/ui';
 
 type ViewMode = 'list' | 'create' | 'import';
@@ -12,6 +13,7 @@ type ViewMode = 'list' | 'create' | 'import';
  */
 export function Standards() {
   const [mode, setMode] = useState<ViewMode>('list');
+  const canWrite = useAuthStore((state) => state.canWrite);
   const createStandard = useCreateStandard();
 
   const handleCreateStandard = async (input: StandardInput) => {
@@ -34,10 +36,12 @@ export function Standards() {
         </div>
         {mode === 'list' && (
           <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => setMode('import')}>
+            <Button variant="secondary" onClick={() => setMode('import')} disabled={!canWrite()}>
               Import JSON
             </Button>
-            <Button onClick={() => setMode('create')}>Add Standard</Button>
+            <Button onClick={() => setMode('create')} disabled={!canWrite()}>
+              Add Standard
+            </Button>
           </div>
         )}
       </div>

@@ -302,6 +302,20 @@ Edit your swimmer profile:
 - Birth Date
 - Gender
 
+### Access Levels
+
+SwimStats supports two access levels determined by your OIDC provider:
+
+- **Full Access**: Can add, edit, and delete all data (meets, times, standards)
+- **View Only**: Can view all data but cannot make any changes
+
+If you have view-only access:
+- Add/Edit/Delete buttons will be disabled throughout the app
+- You can still view all times, meets, standards, progress charts, and comparisons
+- Contact your administrator if you need full access
+
+Your current access level is shown in the header as a badge (displayed only for view-only users).
+
 ### Data Export/Import
 
 - **Export**: Download all data as JSON

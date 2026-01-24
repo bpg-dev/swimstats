@@ -118,6 +118,8 @@ docker-compose.yaml          # Local development environment
 - Two access levels: full (CRUD all data) and view-only (read only)
 - Access level from OIDC claims/groups
 - Dev mode: mock user header for local development
+- View-only users: all add/edit/delete buttons are disabled in UI
+- View-only badge shown in header for view-only users
 
 ### API Patterns
 - RESTful endpoints with standard HTTP methods

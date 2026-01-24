@@ -2,6 +2,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, Button, Loading, ErrorBanner } from '@/components/ui';
 import { MeetTimesList } from '@/components/meets/MeetTimesList';
 import { useMeet, useDeleteMeet } from '@/hooks/useMeets';
+import { useAuthStore } from '@/stores/authStore';
 import { formatDateRange } from '@/utils/timeFormat';
 
 /**
@@ -10,6 +11,7 @@ import { formatDateRange } from '@/utils/timeFormat';
 export function MeetDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const canWrite = useAuthStore((state) => state.canWrite);
   const { data: meet, isLoading, error, refetch } = useMeet(id || '');
   const deleteMutation = useDeleteMeet();
 
@@ -130,7 +132,11 @@ export function MeetDetails() {
             )}
             <div className="flex-1" />
             <div className="flex gap-2">
-              <Button size="sm" onClick={() => navigate(`/add-times?meet_id=${meet.id}`)}>
+              <Button
+                size="sm"
+                onClick={() => navigate(`/add-times?meet_id=${meet.id}`)}
+                disabled={!canWrite()}
+              >
                 <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
@@ -141,7 +147,12 @@ export function MeetDetails() {
                 </svg>
                 Add Times
               </Button>
-              <Button size="sm" variant="outline" onClick={() => navigate(`/meets?id=${meet.id}`)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => navigate(`/meets?id=${meet.id}`)}
+                disabled={!canWrite()}
+              >
                 Edit
               </Button>
               <Button
@@ -149,6 +160,7 @@ export function MeetDetails() {
                 variant="danger"
                 onClick={handleDelete}
                 isLoading={deleteMutation.isPending}
+                disabled={!canWrite()}
               >
                 Delete
               </Button>
