@@ -3,6 +3,7 @@ export interface Swimmer {
   name: string;
   birth_date: string;
   gender: 'male' | 'female';
+  threshold_percent: number;
   current_age: number;
   current_age_group: AgeGroup;
 }
@@ -11,6 +12,7 @@ export interface SwimmerInput {
   name: string;
   birth_date: string;
   gender: 'male' | 'female';
+  threshold_percent?: number;
 }
 
 export type AgeGroup = '10U' | '11-12' | '13-14' | '15-17' | 'OPEN';

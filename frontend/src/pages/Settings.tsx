@@ -155,6 +155,9 @@ export function Settings() {
                     <div className="text-sm text-slate-500">
                       Born: {new Date(swimmer.birth_date).toLocaleDateString()}
                     </div>
+                    <div className="text-sm text-slate-500">
+                      &ldquo;Almost There&rdquo; Threshold: {swimmer.threshold_percent}%
+                    </div>
                   </div>
                 </div>
                 {canWrite() && (
@@ -201,19 +204,6 @@ export function Settings() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Preferences</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 text-slate-500">
-              <p>Additional preferences coming soon.</p>
-              <p className="text-sm mt-2">
-                Configure &ldquo;almost there&rdquo; threshold and other settings.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Data Management Section */}

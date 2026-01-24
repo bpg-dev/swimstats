@@ -23,6 +23,7 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
     name: initialData?.name || '',
     birth_date: initialData?.birth_date || '',
     gender: initialData?.gender || 'female',
+    threshold_percent: initialData?.threshold_percent ?? 3.0,
   });
   const [errors, setErrors] = useState<Partial<Record<keyof SwimmerInput, string>>>({});
 
@@ -47,6 +48,12 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
         newErrors.birth_date = 'Birth date cannot be in the future';
       } else if (age < 4 || age > 25) {
         newErrors.birth_date = 'Birth date should result in age between 4 and 25';
+      }
+    }
+
+    if (formData.threshold_percent !== undefined) {
+      if (formData.threshold_percent < 0 || formData.threshold_percent > 100) {
+        newErrors.threshold_percent = 'Threshold must be between 0 and 100';
       }
     }
 
@@ -117,6 +124,24 @@ export function SwimmerSetupForm({ initialData, onSuccess, onCancel }: SwimmerSe
               { value: 'male', label: 'Male' },
             ]}
             required
+          />
+
+          <Input
+            label={'"Almost There" Threshold (%)'}
+            name="threshold_percent"
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            value={formData.threshold_percent?.toString() ?? '3'}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                threshold_percent: e.target.value ? parseFloat(e.target.value) : 3.0,
+              }))
+            }
+            error={errors.threshold_percent}
+            hint="Times within this percentage of a standard will be marked as 'Almost Achieved'. Default: 3%"
           />
 
           <div className="flex gap-3 pt-4">

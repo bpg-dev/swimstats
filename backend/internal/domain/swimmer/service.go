@@ -27,19 +27,24 @@ func NewService(repo *postgres.SwimmerRepository) *Service {
 
 // Swimmer represents a swimmer with computed fields.
 type Swimmer struct {
-	ID              uuid.UUID `json:"id"`
-	Name            string    `json:"name"`
-	BirthDate       string    `json:"birth_date"`
-	Gender          string    `json:"gender"`
-	CurrentAge      int       `json:"current_age"`
-	CurrentAgeGroup string    `json:"current_age_group"`
+	ID               uuid.UUID `json:"id"`
+	Name             string    `json:"name"`
+	BirthDate        string    `json:"birth_date"`
+	Gender           string    `json:"gender"`
+	ThresholdPercent float64   `json:"threshold_percent"`
+	CurrentAge       int       `json:"current_age"`
+	CurrentAgeGroup  string    `json:"current_age_group"`
 }
+
+// DefaultThresholdPercent is the default "almost there" threshold.
+const DefaultThresholdPercent = 3.0
 
 // Input represents input for creating/updating a swimmer.
 type Input struct {
-	Name      string `json:"name"`
-	BirthDate string `json:"birth_date"`
-	Gender    string `json:"gender"`
+	Name             string   `json:"name"`
+	BirthDate        string   `json:"birth_date"`
+	Gender           string   `json:"gender"`
+	ThresholdPercent *float64 `json:"threshold_percent,omitempty"`
 }
 
 // Validate validates the swimmer input.
@@ -58,6 +63,11 @@ func (i Input) Validate() error {
 	}
 	if i.Gender != "male" && i.Gender != "female" {
 		return errors.New("gender must be 'male' or 'female'")
+	}
+	if i.ThresholdPercent != nil {
+		if *i.ThresholdPercent < 0 || *i.ThresholdPercent > 100 {
+			return errors.New("threshold_percent must be between 0 and 100")
+		}
 	}
 	return nil
 }
@@ -92,10 +102,17 @@ func (s *Service) Create(ctx context.Context, input Input) (*Swimmer, error) {
 
 	birthDate, _ := time.Parse("2006-01-02", input.BirthDate)
 
+	// Use default threshold if not provided
+	threshold := DefaultThresholdPercent
+	if input.ThresholdPercent != nil {
+		threshold = *input.ThresholdPercent
+	}
+
 	params := db.CreateSwimmerParams{
-		Name:      input.Name,
-		BirthDate: pgtype.Date{Time: birthDate, Valid: true},
-		Gender:    input.Gender,
+		Name:             input.Name,
+		BirthDate:        pgtype.Date{Time: birthDate, Valid: true},
+		Gender:           input.Gender,
+		ThresholdPercent: floatToNumeric(threshold),
 	}
 
 	dbSwimmer, err := s.repo.Create(ctx, params)
@@ -113,11 +130,18 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Swimm
 
 	birthDate, _ := time.Parse("2006-01-02", input.BirthDate)
 
+	// Use default threshold if not provided
+	threshold := DefaultThresholdPercent
+	if input.ThresholdPercent != nil {
+		threshold = *input.ThresholdPercent
+	}
+
 	params := db.UpdateSwimmerParams{
-		ID:        id,
-		Name:      input.Name,
-		BirthDate: pgtype.Date{Time: birthDate, Valid: true},
-		Gender:    input.Gender,
+		ID:               id,
+		Name:             input.Name,
+		BirthDate:        pgtype.Date{Time: birthDate, Valid: true},
+		Gender:           input.Gender,
+		ThresholdPercent: floatToNumeric(threshold),
 	}
 
 	dbSwimmer, err := s.repo.Update(ctx, params)
@@ -162,11 +186,31 @@ func toSwimmer(dbSwimmer *db.Swimmer) *Swimmer {
 	ageGroup := domain.AgeGroupFromAge(currentAge)
 
 	return &Swimmer{
-		ID:              dbSwimmer.ID,
-		Name:            dbSwimmer.Name,
-		BirthDate:       birthDate,
-		Gender:          dbSwimmer.Gender,
-		CurrentAge:      currentAge,
-		CurrentAgeGroup: string(ageGroup),
+		ID:               dbSwimmer.ID,
+		Name:             dbSwimmer.Name,
+		BirthDate:        birthDate,
+		Gender:           dbSwimmer.Gender,
+		ThresholdPercent: numericToFloat(dbSwimmer.ThresholdPercent),
+		CurrentAge:       currentAge,
+		CurrentAgeGroup:  string(ageGroup),
 	}
+}
+
+// floatToNumeric converts a float64 to pgtype.Numeric.
+func floatToNumeric(f float64) pgtype.Numeric {
+	var n pgtype.Numeric
+	_ = n.Scan(fmt.Sprintf("%.2f", f))
+	return n
+}
+
+// numericToFloat converts a pgtype.Numeric to float64.
+func numericToFloat(n pgtype.Numeric) float64 {
+	if !n.Valid {
+		return DefaultThresholdPercent
+	}
+	f, _ := n.Float64Value()
+	if !f.Valid {
+		return DefaultThresholdPercent
+	}
+	return f.Float64
 }

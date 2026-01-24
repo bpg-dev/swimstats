@@ -82,6 +82,11 @@ func (h *ComparisonHandler) GetComparison(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// Use swimmer's configured threshold if no explicit threshold provided
+	if threshold == nil {
+		threshold = &swimmerProfile.ThresholdPercent
+	}
+
 	// Perform comparison
 	result, err := h.comparisonService.Compare(ctx, swimmerProfile.ID, standardID, courseType, threshold)
 	if err != nil {

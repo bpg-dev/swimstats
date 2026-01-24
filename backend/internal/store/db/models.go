@@ -34,12 +34,13 @@ type StandardTime struct {
 }
 
 type Swimmer struct {
-	ID        uuid.UUID   `json:"id"`
-	Name      string      `json:"name"`
-	BirthDate pgtype.Date `json:"birth_date"`
-	Gender    string      `json:"gender"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
+	ID               uuid.UUID      `json:"id"`
+	Name             string         `json:"name"`
+	BirthDate        pgtype.Date    `json:"birth_date"`
+	Gender           string         `json:"gender"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+	ThresholdPercent pgtype.Numeric `json:"threshold_percent"`
 }
 
 type Time struct {

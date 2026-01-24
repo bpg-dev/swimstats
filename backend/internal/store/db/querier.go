@@ -19,7 +19,7 @@ type Querier interface {
 	CreateMeet(ctx context.Context, arg CreateMeetParams) (Meet, error)
 	CreateStandard(ctx context.Context, arg CreateStandardParams) (TimeStandard, error)
 	CreateStandardTime(ctx context.Context, arg CreateStandardTimeParams) (StandardTime, error)
-	CreateSwimmer(ctx context.Context, arg CreateSwimmerParams) (Swimmer, error)
+	CreateSwimmer(ctx context.Context, arg CreateSwimmerParams) (CreateSwimmerRow, error)
 	CreateTime(ctx context.Context, arg CreateTimeParams) (Time, error)
 	DeleteMeet(ctx context.Context, id uuid.UUID) error
 	DeleteStandard(ctx context.Context, id uuid.UUID) error
@@ -43,10 +43,10 @@ type Querier interface {
 	GetStandard(ctx context.Context, id uuid.UUID) (TimeStandard, error)
 	GetStandardTime(ctx context.Context, id uuid.UUID) (StandardTime, error)
 	GetStandardTimeForEventAndAge(ctx context.Context, arg GetStandardTimeForEventAndAgeParams) (StandardTime, error)
-	GetSwimmer(ctx context.Context, id uuid.UUID) (Swimmer, error)
+	GetSwimmer(ctx context.Context, id uuid.UUID) (GetSwimmerRow, error)
 	// In a multi-user scenario, this would filter by user_id
 	// For single-user MVP, just return the first swimmer
-	GetSwimmerByUserID(ctx context.Context) (Swimmer, error)
+	GetSwimmerByUserID(ctx context.Context) (GetSwimmerByUserIDRow, error)
 	GetTime(ctx context.Context, id uuid.UUID) (Time, error)
 	GetTimeWithMeet(ctx context.Context, id uuid.UUID) (GetTimeWithMeetRow, error)
 	GetTotalMeetCount(ctx context.Context, swimmerID uuid.UUID) (int32, error)
@@ -56,7 +56,7 @@ type Querier interface {
 	ListMeets(ctx context.Context, arg ListMeetsParams) ([]ListMeetsRow, error)
 	ListStandardTimes(ctx context.Context, standardID uuid.UUID) ([]StandardTime, error)
 	ListStandards(ctx context.Context, arg ListStandardsParams) ([]TimeStandard, error)
-	ListSwimmers(ctx context.Context) ([]Swimmer, error)
+	ListSwimmers(ctx context.Context) ([]ListSwimmersRow, error)
 	ListTimes(ctx context.Context, arg ListTimesParams) ([]ListTimesRow, error)
 	ListTimesByMeet(ctx context.Context, meetID uuid.UUID) ([]Time, error)
 	StandardExists(ctx context.Context, id uuid.UUID) (bool, error)
@@ -64,7 +64,7 @@ type Querier interface {
 	UpdateMeet(ctx context.Context, arg UpdateMeetParams) (Meet, error)
 	UpdateStandard(ctx context.Context, arg UpdateStandardParams) (TimeStandard, error)
 	UpdateStandardTime(ctx context.Context, arg UpdateStandardTimeParams) (StandardTime, error)
-	UpdateSwimmer(ctx context.Context, arg UpdateSwimmerParams) (Swimmer, error)
+	UpdateSwimmer(ctx context.Context, arg UpdateSwimmerParams) (UpdateSwimmerRow, error)
 	UpdateTime(ctx context.Context, arg UpdateTimeParams) (Time, error)
 	UpsertStandardTime(ctx context.Context, arg UpsertStandardTimeParams) (StandardTime, error)
 }
