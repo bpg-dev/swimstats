@@ -19,7 +19,7 @@ lint: ## Run golangci-lint
 
 test: test-setup test-migrate ## Run tests with coverage (starts test database)
 	@echo "Running tests..."
-	DATABASE_URL=$(TEST_DB_URL) go test -v -race -coverprofile=coverage.out ./... || ($(MAKE) test-teardown && exit 1)
+	TEST_DB_HOST=$(TEST_DB_HOST) TEST_DB_PORT=$(TEST_DB_PORT) TEST_DB_USER=$(TEST_DB_USER) TEST_DB_PASSWORD=$(TEST_DB_PASSWORD) TEST_DB_NAME=$(TEST_DB_NAME) go test -v -race -coverprofile=coverage.out ./... || ($(MAKE) test-teardown && exit 1)
 	$(MAKE) test-teardown
 
 test-unit: ## Run tests without database (unit tests only)
