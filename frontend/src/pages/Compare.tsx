@@ -19,6 +19,13 @@ export function Compare() {
   const courseType = useCourseType();
   const { data: swimmer } = useSwimmer();
 
+  // Track the course type to reset selection when it changes
+  const [prevCourseType, setPrevCourseType] = useState(courseType);
+  if (courseType !== prevCourseType) {
+    setSelectedStandardId('');
+    setPrevCourseType(courseType);
+  }
+
   const {
     data: comparison,
     isLoading,
