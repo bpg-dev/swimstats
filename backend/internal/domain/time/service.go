@@ -69,16 +69,30 @@ type Input struct {
 	MeetID    uuid.UUID `json:"meet_id"`
 	Event     string    `json:"event"`
 	TimeMS    int       `json:"time_ms"`
-	EventDate string    `json:"event_date,omitempty"`
+	EventDate string    `json:"event_date"`
 	Notes     string    `json:"notes,omitempty"`
+}
+
+// Sanitize trims whitespace from string fields.
+func (i *Input) Sanitize() {
+	i.Event = domain.SanitizeString(i.Event)
+	i.EventDate = domain.SanitizeString(i.EventDate)
+	i.Notes = domain.SanitizeString(i.Notes)
 }
 
 // BatchTimeInput represents a single time in a batch.
 type BatchTimeInput struct {
 	Event     string `json:"event"`
 	TimeMS    int    `json:"time_ms"`
-	EventDate string `json:"event_date,omitempty"`
+	EventDate string `json:"event_date"`
 	Notes     string `json:"notes,omitempty"`
+}
+
+// Sanitize trims whitespace from string fields.
+func (i *BatchTimeInput) Sanitize() {
+	i.Event = domain.SanitizeString(i.Event)
+	i.EventDate = domain.SanitizeString(i.EventDate)
+	i.Notes = domain.SanitizeString(i.Notes)
 }
 
 // BatchInput represents input for batch time creation.
@@ -87,7 +101,7 @@ type BatchInput struct {
 	Times  []BatchTimeInput `json:"times"`
 }
 
-// Validate validates the time input.
+// Validate validates the time input. Call Sanitize() first.
 func (i Input) Validate() error {
 	if i.MeetID == uuid.Nil {
 		return errors.New("meet_id is required")
@@ -101,10 +115,11 @@ func (i Input) Validate() error {
 	if len(i.Notes) > 1000 {
 		return errors.New("notes must be at most 1000 characters")
 	}
-	if i.EventDate != "" {
-		if _, err := gotime.Parse("2006-01-02", i.EventDate); err != nil {
-			return errors.New("event_date must be a valid date in YYYY-MM-DD format")
-		}
+	if i.EventDate == "" {
+		return errors.New("event_date is required")
+	}
+	if _, err := gotime.Parse("2006-01-02", i.EventDate); err != nil {
+		return errors.New("event_date must be a valid date in YYYY-MM-DD format")
 	}
 	return nil
 }
@@ -112,7 +127,7 @@ func (i Input) Validate() error {
 // ValidateEventDate validates that the event date is within the meet's date range.
 func ValidateEventDate(eventDate string, meetStartDate, meetEndDate gotime.Time) error {
 	if eventDate == "" {
-		return nil // Event date is optional
+		return errors.New("event_date is required")
 	}
 
 	ed, err := gotime.Parse("2006-01-02", eventDate)
@@ -215,6 +230,7 @@ func (s *Service) List(ctx context.Context, params ListParams) (*TimeList, error
 
 // Create creates a new time.
 func (s *Service) Create(ctx context.Context, swimmerID uuid.UUID, input Input) (*TimeRecord, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}
@@ -247,11 +263,9 @@ func (s *Service) Create(ctx context.Context, swimmerID uuid.UUID, input Input) 
 		notes = pgtype.Text{String: input.Notes, Valid: true}
 	}
 
-	var eventDate pgtype.Date
-	if input.EventDate != "" {
-		ed, _ := gotime.Parse("2006-01-02", input.EventDate)
-		eventDate = pgtype.Date{Time: ed, Valid: true}
-	}
+	// EventDate is validated to be non-empty and valid format in Validate()
+	ed, _ := gotime.Parse("2006-01-02", input.EventDate)
+	eventDate := pgtype.Date{Time: ed, Valid: true}
 
 	params := db.CreateTimeParams{
 		SwimmerID: swimmerID,
@@ -270,10 +284,8 @@ func (s *Service) Create(ctx context.Context, swimmerID uuid.UUID, input Input) 
 	// Check if this is a PB
 	isPB, _ := s.timeRepo.IsPersonalBest(ctx, swimmerID, meet.CourseType, input.Event, int32(input.TimeMS), &dbTime.ID)
 
-	var eventDateStr string
-	if dbTime.EventDate.Valid {
-		eventDateStr = dbTime.EventDate.Time.Format("2006-01-02")
-	}
+	// EventDate is always valid since it's required
+	eventDateStr := dbTime.EventDate.Time.Format("2006-01-02")
 
 	return &TimeRecord{
 		ID:            dbTime.ID,
@@ -304,13 +316,21 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 		return nil, errors.New("at least one time is required")
 	}
 
-	// Check for duplicate events within the batch
+	// Sanitize and validate all inputs first
 	seenEvents := make(map[string]bool)
-	for _, t := range input.Times {
-		if seenEvents[t.Event] {
-			return nil, fmt.Errorf("duplicate event in batch: %s", t.Event)
+	for i := range input.Times {
+		input.Times[i].Sanitize()
+
+		// Check for duplicate events within the batch
+		if seenEvents[input.Times[i].Event] {
+			return nil, fmt.Errorf("duplicate event in batch: %s", input.Times[i].Event)
 		}
-		seenEvents[t.Event] = true
+		seenEvents[input.Times[i].Event] = true
+
+		// Validate event_date is required
+		if input.Times[i].EventDate == "" {
+			return nil, fmt.Errorf("event_date is required for event %s", input.Times[i].Event)
+		}
 	}
 
 	// Verify meet exists and get course type
@@ -363,11 +383,9 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 			notes = pgtype.Text{String: t.Notes, Valid: true}
 		}
 
-		var eventDate pgtype.Date
-		if t.EventDate != "" {
-			ed, _ := gotime.Parse("2006-01-02", t.EventDate)
-			eventDate = pgtype.Date{Time: ed, Valid: true}
-		}
+		// EventDate is validated to be non-empty and valid format above
+		ed, _ := gotime.Parse("2006-01-02", t.EventDate)
+		eventDate := pgtype.Date{Time: ed, Valid: true}
 
 		params := db.CreateTimeParams{
 			SwimmerID: swimmerID,
@@ -425,6 +443,7 @@ func (s *Service) CreateBatch(ctx context.Context, swimmerID uuid.UUID, input Ba
 
 // Update updates an existing time.
 func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*TimeRecord, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}
@@ -448,11 +467,9 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*TimeR
 		notes = pgtype.Text{String: input.Notes, Valid: true}
 	}
 
-	var eventDate pgtype.Date
-	if input.EventDate != "" {
-		ed, _ := gotime.Parse("2006-01-02", input.EventDate)
-		eventDate = pgtype.Date{Time: ed, Valid: true}
-	}
+	// EventDate is validated to be non-empty and valid format in Validate()
+	ed, _ := gotime.Parse("2006-01-02", input.EventDate)
+	eventDate := pgtype.Date{Time: ed, Valid: true}
 
 	params := db.UpdateTimeParams{
 		ID:        id,
@@ -468,10 +485,8 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*TimeR
 		return nil, fmt.Errorf("update time: %w", err)
 	}
 
-	var eventDateStr string
-	if dbTime.EventDate.Valid {
-		eventDateStr = dbTime.EventDate.Time.Format("2006-01-02")
-	}
+	// EventDate is always valid since it's required
+	eventDateStr := dbTime.EventDate.Time.Format("2006-01-02")
 
 	return &TimeRecord{
 		ID:            dbTime.ID,

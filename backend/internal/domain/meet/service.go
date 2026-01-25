@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -52,7 +53,17 @@ type Input struct {
 	CourseType string `json:"course_type"`
 }
 
-// Validate validates the meet input.
+// Sanitize trims whitespace from string fields.
+func (i *Input) Sanitize() {
+	i.Name = strings.TrimSpace(i.Name)
+	i.City = strings.TrimSpace(i.City)
+	i.Country = strings.TrimSpace(i.Country)
+	i.StartDate = strings.TrimSpace(i.StartDate)
+	i.EndDate = strings.TrimSpace(i.EndDate)
+	i.CourseType = strings.TrimSpace(i.CourseType)
+}
+
+// Validate validates the meet input. Call Sanitize() first.
 func (i Input) Validate() error {
 	if i.Name == "" {
 		return errors.New("name is required")
@@ -153,6 +164,7 @@ func (s *Service) List(ctx context.Context, params ListParams) (*MeetList, error
 
 // Create creates a new meet.
 func (s *Service) Create(ctx context.Context, input Input) (*Meet, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}
@@ -189,6 +201,7 @@ func (s *Service) Create(ctx context.Context, input Input) (*Meet, error) {
 
 // Update updates an existing meet.
 func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Meet, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}

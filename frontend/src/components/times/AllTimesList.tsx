@@ -1,6 +1,6 @@
 import { TimeRecord, getEventInfo } from '@/types/time';
 import { SortBy } from './SortToggle';
-import { formatDate, formatDateRange } from '@/utils/timeFormat';
+import { formatDate } from '@/utils/timeFormat';
 import { MeetLink } from '@/components/ui';
 
 interface AllTimesListProps {
@@ -38,13 +38,16 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
     }
   });
 
-  const formatMeetDate = (time: TimeRecord): string => {
-    if (!time.meet) return '—';
-    // If event_date is set and different from meet start_date, show it
-    if (time.event_date && time.event_date !== time.meet.start_date) {
+  const formatEventDate = (time: TimeRecord): string => {
+    // Always show the event date (which is now required)
+    if (time.event_date) {
       return formatDate(time.event_date);
     }
-    return formatDateRange(time.meet.start_date, time.meet.end_date);
+    // Fallback for legacy data without event_date
+    if (time.meet) {
+      return formatDate(time.meet.start_date);
+    }
+    return '—';
   };
 
   return (
@@ -116,7 +119,7 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
                 </td>
 
                 {/* Date */}
-                <td className="py-3 text-slate-600">{formatMeetDate(time)}</td>
+                <td className="py-3 text-slate-600">{formatEventDate(time)}</td>
               </tr>
             );
           })}

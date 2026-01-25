@@ -20,9 +20,10 @@ type TimeInput struct {
 type TimeBatchInput struct {
 	MeetID string `json:"meet_id"`
 	Times  []struct {
-		Event  string `json:"event"`
-		TimeMS int    `json:"time_ms"`
-		Notes  string `json:"notes,omitempty"`
+		Event     string `json:"event"`
+		TimeMS    int    `json:"time_ms"`
+		EventDate string `json:"event_date"`
+		Notes     string `json:"notes,omitempty"`
 	} `json:"times"`
 }
 
@@ -99,10 +100,11 @@ func TestTimeAPI(t *testing.T) {
 		_, meetID := setupSwimmerAndMeet(t, "25m")
 
 		input := TimeInput{
-			MeetID: meetID,
-			Event:  "100FR",
-			TimeMS: 65320, // 1:05.32
-			Notes:  "Heat 3",
+			MeetID:    meetID,
+			Event:     "100FR",
+			TimeMS:    65320, // 1:05.32
+			EventDate: "2026-03-15",
+			Notes:     "Heat 3",
 		}
 
 		rr := client.Post("/api/v1/times", input)
@@ -125,9 +127,9 @@ func TestTimeAPI(t *testing.T) {
 
 		// Create multiple times
 		times := []TimeInput{
-			{MeetID: meetID, Event: "100FR", TimeMS: 65320},
-			{MeetID: meetID, Event: "200FR", TimeMS: 145000},
-			{MeetID: meetID, Event: "50FL", TimeMS: 32500},
+			{MeetID: meetID, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"},
+			{MeetID: meetID, Event: "200FR", TimeMS: 145000, EventDate: "2026-03-15"},
+			{MeetID: meetID, Event: "50FL", TimeMS: 32500, EventDate: "2026-03-15"},
 		}
 
 		for _, ti := range times {
@@ -157,9 +159,9 @@ func TestTimeAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &meet2)
 
 		times := []TimeInput{
-			{MeetID: meetID1, Event: "100FR", TimeMS: 65320},
-			{MeetID: meet2.ID, Event: "100FR", TimeMS: 64000}, // Same event, different meet
-			{MeetID: meetID1, Event: "200FR", TimeMS: 145000},
+			{MeetID: meetID1, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"},
+			{MeetID: meet2.ID, Event: "100FR", TimeMS: 64000, EventDate: "2026-04-15"}, // Same event, different meet
+			{MeetID: meetID1, Event: "200FR", TimeMS: 145000, EventDate: "2026-03-15"},
 		}
 
 		for _, ti := range times {
@@ -194,9 +196,9 @@ func TestTimeAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &meet50)
 
 		// Add times to both meets
-		rr = client.Post("/api/v1/times", TimeInput{MeetID: meetID25, Event: "100FR", TimeMS: 65320})
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meetID25, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"})
 		require.Equal(t, http.StatusCreated, rr.Code)
-		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet50.ID, Event: "100FR", TimeMS: 68000})
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet50.ID, Event: "100FR", TimeMS: 68000, EventDate: "2026-04-15"})
 		require.Equal(t, http.StatusCreated, rr.Code)
 
 		rr = client.Get("/api/v1/times?course_type=25m")
@@ -210,7 +212,7 @@ func TestTimeAPI(t *testing.T) {
 		testDB.ClearTables(ctx, t)
 		_, meetID := setupSwimmerAndMeet(t, "25m")
 
-		input := TimeInput{MeetID: meetID, Event: "100BR", TimeMS: 75000}
+		input := TimeInput{MeetID: meetID, Event: "100BR", TimeMS: 75000, EventDate: "2026-03-15"}
 		rr := client.Post("/api/v1/times", input)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
@@ -233,7 +235,7 @@ func TestTimeAPI(t *testing.T) {
 		testDB.ClearTables(ctx, t)
 		_, meetID := setupSwimmerAndMeet(t, "25m")
 
-		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320}
+		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"}
 		rr := client.Post("/api/v1/times", input)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
@@ -257,7 +259,7 @@ func TestTimeAPI(t *testing.T) {
 		testDB.ClearTables(ctx, t)
 		_, meetID := setupSwimmerAndMeet(t, "25m")
 
-		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320}
+		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"}
 		rr := client.Post("/api/v1/times", input)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
@@ -283,19 +285,23 @@ func TestTimeAPI(t *testing.T) {
 		}{
 			{
 				name:  "invalid meet_id",
-				input: TimeInput{MeetID: "00000000-0000-0000-0000-000000000000", Event: "100FR", TimeMS: 65320},
+				input: TimeInput{MeetID: "00000000-0000-0000-0000-000000000000", Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"},
 			},
 			{
 				name:  "invalid event",
-				input: TimeInput{MeetID: meetID, Event: "INVALID", TimeMS: 65320},
+				input: TimeInput{MeetID: meetID, Event: "INVALID", TimeMS: 65320, EventDate: "2026-03-15"},
 			},
 			{
 				name:  "zero time",
-				input: TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 0},
+				input: TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 0, EventDate: "2026-03-15"},
 			},
 			{
 				name:  "negative time",
-				input: TimeInput{MeetID: meetID, Event: "100FR", TimeMS: -1000},
+				input: TimeInput{MeetID: meetID, Event: "100FR", TimeMS: -1000, EventDate: "2026-03-15"},
+			},
+			{
+				name:  "missing event_date",
+				input: TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320, EventDate: ""},
 			},
 		}
 
@@ -315,7 +321,7 @@ func TestTimeAPI(t *testing.T) {
 		client.SetMockUser("view_only")
 		defer client.SetMockUser("full")
 
-		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320}
+		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"}
 		rr := client.Post("/api/v1/times", input)
 
 		assert.Equal(t, http.StatusForbidden, rr.Code)
@@ -326,7 +332,7 @@ func TestTimeAPI(t *testing.T) {
 		_, meetID := setupSwimmerAndMeet(t, "25m")
 
 		// Create first time
-		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320}
+		input := TimeInput{MeetID: meetID, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"}
 		rr := client.Post("/api/v1/times", input)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
@@ -350,12 +356,13 @@ func TestTimeAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &meet2)
 
 		// Create time at first meet
-		input := TimeInput{MeetID: meetID1, Event: "100FR", TimeMS: 65320}
+		input := TimeInput{MeetID: meetID1, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"}
 		rr = client.Post("/api/v1/times", input)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
 		// Create same event at second meet - should succeed
 		input.MeetID = meet2.ID
+		input.EventDate = "2026-04-15"
 		rr = client.Post("/api/v1/times", input)
 
 		assert.Equal(t, http.StatusCreated, rr.Code)
@@ -394,9 +401,9 @@ func TestTimeBatchAPI(t *testing.T) {
 		input := map[string]interface{}{
 			"meet_id": meet.ID,
 			"times": []map[string]interface{}{
-				{"event": "100FR", "time_ms": 65320, "notes": "Heat"},
-				{"event": "200FR", "time_ms": 145000},
-				{"event": "50FL", "time_ms": 32500, "notes": "Final"},
+				{"event": "100FR", "time_ms": 65320, "event_date": "2026-03-15", "notes": "Heat"},
+				{"event": "200FR", "time_ms": 145000, "event_date": "2026-03-15"},
+				{"event": "50FL", "time_ms": 32500, "event_date": "2026-03-15", "notes": "Final"},
 			},
 		}
 
@@ -426,7 +433,7 @@ func TestTimeBatchAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &meet1)
 
 		// Create initial time
-		timeInput := TimeInput{MeetID: meet1.ID, Event: "100FR", TimeMS: 65320}
+		timeInput := TimeInput{MeetID: meet1.ID, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"}
 		rr = client.Post("/api/v1/times", timeInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
@@ -442,8 +449,8 @@ func TestTimeBatchAPI(t *testing.T) {
 		input := map[string]interface{}{
 			"meet_id": meet2.ID,
 			"times": []map[string]interface{}{
-				{"event": "100FR", "time_ms": 64000},  // Faster - new PB
-				{"event": "200FR", "time_ms": 145000}, // New event - PB
+				{"event": "100FR", "time_ms": 64000, "event_date": "2026-04-15"},  // Faster - new PB
+				{"event": "200FR", "time_ms": 145000, "event_date": "2026-04-15"}, // New event - PB
 			},
 		}
 
@@ -477,9 +484,9 @@ func TestTimeBatchAPI(t *testing.T) {
 		input := map[string]interface{}{
 			"meet_id": meet.ID,
 			"times": []map[string]interface{}{
-				{"event": "100FR", "time_ms": 65320},
-				{"event": "100FR", "time_ms": 64000}, // Duplicate event
-				{"event": "200FR", "time_ms": 145000},
+				{"event": "100FR", "time_ms": 65320, "event_date": "2026-03-15"},
+				{"event": "100FR", "time_ms": 64000, "event_date": "2026-03-15"}, // Duplicate event
+				{"event": "200FR", "time_ms": 145000, "event_date": "2026-03-15"},
 			},
 		}
 
@@ -502,7 +509,7 @@ func TestTimeBatchAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &meet)
 
 		// Create first time
-		timeInput := TimeInput{MeetID: meet.ID, Event: "100FR", TimeMS: 65320}
+		timeInput := TimeInput{MeetID: meet.ID, Event: "100FR", TimeMS: 65320, EventDate: "2026-03-15"}
 		rr = client.Post("/api/v1/times", timeInput)
 		require.Equal(t, http.StatusCreated, rr.Code)
 
@@ -510,8 +517,8 @@ func TestTimeBatchAPI(t *testing.T) {
 		input := map[string]interface{}{
 			"meet_id": meet.ID,
 			"times": []map[string]interface{}{
-				{"event": "100FR", "time_ms": 64000}, // Already exists
-				{"event": "200FR", "time_ms": 145000},
+				{"event": "100FR", "time_ms": 64000, "event_date": "2026-03-15"}, // Already exists
+				{"event": "200FR", "time_ms": 145000, "event_date": "2026-03-15"},
 			},
 		}
 
@@ -560,7 +567,7 @@ func TestTimeFormatting(t *testing.T) {
 			AssertJSONBody(t, rr, &meet)
 
 			// Create time
-			timeInput := TimeInput{MeetID: meet.ID, Event: "100FR", TimeMS: tc.timeMS}
+			timeInput := TimeInput{MeetID: meet.ID, Event: "100FR", TimeMS: tc.timeMS, EventDate: "2026-03-15"}
 			rr = client.Post("/api/v1/times", timeInput)
 			require.Equal(t, http.StatusCreated, rr.Code)
 

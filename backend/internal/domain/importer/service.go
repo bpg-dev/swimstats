@@ -144,42 +144,55 @@ func (s *Service) ImportSwimmerData(ctx context.Context, data *ImportData) (*Imp
 
 // parseSwimmer validates and parses swimmer data.
 func (s *Service) parseSwimmer(data *SwimmerData) (*ParsedSwimmer, error) {
-	if data.Name == "" {
+	// Sanitize input
+	name := strings.TrimSpace(data.Name)
+	gender := strings.TrimSpace(data.Gender)
+	birthDateStr := strings.TrimSpace(data.BirthDate)
+
+	if name == "" {
 		return nil, fmt.Errorf("swimmer name is required")
 	}
 
-	if data.Gender != "female" && data.Gender != "male" {
-		return nil, fmt.Errorf("gender must be 'female' or 'male', got: %s", data.Gender)
+	if gender != "female" && gender != "male" {
+		return nil, fmt.Errorf("gender must be 'female' or 'male', got: %s", gender)
 	}
 
-	birthDate, err := time.Parse("2006-01-02", data.BirthDate)
+	birthDate, err := time.Parse("2006-01-02", birthDateStr)
 	if err != nil {
 		return nil, fmt.Errorf("invalid birth_date format (expected YYYY-MM-DD): %v", err)
 	}
 
 	return &ParsedSwimmer{
-		Name:      data.Name,
+		Name:      name,
 		BirthDate: birthDate,
-		Gender:    data.Gender,
+		Gender:    gender,
 	}, nil
 }
 
 // parseMeet validates and parses meet data.
 func (s *Service) parseMeet(data *MeetData) (*ParsedMeet, error) {
-	if data.Name == "" {
+	// Sanitize input
+	name := strings.TrimSpace(data.Name)
+	city := strings.TrimSpace(data.City)
+	country := strings.TrimSpace(data.Country)
+	courseType := strings.TrimSpace(data.CourseType)
+	startDateStr := strings.TrimSpace(data.StartDate)
+	endDateStr := strings.TrimSpace(data.EndDate)
+
+	if name == "" {
 		return nil, fmt.Errorf("meet name is required")
 	}
 
-	if data.CourseType != "25m" && data.CourseType != "50m" {
-		return nil, fmt.Errorf("course_type must be '25m' or '50m', got: %s", data.CourseType)
+	if courseType != "25m" && courseType != "50m" {
+		return nil, fmt.Errorf("course_type must be '25m' or '50m', got: %s", courseType)
 	}
 
-	startDate, err := time.Parse("2006-01-02", data.StartDate)
+	startDate, err := time.Parse("2006-01-02", startDateStr)
 	if err != nil {
 		return nil, fmt.Errorf("invalid start_date format (expected YYYY-MM-DD): %v", err)
 	}
 
-	endDate, err := time.Parse("2006-01-02", data.EndDate)
+	endDate, err := time.Parse("2006-01-02", endDateStr)
 	if err != nil {
 		return nil, fmt.Errorf("invalid end_date format (expected YYYY-MM-DD): %v", err)
 	}
@@ -199,19 +212,25 @@ func (s *Service) parseMeet(data *MeetData) (*ParsedMeet, error) {
 	}
 
 	return &ParsedMeet{
-		Name:       data.Name,
-		City:       data.City,
-		Country:    data.Country,
+		Name:       name,
+		City:       city,
+		Country:    country,
 		StartDate:  startDate,
 		EndDate:    endDate,
-		CourseType: data.CourseType,
+		CourseType: courseType,
 		Times:      parsedTimes,
 	}, nil
 }
 
 // parseTime validates and parses time data.
 func (s *Service) parseTime(data *TimeData, meetStart, meetEnd time.Time) (*ParsedTime, error) {
-	if data.Event == "" {
+	// Sanitize input
+	event := strings.TrimSpace(data.Event)
+	timeStr := strings.TrimSpace(data.Time)
+	eventDateStr := strings.TrimSpace(data.EventDate)
+	notes := strings.TrimSpace(data.Notes)
+
+	if event == "" {
 		return nil, fmt.Errorf("event is required")
 	}
 
@@ -224,32 +243,35 @@ func (s *Service) parseTime(data *TimeData, meetStart, meetEnd time.Time) (*Pars
 		"200IM": true, "400IM": true,
 	}
 
-	if !validEvents[data.Event] {
-		return nil, fmt.Errorf("invalid event code: %s", data.Event)
+	if !validEvents[event] {
+		return nil, fmt.Errorf("invalid event code: %s", event)
 	}
 
 	// Parse time string to milliseconds
-	timeMS, err := parseTimeToMS(data.Time)
+	timeMS, err := parseTimeToMS(timeStr)
 	if err != nil {
 		return nil, fmt.Errorf("invalid time format: %v", err)
 	}
 
 	// Parse and validate event date
-	eventDate, err := time.Parse("2006-01-02", data.EventDate)
+	if eventDateStr == "" {
+		return nil, fmt.Errorf("event_date is required")
+	}
+	eventDate, err := time.Parse("2006-01-02", eventDateStr)
 	if err != nil {
 		return nil, fmt.Errorf("invalid event_date format (expected YYYY-MM-DD): %v", err)
 	}
 
 	if eventDate.Before(meetStart) || eventDate.After(meetEnd) {
 		return nil, fmt.Errorf("event_date %s is outside meet date range (%s to %s)",
-			data.EventDate, meetStart.Format("2006-01-02"), meetEnd.Format("2006-01-02"))
+			eventDateStr, meetStart.Format("2006-01-02"), meetEnd.Format("2006-01-02"))
 	}
 
 	return &ParsedTime{
-		Event:     data.Event,
+		Event:     event,
 		TimeMS:    int32(timeMS),
 		EventDate: eventDate,
-		Notes:     data.Notes,
+		Notes:     notes,
 	}, nil
 }
 

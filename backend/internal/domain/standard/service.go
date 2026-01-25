@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -61,7 +62,15 @@ type Input struct {
 	Gender      string `json:"gender"`
 }
 
-// Validate validates the standard input.
+// Sanitize trims whitespace from string fields.
+func (i *Input) Sanitize() {
+	i.Name = strings.TrimSpace(i.Name)
+	i.Description = strings.TrimSpace(i.Description)
+	i.CourseType = strings.TrimSpace(i.CourseType)
+	i.Gender = strings.TrimSpace(i.Gender)
+}
+
+// Validate validates the standard input. Call Sanitize() first.
 func (i Input) Validate() error {
 	if i.Name == "" {
 		return errors.New("name is required")
@@ -108,7 +117,19 @@ type ImportInput struct {
 	Times       []StandardTimeInput `json:"times"`
 }
 
-// Validate validates the import input.
+// Sanitize trims whitespace from string fields.
+func (i *ImportInput) Sanitize() {
+	i.Name = strings.TrimSpace(i.Name)
+	i.Description = strings.TrimSpace(i.Description)
+	i.CourseType = strings.TrimSpace(i.CourseType)
+	i.Gender = strings.TrimSpace(i.Gender)
+	for idx := range i.Times {
+		i.Times[idx].Event = strings.TrimSpace(i.Times[idx].Event)
+		i.Times[idx].AgeGroup = strings.TrimSpace(i.Times[idx].AgeGroup)
+	}
+}
+
+// Validate validates the import input. Call Sanitize() first.
 func (i ImportInput) Validate() error {
 	input := Input{
 		Name:        i.Name,
@@ -205,6 +226,7 @@ func (s *Service) List(ctx context.Context, params ListParams) (*StandardList, e
 
 // Create creates a new standard.
 func (s *Service) Create(ctx context.Context, input Input) (*Standard, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}
@@ -240,6 +262,7 @@ func (s *Service) Create(ctx context.Context, input Input) (*Standard, error) {
 
 // Update updates an existing standard.
 func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Standard, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}
@@ -342,6 +365,7 @@ func (s *Service) SetTimes(ctx context.Context, standardID uuid.UUID, times []St
 
 // Import creates a new standard with all its times in one operation.
 func (s *Service) Import(ctx context.Context, input ImportInput) (*StandardWithTimes, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}

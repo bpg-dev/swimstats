@@ -47,7 +47,14 @@ type Input struct {
 	ThresholdPercent *float64 `json:"threshold_percent,omitempty"`
 }
 
-// Validate validates the swimmer input.
+// Sanitize trims whitespace from string fields.
+func (i *Input) Sanitize() {
+	i.Name = domain.SanitizeString(i.Name)
+	i.BirthDate = domain.SanitizeString(i.BirthDate)
+	i.Gender = domain.SanitizeString(i.Gender)
+}
+
+// Validate validates the swimmer input. Call Sanitize() first.
 func (i Input) Validate() error {
 	if i.Name == "" {
 		return errors.New("name is required")
@@ -96,6 +103,7 @@ func (s *Service) GetByID(ctx context.Context, id uuid.UUID) (*Swimmer, error) {
 
 // Create creates a new swimmer.
 func (s *Service) Create(ctx context.Context, input Input) (*Swimmer, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}
@@ -124,6 +132,7 @@ func (s *Service) Create(ctx context.Context, input Input) (*Swimmer, error) {
 
 // Update updates an existing swimmer.
 func (s *Service) Update(ctx context.Context, id uuid.UUID, input Input) (*Swimmer, error) {
+	input.Sanitize()
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("validation: %w", err)
 	}

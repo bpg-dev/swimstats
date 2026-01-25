@@ -12,7 +12,7 @@ import {
 } from '@/components/ui';
 import { useTimes, useDeleteTime } from '@/hooks/useTimes';
 import { useAuthStore } from '@/stores/authStore';
-import { formatDate, formatDateRange } from '@/utils/timeFormat';
+import { formatDate } from '@/utils/timeFormat';
 
 export interface TimeHistoryProps {
   courseType?: CourseType;
@@ -52,13 +52,16 @@ export function TimeHistory({
 
   const times = data?.times || [];
 
-  const formatMeetDate = (time: TimeRecord): string => {
-    if (!time.meet) return '—';
-    // If event_date is set and different from meet start_date, show it
-    if (time.event_date && time.event_date !== time.meet.start_date) {
+  const formatEventDate = (time: TimeRecord): string => {
+    // Always show the event date (which is now required)
+    if (time.event_date) {
       return formatDate(time.event_date);
     }
-    return formatDateRange(time.meet.start_date, time.meet.end_date);
+    // Fallback for legacy data without event_date
+    if (time.meet) {
+      return formatDate(time.meet.start_date);
+    }
+    return '—';
   };
 
   const handleDelete = async (time: TimeRecord) => {
@@ -125,7 +128,7 @@ export function TimeHistory({
                       <span className="text-slate-400">—</span>
                     )}
                   </td>
-                  <td className="py-3 text-slate-600">{formatMeetDate(time)}</td>
+                  <td className="py-3 text-slate-600">{formatEventDate(time)}</td>
                   <td className="py-3 text-right">
                     <div className="flex items-center justify-end gap-1">
                       {onEditTime && (
