@@ -25,6 +25,7 @@ yarn-error.log*
 frontend/dist/
 frontend/build/
 frontend/.vite/
+*.tsbuildinfo
 
 # Go / Backend
 backend/bin/
