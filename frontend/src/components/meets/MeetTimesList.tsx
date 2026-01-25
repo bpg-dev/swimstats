@@ -75,13 +75,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
   }
 
   // Group times by date
-  const strokeOrder = [
-    'Freestyle',
-    'Backstroke',
-    'Breaststroke',
-    'Butterfly',
-    'Individual Medley',
-  ];
+  const strokeOrder = ['Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'Individual Medley'];
 
   const sortByEvent = (a: TimeRecord, b: TimeRecord) => {
     const eventInfoA = getEventInfo(a.event);
