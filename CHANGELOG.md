@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/bpg/swimstats/compare/v0.9.0...v0.10.0) (2026-01-25)
+
+
+### Features
+
+* **backend:** add embedded database migrations with CLI support ([#106](https://github.com/bpg/swimstats/issues/106)) ([e92b1d7](https://github.com/bpg/swimstats/commit/e92b1d7c77979b782468f96cc4349d8d87556b0b))
+
 ## [0.9.0](https://github.com/bpg/swimstats/compare/v0.8.0...v0.9.0) (2026-01-25)
 
 
