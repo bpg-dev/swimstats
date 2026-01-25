@@ -1,5 +1,6 @@
 export interface ProgressDataPoint {
   id: string;
+  meet_id: string;
   time_ms: number;
   time_formatted: string;
   date: string;

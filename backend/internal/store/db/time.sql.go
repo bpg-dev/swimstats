@@ -301,6 +301,7 @@ func (q *Queries) GetPersonalBests(ctx context.Context, arg GetPersonalBestsPara
 const getProgressData = `-- name: GetProgressData :many
 SELECT
     t.id,
+    t.meet_id,
     t.time_ms,
     COALESCE(t.event_date, m.start_date) AS date,
     m.name AS meet_name,
@@ -334,6 +335,7 @@ type GetProgressDataParams struct {
 
 type GetProgressDataRow struct {
 	ID       uuid.UUID   `json:"id"`
+	MeetID   uuid.UUID   `json:"meet_id"`
 	TimeMs   int32       `json:"time_ms"`
 	Date     pgtype.Date `json:"date"`
 	MeetName string      `json:"meet_name"`
@@ -360,6 +362,7 @@ func (q *Queries) GetProgressData(ctx context.Context, arg GetProgressDataParams
 		var i GetProgressDataRow
 		if err := rows.Scan(
 			&i.ID,
+			&i.MeetID,
 			&i.TimeMs,
 			&i.Date,
 			&i.MeetName,

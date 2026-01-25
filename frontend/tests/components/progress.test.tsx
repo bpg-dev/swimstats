@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
 import { ProgressChart } from '@/components/charts/ProgressChart';
 import { ProgressDataPoint } from '@/types/progress';
 
@@ -16,7 +17,9 @@ const createTestQueryClient = () =>
 const renderWithProviders = (ui: React.ReactElement) => {
   const testQueryClient = createTestQueryClient();
   return render(
-    <QueryClientProvider client={testQueryClient}>{ui}</QueryClientProvider>
+    <QueryClientProvider client={testQueryClient}>
+      <BrowserRouter>{ui}</BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
@@ -24,6 +27,7 @@ describe('ProgressChart', () => {
   const mockProgressData: ProgressDataPoint[] = [
     {
       id: 'time-1',
+      meet_id: 'meet-1',
       time_ms: 29200,
       time_formatted: '29.20',
       date: '2026-01-10',
@@ -33,6 +37,7 @@ describe('ProgressChart', () => {
     },
     {
       id: 'time-2',
+      meet_id: 'meet-2',
       time_ms: 28850,
       time_formatted: '28.85',
       date: '2026-01-15',
@@ -42,6 +47,7 @@ describe('ProgressChart', () => {
     },
     {
       id: 'time-3',
+      meet_id: 'meet-3',
       time_ms: 28600,
       time_formatted: '28.60',
       date: '2026-01-20',

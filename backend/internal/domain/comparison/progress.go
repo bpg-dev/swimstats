@@ -26,6 +26,7 @@ func NewProgressService(timeRepo *postgres.TimeRepository) *ProgressService {
 // ProgressDataPoint represents a single data point for progress visualization.
 type ProgressDataPoint struct {
 	ID             string `json:"id"`
+	MeetID         string `json:"meet_id"`
 	TimeMS         int    `json:"time_ms"`
 	TimeFormatted  string `json:"time_formatted"`
 	Date           string `json:"date"`
@@ -77,6 +78,7 @@ func (s *ProgressService) GetProgressData(
 
 		dataPoints[i] = ProgressDataPoint{
 			ID:             row.ID.String(),
+			MeetID:         row.MeetID.String(),
 			TimeMS:         int(row.TimeMs),
 			TimeFormatted:  domain.FormatTime(int(row.TimeMs)),
 			Date:           date,

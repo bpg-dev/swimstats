@@ -119,16 +119,15 @@
 
 **Independent Test**: View Progress chart, interact with data point, click meet name in tooltip, verify navigation
 
-**Note**: This phase requires backend changes to include `meet_id` in the ProgressDataPoint API response. The current backend progress endpoint does not return meet_id. This is deferred to a future enhancement.
-
 ### Tests for User Story 6
 
-- [ ] T020 [US6] Add integration test for Progress page meet link navigation in frontend/tests/components/progress.test.tsx (BLOCKED - requires backend meet_id)
+- [x] T020 [US6] Update test mock data to include meet_id in frontend/tests/components/progress.test.tsx
 
 ### Implementation for User Story 6
 
-- [ ] T021 [US6] Import MeetLink and update chart tooltip/data display in frontend/src/pages/Progress.tsx (BLOCKED - requires backend meet_id)
-- [ ] T022 [US6] Verify keyboard navigation works for meet links in chart tooltips (BLOCKED - requires backend meet_id)
+- [x] T021 [US6] Add meet_id to backend SQL query and ProgressDataPoint struct
+- [x] T022 [US6] Add meet_id to frontend ProgressDataPoint type
+- [x] T023 [US6] Import MeetLink and update chart tooltip in frontend/src/components/charts/ProgressChart.tsx
 
 **Checkpoint**: Progress page chart tooltips have clickable meet names
 

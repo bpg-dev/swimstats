@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { ProgressDataPoint } from '@/types/progress';
 import { formatDate } from '@/utils/timeFormat';
+import { MeetLink } from '@/components/ui';
 
 interface ProgressChartProps {
   data: ProgressDataPoint[];
@@ -62,7 +63,9 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     return (
       <div className="bg-white p-3 border border-slate-200 rounded-md shadow-lg">
         <p className="font-semibold text-slate-900">{data.time_formatted}</p>
-        <p className="text-sm text-slate-600">{data.meet_name}</p>
+        <p className="text-sm">
+          <MeetLink meetId={data.meet_id} meetName={data.meet_name} />
+        </p>
         <p className="text-sm text-slate-500">{formatDate(data.date)}</p>
         {data.is_pb && <p className="text-xs text-green-600 font-semibold mt-1">Personal Best</p>}
       </div>

@@ -185,6 +185,7 @@ SELECT EXISTS (
 -- Used for progress charts visualization
 SELECT
     t.id,
+    t.meet_id,
     t.time_ms,
     COALESCE(t.event_date, m.start_date) AS date,
     m.name AS meet_name,
