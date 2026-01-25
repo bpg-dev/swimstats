@@ -59,7 +59,7 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
             <th className="pb-3 font-medium">Date</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-slate-100 text-sm">
           {sortedTimes.map((time, index) => {
             const isPB = time.id === pbTimeId;
             const eventInfo = getEventInfo(time.event);

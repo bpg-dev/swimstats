@@ -74,7 +74,7 @@ export function TimeHistory({
                 <th className="pb-3 font-medium sr-only">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 text-sm">
               {times.map((time) => (
                   <tr key={time.id}>
                     <td className="py-3">

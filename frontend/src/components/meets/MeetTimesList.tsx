@@ -121,7 +121,7 @@ export function MeetTimesList({ meetId, courseType }: MeetTimesListProps) {
               <th className="pb-3 font-medium w-20"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 text-sm">
             {sortedEvents.flatMap((event) =>
               (timesByEvent[event] || []).map((time) => {
                 const isPB = pbTimeIds.has(time.id);
