@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.9.0](https://github.com/bpg/swimstats/compare/v0.8.0...v0.9.0) (2026-01-25)
+
+
+### Features
+
+* **ui:** add clickable event and meet name links ([#105](https://github.com/bpg/swimstats/issues/105)) ([90c2958](https://github.com/bpg/swimstats/commit/90c29580c0082887132002a33cd1132e941d25b3))
+
+
+### Bug Fixes
+
+* **ui:** handle ISO date format in formatDate utility ([cb187dd](https://github.com/bpg/swimstats/commit/cb187dd9a16c6f301f28bfbdc8c97b57dfca6a7c))
+* **ui:** use consistent YYYY-MM-DD date format everywhere ([#101](https://github.com/bpg/swimstats/issues/101)) ([72e7a48](https://github.com/bpg/swimstats/commit/72e7a480f76da304590275eaed935d9b039e2e29))
+
+
+### Miscellaneous
+
+* **docs:** add AI assistant git workflow guidelines to constitution ([#103](https://github.com/bpg/swimstats/issues/103)) ([9b94348](https://github.com/bpg/swimstats/commit/9b94348057eb09a921022f8f387ae586305b905e))
+* **docs:** add threshold_percent to data model and import guide ([631013f](https://github.com/bpg/swimstats/commit/631013fd80bffa1a0bba57f9070e6d8b1db0d11b))
+* **docs:** update AI assistant guidelines - allow push/PR, forbid merge ([#104](https://github.com/bpg/swimstats/issues/104)) ([339788f](https://github.com/bpg/swimstats/commit/339788f92c24eabf44e0706f3b1a544dadc30234))
+
 ## [0.8.0](https://github.com/bpg/swimstats/compare/v0.7.0...v0.8.0) (2026-01-24)
 
 
