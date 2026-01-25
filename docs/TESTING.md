@@ -191,10 +191,9 @@ See `.github/workflows/ci.yaml` for the full configuration.
 # Create test database
 createdb swimstats_test
 
-# Run migrations
-migrate -path backend/migrations \
-  -database "postgres://swimstats:swimstats@localhost:5432/swimstats_test?sslmode=disable" \
-  up
+# Run migrations using the embedded migrate command
+cd backend && DATABASE_URL="postgres://swimstats:swimstats@localhost:5432/swimstats_test?sslmode=disable" \
+  go run ./cmd/server migrate
 ```
 
 ### CI Environment

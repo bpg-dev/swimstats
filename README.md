@@ -54,20 +54,6 @@ A web application for competitive swimmers to track their times, view personal b
 - [Go 1.25+](https://go.dev/dl/)
 - [Node.js 18+](https://nodejs.org/)
 - [Docker](https://www.docker.com/) & Docker Compose
-- [golang-migrate](https://github.com/golang-migrate/migrate) CLI (for running migrations manually)
-
-### Installing golang-migrate
-
-```bash
-# macOS
-brew install golang-migrate
-
-# Linux
-curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.0/migrate.linux-amd64.tar.gz | tar xvz
-sudo mv migrate /usr/local/bin/
-
-# Or use Docker (see below)
-```
 
 ## Quick Start (Development Mode)
 
@@ -83,14 +69,14 @@ docker-compose ps
 
 ### 2. Run Database Migrations
 
-```bash
-# Option A: Using golang-migrate CLI
-migrate -path backend/migrations \
-  -database "postgres://swimstats:swimstats@localhost:5432/swimstats?sslmode=disable" \
-  up
+Migrations are embedded in the backend binary and can be run without external tools.
 
-# Option B: Using Docker Compose (includes migrate service)
+```bash
+# Option A: Using Docker Compose (recommended)
 docker-compose --profile migrate up migrate
+
+# Option B: Using the backend binary directly
+cd backend && go run ./cmd/server migrate
 ```
 
 ### 3. Start the Backend
@@ -166,10 +152,9 @@ cd backend
 # Create test database
 createdb swimstats_test
 
-# Run migrations on test database
-migrate -path migrations \
-  -database "postgres://swimstats:swimstats@localhost:5432/swimstats_test?sslmode=disable" \
-  up
+# Run migrations on test database using the embedded migrate command
+DATABASE_URL="postgres://swimstats:swimstats@localhost:5432/swimstats_test?sslmode=disable" \
+  go run ./cmd/server migrate
 
 # Run all tests
 go test ./...

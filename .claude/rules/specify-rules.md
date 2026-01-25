@@ -56,6 +56,10 @@ docker-compose.yaml          # Local development environment
 **Development**:
 - `docker-compose up` - Start PostgreSQL and services locally
 
+**Migrations**:
+- `docker-compose --profile migrate up migrate` - Run migrations via Docker
+- `cd backend && go run ./cmd/server migrate` - Run migrations directly (embedded in binary)
+
 ## Code Quality Standards
 
 ### I. Code Quality
@@ -129,6 +133,7 @@ docker-compose.yaml          # Local development environment
 
 ## Recent Changes
 
+- 2026-01-24: Embedded database migrations - `./server migrate` CLI subcommand, no external tools needed
 - 2026-01-23: Added release-please for automated releases and versioned Docker images
 - 2026-01-21: All phases complete - project feature-complete
 - 2026-01-21: Completed Phase 8 (data export/import, accessibility, documentation)

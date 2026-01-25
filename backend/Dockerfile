@@ -41,7 +41,8 @@ RUN addgroup -S swimstats && adduser -S swimstats -G swimstats
 # Copy binary from builder
 COPY --from=builder /app/server /app/server
 
-# Copy migrations for runtime migration support
+# Note: Migrations are embedded in the binary via Go embed.
+# This copy is kept for debugging and external tooling compatibility.
 COPY --from=builder /app/migrations /app/migrations
 
 # Set ownership

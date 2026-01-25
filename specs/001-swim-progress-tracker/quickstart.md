@@ -36,10 +36,9 @@ cd backend
 
 # Install tools
 go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
-go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
-# Run migrations
-migrate -path ./migrations -database "postgres://swimstats:swimstats@localhost:5432/swimstats?sslmode=disable" up
+# Run migrations (embedded in the server binary)
+go run ./cmd/server migrate
 
 # Generate sqlc code
 sqlc generate
@@ -158,8 +157,11 @@ npm run lint
 
 ```bash
 cd backend
-migrate create -ext sql -dir migrations -seq add_new_table
-# Edit migrations/XXXXXX_add_new_table.up.sql and .down.sql
+# Create new migration files manually
+# Name format: NNN_description.up.sql and NNN_description.down.sql
+# Where NNN is the next sequence number (e.g., 005)
+touch migrations/005_add_new_table.up.sql migrations/005_add_new_table.down.sql
+# Edit the .up.sql and .down.sql files with your schema changes
 ```
 
 ### Regenerate API Types
