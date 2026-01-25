@@ -38,12 +38,8 @@ RUN apk add --no-cache ca-certificates tzdata
 # Create non-root user
 RUN addgroup -S swimstats && adduser -S swimstats -G swimstats
 
-# Copy binary from builder
+# Copy binary from builder (migrations are embedded via Go embed)
 COPY --from=builder /app/server /app/server
-
-# Note: Migrations are embedded in the binary via Go embed.
-# This copy is kept for debugging and external tooling compatibility.
-COPY --from=builder /app/migrations /app/migrations
 
 # Set ownership
 RUN chown -R swimstats:swimstats /app
