@@ -187,6 +187,9 @@ docker-compose.yaml          # Local development environment
 3. **AI Assistant Git Rules** (Constitution §AI Assistant Guidelines):
    - **NEVER commit to main** - All work must be on feature (`feature/*`) or fix (`fix/*`) branches.
    - **ALWAYS create a branch first** - Before making any commits, create an appropriately named branch.
+   - **ALWAYS verify quality gates before PR** - Run linter, format check, type check, and tests locally BEFORE creating a PR:
+     - Frontend: `cd frontend && make check && npm test -- --run`
+     - Backend: `cd backend && golangci-lint run && go test ./...`
    - **Push and create PRs when done** - You MAY push branches and create PRs to streamline workflow.
    - **NEVER merge PRs** - Merging is the sole responsibility of human maintainers.
 

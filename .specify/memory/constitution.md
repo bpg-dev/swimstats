@@ -2,14 +2,14 @@
 ================================================================================
 SYNC IMPACT REPORT
 ================================================================================
-Version Change: 1.2.0 → 1.3.0
+Version Change: 1.3.0 → 1.4.0
 
 Modified Principles: N/A
 
-Added Sections:
-  - AI Assistant Guidelines (under Development Workflow)
+Added Sections: N/A
 
-Modified Sections: N/A
+Modified Sections:
+  - AI Assistant Guidelines: Added "Verify quality gates before PR" requirement
 
 Removed Sections: N/A
 
@@ -159,6 +159,11 @@ When Claude Code or other AI assistants work on this codebase, they MUST follow 
   All work MUST be done on feature or fix branches.
 - **Always create a new branch**: When starting work on a new feature or fix, AI assistants
   MUST create an appropriately named branch (`feature/*` or `fix/*`) before making any commits.
+- **Verify quality gates before PR**: AI assistants MUST run all checks and tests locally
+  and ensure they pass BEFORE creating a Pull Request. This includes:
+  - Frontend: `cd frontend && make check && npm test -- --run` (lint, format, typecheck, tests)
+  - Backend: `cd backend && golangci-lint run && go test ./...`
+  PRs with failing CI are considered defects in the AI assistant's work.
 - **Push and create PRs when done**: AI assistants MAY push branches and create Pull Requests
   when work is complete, to streamline the workflow.
 - **Never merge PRs**: AI assistants MUST NOT merge Pull Requests. Merging is the sole
@@ -166,7 +171,7 @@ When Claude Code or other AI assistants work on this codebase, they MUST follow 
 
 **Rationale**: These constraints ensure human oversight of all code changes entering the
 main branch while allowing AI assistants to complete the development workflow up to the
-point of final approval.
+point of final approval. Pre-PR verification prevents wasted CI cycles and reviewer time.
 
 ### Commit Standards
 
@@ -278,4 +283,4 @@ When Constitution principles conflict with external requirements:
 3. Obtain maintainer approval for the exception
 4. Track exception in project backlog for future resolution
 
-**Version**: 1.3.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-24
+**Version**: 1.4.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-25
