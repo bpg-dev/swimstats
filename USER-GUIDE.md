@@ -167,20 +167,26 @@ View all times recorded at a specific meet:
 
 Manage time standards for tracking qualification goals.
 
+### Standards List
+
+The Standards page shows standards filtered by:
+- **Course Type**: Matches the global course filter (25m/50m) in the navigation bar
+- **Gender**: Toggle between Female (F) and Male (M) - defaults to your swimmer profile's gender
+
 ### Pre-loaded Standards
 
 SwimStats includes pre-loaded standards for:
 - Swimming Canada (Senior, Junior, Usport, Canadian Open)
 - Swim Ontario (OSC, OAG)
 
-Pre-loaded standards are marked with a lock icon and cannot be edited.
+Pre-loaded standards are marked with an amber "Preloaded" badge and cannot be deleted.
 
 ### Custom Standards
 
 Create your own standards for club meets, regional competitions, or personal goals:
 
 1. Navigate to **Standards**
-2. Click **New Standard**
+2. Click **Add Standard**
 3. Enter:
    - Standard name
    - Description (optional)
@@ -192,9 +198,16 @@ Create your own standards for club meets, regional competitions, or personal goa
 
 For bulk importing time standards:
 
-1. Click **Import from JSON**
-2. Select a JSON file (see `data/README.md` for format)
-3. Review and confirm the import
+1. Click **Import JSON**
+2. Expand **JSON Format Reference** to see the expected format and example
+3. Select a JSON file
+4. Review the preview showing standards to be imported
+5. Click **Import** to confirm
+
+The JSON format reference in the import form shows:
+- Required fields (`course_type`, `gender`, `standards`, `age_groups`, `times`)
+- A complete example with multiple standards
+- Time format notes (use `null` for missing times)
 
 ---
 

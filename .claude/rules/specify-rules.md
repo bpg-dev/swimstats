@@ -1,6 +1,6 @@
 # swimstats Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-01-24
+Auto-generated from all feature plans. Last updated: 2026-01-25
 
 ## Active Technologies
 
@@ -133,6 +133,8 @@ docker-compose.yaml          # Local development environment
 
 ## Recent Changes
 
+- 2026-01-25: Standards page now filters by course type (global filter) and gender (defaults to swimmer's gender)
+- 2026-01-25: JSON import form includes collapsible format reference with example
 - 2026-01-24: Embedded database migrations - `./server migrate` CLI subcommand, no external tools needed
 - 2026-01-23: Added release-please for automated releases and versioned Docker images
 - 2026-01-21: All phases complete - project feature-complete
