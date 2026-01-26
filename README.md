@@ -25,7 +25,7 @@ A web application for competitive swimmers to track their times, view personal b
 - 🏊 **Record Swim Times** - Log race results with event, time, and meet details
 - ⏱️ **All Times** - Browse complete time history by event with PB indicators and ranking
 - 📅 **Meets** - Organize times by competition with inline quick-add during time entry
-- 🎯 **Time Standards** - Manage time standards with JSON import (Swimming Canada, Swim Ontario)
+- 🎯 **Time Standards** - Manage time standards with JSON import (Swimming Canada, Swim Ontario), filtered by course and gender
 - 📊 **Comparison** - Compare PBs against standards with adjacent age groups and achievement status
 - 🎯 **Standing Dashboard** - Quick overview showing achieved/almost/not-yet qualification counts
 - 📈 **Progress Charts** - Visualize time progression with PB markers and standard reference lines
