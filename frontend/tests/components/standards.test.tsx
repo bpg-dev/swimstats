@@ -67,7 +67,7 @@ describe('StandardList', () => {
     render(<StandardList showHeader />, { wrapper: createWrapper() });
 
     await waitFor(() => {
-      expect(screen.getByText('Available Standards')).toBeInTheDocument();
+      expect(screen.getByText('Standards')).toBeInTheDocument();
     });
   });
 

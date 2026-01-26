@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Standard, StandardListParams } from '@/types/standard';
+import { Standard, StandardListParams, Gender } from '@/types/standard';
 import { Card, CardContent, CardHeader, CardTitle, Loading, ErrorBanner } from '@/components/ui';
 import { useStandards } from '@/hooks/useStandards';
 
@@ -9,6 +9,8 @@ export interface StandardListProps {
   showHeader?: boolean;
   emptyMessage?: string;
   linkToDetails?: boolean;
+  genderFilter?: Gender;
+  onGenderFilterChange?: (gender: Gender) => void;
 }
 
 export function StandardList({
@@ -17,6 +19,8 @@ export function StandardList({
   showHeader = true,
   emptyMessage = 'No standards found.',
   linkToDetails = false,
+  genderFilter,
+  onGenderFilterChange,
 }: StandardListProps) {
   const { data, isLoading, error } = useStandards(params);
 
@@ -135,14 +139,50 @@ export function StandardList({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          Available Standards
-          {standards.length > 0 && (
-            <span className="ml-2 text-sm font-normal text-slate-500">
-              ({standards.length} total)
-            </span>
+        <div className="flex items-center justify-between">
+          <CardTitle>
+            Standards
+            {standards.length > 0 && (
+              <span className="ml-2 text-sm font-normal text-slate-500">({standards.length})</span>
+            )}
+          </CardTitle>
+          {genderFilter && onGenderFilterChange && (
+            <div
+              className="inline-flex rounded-lg bg-slate-100 p-0.5"
+              role="radiogroup"
+              aria-label="Filter by gender"
+            >
+              <button
+                role="radio"
+                aria-checked={genderFilter === 'female'}
+                aria-label="Female"
+                title="Female"
+                onClick={() => onGenderFilterChange('female')}
+                className={`px-3 py-1 text-sm font-semibold rounded-md transition-all ${
+                  genderFilter === 'female'
+                    ? 'bg-pink-500 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                }`}
+              >
+                F
+              </button>
+              <button
+                role="radio"
+                aria-checked={genderFilter === 'male'}
+                aria-label="Male"
+                title="Male"
+                onClick={() => onGenderFilterChange('male')}
+                className={`px-3 py-1 text-sm font-semibold rounded-md transition-all ${
+                  genderFilter === 'male'
+                    ? 'bg-indigo-500 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                }`}
+              >
+                M
+              </button>
+            </div>
           )}
-        </CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="-mx-6 -mb-6">{content}</CardContent>
     </Card>

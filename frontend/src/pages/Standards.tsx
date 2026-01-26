@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { StandardList, StandardForm, StandardImportForm } from '@/components/standards';
-import { StandardInput } from '@/types/standard';
+import { StandardInput, Gender } from '@/types/standard';
 import { useCreateStandard } from '@/hooks/useStandards';
+import { useSwimmer } from '@/hooks/useSwimmer';
 import { useAuthStore } from '@/stores/authStore';
+import { useCourseType } from '@/stores/courseFilterStore';
 import { ErrorBanner } from '@/components/ui';
 
 type ViewMode = 'list' | 'create' | 'import';
@@ -14,7 +16,13 @@ type ViewMode = 'list' | 'create' | 'import';
 export function Standards() {
   const [mode, setMode] = useState<ViewMode>('list');
   const canWrite = useAuthStore((state) => state.canWrite);
+  const courseType = useCourseType();
+  const { data: swimmer } = useSwimmer();
+  const [genderOverride, setGenderOverride] = useState<Gender | null>(null);
   const createStandard = useCreateStandard();
+
+  // Use override if set, otherwise use swimmer's gender, fallback to female
+  const genderFilter: Gender = genderOverride ?? swimmer?.gender ?? 'female';
 
   const handleCreateStandard = async (input: StandardInput) => {
     try {
@@ -64,8 +72,11 @@ export function Standards() {
 
       {mode === 'list' && (
         <StandardList
+          params={{ course_type: courseType, gender: genderFilter }}
           linkToDetails
           emptyMessage="Add time standards like Swimming Canada or Swim Ontario to compare your times."
+          genderFilter={genderFilter}
+          onGenderFilterChange={setGenderOverride}
         />
       )}
     </div>

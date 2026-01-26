@@ -75,6 +75,68 @@ export function StandardImportForm({ onSuccess, onCancel }: StandardImportFormPr
             />
           </div>
 
+          {/* Format help - collapsible */}
+          <details className="bg-slate-50 rounded-lg">
+            <summary className="px-4 py-2 cursor-pointer text-sm font-medium text-slate-700 hover:text-slate-900">
+              JSON Format Reference
+            </summary>
+            <div className="px-4 pb-4 text-xs text-slate-600 space-y-3">
+              <div>
+                <p className="font-medium text-slate-700 mb-1">Required fields:</p>
+                <ul className="list-disc list-inside space-y-0.5">
+                  <li>
+                    <code className="bg-slate-200 px-1 rounded">course_type</code>: "25m" or "50m"
+                  </li>
+                  <li>
+                    <code className="bg-slate-200 px-1 rounded">gender</code>: "female" or "male"
+                  </li>
+                  <li>
+                    <code className="bg-slate-200 px-1 rounded">standards</code>: object with
+                    standard codes as keys
+                  </li>
+                  <li>
+                    <code className="bg-slate-200 px-1 rounded">age_groups</code>: array of age
+                    group codes
+                  </li>
+                  <li>
+                    <code className="bg-slate-200 px-1 rounded">times</code>: nested object (event →
+                    age_group → standard_code → time)
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-medium text-slate-700 mb-1">Example:</p>
+                <pre className="bg-slate-200 p-2 rounded text-[10px] overflow-x-auto whitespace-pre">
+                  {`{
+  "course_type": "25m",
+  "gender": "female",
+  "standards": {
+    "OSC": { "name": "Ontario Swimming Championships" },
+    "OAG": { "name": "Ontario Age Group", "description": "Age group times" }
+  },
+  "age_groups": ["10U", "11-12", "13-14", "15-17", "OPEN"],
+  "times": {
+    "50FR": {
+      "10U": { "OSC": "32.50", "OAG": "35.00" },
+      "11-12": { "OSC": "30.00", "OAG": "32.50" }
+    },
+    "100FR": {
+      "10U": { "OSC": "1:12.00", "OAG": "1:18.00" }
+    }
+  }
+}`}
+                </pre>
+              </div>
+              <p className="text-slate-500">
+                Time format: "M:SS.HH" or "SS.HH". Use{' '}
+                <code className="bg-slate-200 px-1 rounded">null</code> for missing times. Optional{' '}
+                <code className="bg-slate-200 px-1 rounded">source</code>/
+                <code className="bg-slate-200 px-1 rounded">season</code> fields auto-generate
+                names.
+              </p>
+            </div>
+          </details>
+
           {parseError && <ErrorBanner message={parseError} />}
 
           {importMutation.error && (
