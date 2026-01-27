@@ -208,6 +208,12 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
   // Calculate nice round tick values for Y-axis
   const yTicks = calculateYTicks(yDomain[0], yDomain[1]);
 
+  // Extend domain to include all tick values (prevents ticks outside chart area)
+  if (yTicks.length > 0) {
+    yDomain[0] = Math.min(yDomain[0], yTicks[0]);
+    yDomain[1] = Math.max(yDomain[1], yTicks[yTicks.length - 1]);
+  }
+
   return (
     <ResponsiveContainer width="100%" height={400}>
       <LineChart data={chartData} margin={{ top: 30, right: 30, left: 20, bottom: 20 }}>
