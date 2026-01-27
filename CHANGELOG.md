@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/bpg/swimstats/compare/v1.0.2...v1.0.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* **ci:** re-enable Docker image attestation ([#127](https://github.com/bpg/swimstats/issues/127)) ([3d6006b](https://github.com/bpg/swimstats/commit/3d6006bddd68d34eb985e38fa7552caafc65f2af))
+* **frontend:** pass git commit hash to Docker build ([#129](https://github.com/bpg/swimstats/issues/129)) ([6fa7695](https://github.com/bpg/swimstats/commit/6fa76952ecf36338c778cb245652c5c3b7205fca))
+
 ## [1.0.2](https://github.com/bpg/swimstats/compare/v1.0.1...v1.0.2) (2026-01-27)
 
 
