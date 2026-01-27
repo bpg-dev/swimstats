@@ -133,6 +133,8 @@ docker-compose.yaml          # Local development environment
 
 ## Recent Changes
 
+- 2026-01-26: Export format now includes `format_version` field and swimmer's `threshold_percent`
+- 2026-01-26: Added schema evolution checklist to Constitution (see Data Portability Requirements)
 - 2026-01-25: Standards page now filters by course type (global filter) and gender (defaults to swimmer's gender)
 - 2026-01-25: JSON import form includes collapsible format reference with example
 - 2026-01-24: Embedded database migrations - `./server migrate` CLI subcommand, no external tools needed
@@ -159,7 +161,7 @@ docker-compose.yaml          # Local development environment
 
 **Core Entities**:
 - **User**: OIDC-authenticated with access level (full/view-only)
-- **Swimmer**: Name, birth date, gender
+- **Swimmer**: Name, birth date, gender, threshold_percent (configurable "almost there" threshold)
 - **Meet**: Name, city, country, start_date, end_date, course_type (25m/50m)
 - **Time Entry**: Event, time value, event_date, notes; linked to swimmer and meet
 - **Event**: Stroke + distance (e.g., 50m Freestyle, 200m IM)
@@ -170,6 +172,10 @@ docker-compose.yaml          # Local development environment
 **Pre-loaded Standards**:
 - Swimming Canada 2026-2028 (Trials Senior, Trials Junior, Usport, Canadian Open)
 - Swim Ontario 2025-2026 (OSC, OAG)
+
+**Schema Evolution**: When modifying the database schema, you MUST also update the
+export/import functionality. See Constitution §Data Portability Requirements for the
+complete checklist.
 
 <!-- MANUAL ADDITIONS START -->
 

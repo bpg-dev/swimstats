@@ -38,8 +38,9 @@ func NewService(
 // ExportAll exports all user data including swimmer profile, meets, times, and custom standards.
 func (s *Service) ExportAll(ctx context.Context) (*ExportData, error) {
 	export := &ExportData{
-		Meets:     []MeetExport{},
-		Standards: []StandardExport{},
+		FormatVersion: CurrentFormatVersion,
+		Meets:         []MeetExport{},
+		Standards:     []StandardExport{},
 	}
 
 	// 1. Export swimmer
@@ -49,9 +50,10 @@ func (s *Service) ExportAll(ctx context.Context) (*ExportData, error) {
 	}
 
 	export.Swimmer = SwimmerExport{
-		Name:      swimmerData.Name,
-		BirthDate: swimmerData.BirthDate,
-		Gender:    swimmerData.Gender,
+		Name:             swimmerData.Name,
+		BirthDate:        swimmerData.BirthDate,
+		Gender:           swimmerData.Gender,
+		ThresholdPercent: swimmerData.ThresholdPercent,
 	}
 
 	// 2. Export meets with times
@@ -136,7 +138,6 @@ func (s *Service) ExportAll(ctx context.Context) (*ExportData, error) {
 		standardExport := StandardExport{
 			Name:        std.Name,
 			Description: std.Description,
-			Season:      "", // Custom standards don't have a season
 			CourseType:  std.CourseType,
 			Gender:      std.Gender,
 			Times:       make(map[string][]string),

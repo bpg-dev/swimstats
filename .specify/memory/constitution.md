@@ -2,14 +2,14 @@
 ================================================================================
 SYNC IMPACT REPORT
 ================================================================================
-Version Change: 1.3.0 → 1.4.0
+Version Change: 1.4.0 → 1.5.0
 
 Modified Principles: N/A
 
-Added Sections: N/A
+Added Sections:
+  - Data Portability Requirements: Schema evolution checklist for export/import
 
-Modified Sections:
-  - AI Assistant Guidelines: Added "Verify quality gates before PR" requirement
+Modified Sections: N/A
 
 Removed Sections: N/A
 
@@ -222,6 +222,45 @@ A feature is complete when:
 5. Accessibility requirements are validated
 6. Code review is approved
 
+### Data Portability Requirements
+
+The export/import functionality enables users to back up and restore their data.
+Maintaining this capability across schema changes is critical for data integrity.
+
+**Schema Evolution Checklist**
+
+When modifying the database schema (adding, removing, or changing fields), you MUST:
+
+1. **Update Export Types** (`backend/internal/domain/exporter/types.go`):
+   - Add new fields to the appropriate export struct
+   - Update field documentation with format requirements
+
+2. **Update Export Service** (`backend/internal/domain/exporter/service.go`):
+   - Populate new fields when building export data
+   - Ensure the field is included in the export JSON
+
+3. **Update Import Types** (`backend/internal/domain/importer/types.go`):
+   - Add new fields to the appropriate import struct
+   - Mark optional fields with `omitempty` for backward compatibility
+
+4. **Update Import Service** (`backend/internal/domain/importer/service.go`):
+   - Parse and validate new fields
+   - Pass new fields to domain services for persistence
+
+5. **Update Integration Tests** (`backend/tests/integration/export_test.go`):
+   - Add the new field to test type definitions
+   - Verify the field in the roundtrip test (export → clean → import → export)
+   - Ensure the field value is preserved through the cycle
+
+6. **Consider Format Versioning**:
+   - The export format includes a `format_version` field (currently "1.0")
+   - Increment version for breaking changes that require migration logic
+   - Add migration code if old exports need to be upgraded
+
+**Rationale**: Export/import is the user's safety net. Schema changes that break
+export/import silently corrupt backups, which may not be discovered until the
+user needs to restore their data—the worst possible time.
+
 ### Release Process
 
 Releases are automated using [release-please](https://github.com/googleapis/release-please).
@@ -283,4 +322,4 @@ When Constitution principles conflict with external requirements:
 3. Obtain maintainer approval for the exception
 4. Track exception in project backlog for future resolution
 
-**Version**: 1.4.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-25
+**Version**: 1.5.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-26

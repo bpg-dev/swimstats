@@ -162,10 +162,18 @@ func (s *Service) parseSwimmer(data *SwimmerData) (*ParsedSwimmer, error) {
 		return nil, fmt.Errorf("invalid birth_date format (expected YYYY-MM-DD): %v", err)
 	}
 
+	// Validate threshold_percent if provided
+	if data.ThresholdPercent != nil {
+		if *data.ThresholdPercent < 0 || *data.ThresholdPercent > 100 {
+			return nil, fmt.Errorf("threshold_percent must be between 0 and 100, got: %f", *data.ThresholdPercent)
+		}
+	}
+
 	return &ParsedSwimmer{
-		Name:      name,
-		BirthDate: birthDate,
-		Gender:    gender,
+		Name:             name,
+		BirthDate:        birthDate,
+		Gender:           gender,
+		ThresholdPercent: data.ThresholdPercent,
 	}, nil
 }
 
@@ -319,9 +327,10 @@ func parseTimeToMS(timeStr string) (int, error) {
 // createOrUpdateSwimmer creates a new swimmer or updates existing one.
 func (s *Service) createOrUpdateSwimmer(ctx context.Context, parsed *ParsedSwimmer) (string, error) {
 	input := swimmer.Input{
-		Name:      parsed.Name,
-		BirthDate: parsed.BirthDate.Format("2006-01-02"),
-		Gender:    parsed.Gender,
+		Name:             parsed.Name,
+		BirthDate:        parsed.BirthDate.Format("2006-01-02"),
+		Gender:           parsed.Gender,
+		ThresholdPercent: parsed.ThresholdPercent,
 	}
 
 	created, _, err := s.swimmerService.CreateOrUpdate(ctx, input)
@@ -552,7 +561,6 @@ func (s *Service) parseStandard(data *StandardData) (*ParsedStandard, error) {
 	return &ParsedStandard{
 		Name:        data.Name,
 		Description: data.Description,
-		Season:      data.Season,
 		CourseType:  data.CourseType,
 		Gender:      data.Gender,
 		Times:       parsedTimes,
