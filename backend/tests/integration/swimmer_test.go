@@ -16,6 +16,13 @@ type SwimmerInput struct {
 	Gender    string `json:"gender"`
 }
 
+type SwimmerInputWithThreshold struct {
+	Name             string   `json:"name"`
+	BirthDate        string   `json:"birth_date"`
+	Gender           string   `json:"gender"`
+	ThresholdPercent *float64 `json:"threshold_percent,omitempty"`
+}
+
 type Swimmer struct {
 	ID              string `json:"id"`
 	Name            string `json:"name"`

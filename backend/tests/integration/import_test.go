@@ -204,7 +204,6 @@ func TestImportAPI(t *testing.T) {
 					{
 						Name:        "Custom Test Standard",
 						Description: "Test standard",
-						Season:      "2026-2027",
 						CourseType:  "25m",
 						Gender:      "female",
 						Times: map[string][]string{

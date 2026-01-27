@@ -1,18 +1,24 @@
 // Package exporter provides functionality to export swimmer data to JSON files.
 package exporter
 
+// CurrentFormatVersion is the current export format version.
+// Increment when making breaking changes to the export format.
+const CurrentFormatVersion = "1.0"
+
 // ExportData represents the complete export structure containing all user data.
 type ExportData struct {
-	Swimmer   SwimmerExport    `json:"swimmer"`
-	Meets     []MeetExport     `json:"meets"`
-	Standards []StandardExport `json:"standards,omitempty"`
+	FormatVersion string           `json:"format_version"`
+	Swimmer       SwimmerExport    `json:"swimmer"`
+	Meets         []MeetExport     `json:"meets"`
+	Standards     []StandardExport `json:"standards,omitempty"`
 }
 
 // SwimmerExport represents swimmer profile information for export.
 type SwimmerExport struct {
-	Name      string `json:"name"`
-	BirthDate string `json:"birth_date"` // YYYY-MM-DD format
-	Gender    string `json:"gender"`     // "female" or "male"
+	Name             string  `json:"name"`
+	BirthDate        string  `json:"birth_date"`        // YYYY-MM-DD format
+	Gender           string  `json:"gender"`            // "female" or "male"
+	ThresholdPercent float64 `json:"threshold_percent"` // "almost there" threshold percentage
 }
 
 // MeetExport represents a meet with its associated times for export.
@@ -38,7 +44,6 @@ type TimeExport struct {
 type StandardExport struct {
 	Name        string              `json:"name"`
 	Description string              `json:"description"`
-	Season      string              `json:"season"`
 	CourseType  string              `json:"course_type"` // "25m" or "50m"
 	Gender      string              `json:"gender"`      // "female" or "male"
 	Times       map[string][]string `json:"times"`       // Event -> [age_group:time, ...]

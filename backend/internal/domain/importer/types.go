@@ -8,9 +8,10 @@ import (
 // ImportData represents the root structure for importing swimmer data.
 // All sections are optional - if present, they will REPLACE existing data.
 type ImportData struct {
-	Swimmer   *SwimmerData   `json:"swimmer,omitempty"`
-	Meets     []MeetData     `json:"meets,omitempty"`
-	Standards []StandardData `json:"standards,omitempty"`
+	FormatVersion string         `json:"format_version,omitempty"`
+	Swimmer       *SwimmerData   `json:"swimmer,omitempty"`
+	Meets         []MeetData     `json:"meets,omitempty"`
+	Standards     []StandardData `json:"standards,omitempty"`
 }
 
 // SwimmerImport is deprecated, use ImportData instead.
@@ -19,9 +20,10 @@ type SwimmerImport = ImportData
 
 // SwimmerData represents swimmer profile information for import.
 type SwimmerData struct {
-	Name      string `json:"name"`
-	BirthDate string `json:"birth_date"` // YYYY-MM-DD format
-	Gender    string `json:"gender"`     // "female" or "male"
+	Name             string   `json:"name"`
+	BirthDate        string   `json:"birth_date"`                  // YYYY-MM-DD format
+	Gender           string   `json:"gender"`                      // "female" or "male"
+	ThresholdPercent *float64 `json:"threshold_percent,omitempty"` // "almost there" threshold percentage
 }
 
 // MeetData represents a meet with its associated times for import.
@@ -47,7 +49,6 @@ type TimeData struct {
 type StandardData struct {
 	Name        string              `json:"name"`
 	Description string              `json:"description"`
-	Season      string              `json:"season"`
 	CourseType  string              `json:"course_type"` // "25m" or "50m"
 	Gender      string              `json:"gender"`      // "female" or "male"
 	Times       map[string][]string `json:"times"`       // Event -> [age_group:time, ...]
@@ -88,9 +89,10 @@ type ImportResult struct {
 
 // ParsedSwimmer is the validated swimmer data ready for database insertion.
 type ParsedSwimmer struct {
-	Name      string
-	BirthDate time.Time
-	Gender    string
+	Name             string
+	BirthDate        time.Time
+	Gender           string
+	ThresholdPercent *float64
 }
 
 // ParsedMeet is the validated meet data ready for database insertion.
@@ -116,7 +118,6 @@ type ParsedTime struct {
 type ParsedStandard struct {
 	Name        string
 	Description string
-	Season      string
 	CourseType  string
 	Gender      string
 	Times       map[string][]ParsedStandardTime
