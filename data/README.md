@@ -1,6 +1,19 @@
-# Time Standards Data
+# Data Files
 
-This directory contains time standards in JSON format for import into SwimStats.
+This directory contains data files for import into SwimStats.
+
+## Swimmer Data Import
+
+For importing swimmer data (meets and times), see the main [IMPORT-GUIDE.md](../IMPORT-GUIDE.md).
+
+Sample files:
+
+- `sample-swimmer-import.json` - Example with 3 meets and 13 times
+- `swimmer-import-template.json` - Minimal template to copy and fill in
+
+## Time Standards
+
+This directory also contains time standards in JSON format for import.
 
 ## Available Standards
 
@@ -12,10 +25,12 @@ This directory contains time standards in JSON format for import into SwimStats.
 | `swimming-canada-2026-2028-female-lc.json` | Swimming Canada | 2026-2028 | Female | Long Course (50m) |
 
 ### Swim Ontario Standards (per file)
+
 - **OSC** - Ontario Swimming Championships
 - **OAG** - Ontario Age Group
 
 ### Swimming Canada Standards
+
 - **Short Course (25m)**: Usport SCM, Canadian Open SCM
 - **Long Course (50m)**: Trials Senior, Trials Junior, Canadian Open LCM
 
@@ -26,6 +41,7 @@ This directory contains time standards in JSON format for import into SwimStats.
 ```
 
 Examples:
+
 - `swim-ontario-2025-2026-female-sc.json` - Swim Ontario 2025-2026 Female Short Course
 - `swim-ontario-2025-2026-female-lc.json` - Swim Ontario 2025-2026 Female Long Course
 - `swimming-canada-2026-2028-female-sc.json` - Swimming Canada 2026-2028 Female Short Course
@@ -101,6 +117,7 @@ Examples:
 ## Time Format
 
 Times should be in the format:
+
 - `"M:SS.ss"` for times >= 1 minute (e.g., `"1:05.32"`, `"10:25.17"`)
 - `"S.ss"` or `"SS.ss"` for times < 1 minute (e.g., `"0:31.38"` or `"31.38"`)
 - `null` for events without a standard time
@@ -117,6 +134,7 @@ curl -X POST http://localhost:8080/api/v1/standards/import/json \
 ```
 
 Response:
+
 ```json
 {
   "standards": [...],
