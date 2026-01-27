@@ -361,7 +361,7 @@ This project was built entirely using [Claude Opus 4.5](https://www.anthropic.co
 
 It started as a fun experiment to see what frontier LLM models with agentic tool chains can actually do when given a real-world project. Turns out, quite a lot! From database schema design to React components to CI/CD pipelines - Claude handled it all.
 
-Was it perfect? Nope. Were there moments of "wait, that's not what I meant"? Absolutely. But that's part of the adventure. If you're curious about AI-assisted development, feel free to poke around the commit history and see how it evolved.
+Was it perfect? Nope. Were there moments of "wait, that's not what I meant"? Absolutely. But that's part of the adventure. (Fun fact: the original 200+ commit history had to be squashed before open-sourcing because Claude cheerfully committed test data with real names. Lesson learned about PII and AI assistants!)
 
 ## License
 
