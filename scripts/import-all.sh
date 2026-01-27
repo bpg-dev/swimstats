@@ -32,10 +32,10 @@ echo ""
 
 echo ""
 echo "════════════════════════════════════════════════════════"
-echo "Step 2: Importing Alice's 2025-2026 Season Data"
+echo "Step 2: Importing Sample Swimmer Data"
 echo "════════════════════════════════════════════════════════"
 echo ""
-./scripts/test-import.sh data/alice-boldyrev-2025-2026.json
+./scripts/test-import.sh data/sample-swimmer-import.json
 
 echo ""
 echo "════════════════════════════════════════════════════════"
