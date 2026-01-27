@@ -188,7 +188,7 @@ jobs:
       - name: Get manifest digest
         id: manifest
         run: |
-          digest=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ github.repository }}/backend:${{ steps.meta.outputs.version }} --format '{{.Manifest.Digest}}' | grep -E '^sha256:')
+          digest=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ github.repository }}/backend:${{ steps.meta.outputs.version }} | grep '^Digest:' | awk '{print $2}')
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
       - name: Inspect image
@@ -249,7 +249,7 @@ jobs:
       - name: Get manifest digest
         id: manifest
         run: |
-          digest=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ github.repository }}/frontend:${{ steps.meta.outputs.version }} --format '{{.Manifest.Digest}}' | grep -E '^sha256:')
+          digest=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ github.repository }}/frontend:${{ steps.meta.outputs.version }} | grep '^Digest:' | awk '{print $2}')
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
       - name: Inspect image
