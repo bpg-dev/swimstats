@@ -110,12 +110,18 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}/frontend
 
+      - name: Get short commit SHA
+        id: short-sha
+        run: echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
         with:
           context: ./frontend
           platforms: ${{ matrix.platform }}
+          build-args: |
+            GIT_COMMIT=${{ steps.short-sha.outputs.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=frontend-${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=frontend-${{ matrix.platform }}

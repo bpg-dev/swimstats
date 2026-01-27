@@ -8,6 +8,11 @@ import { execSync } from 'child_process';
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 function getGitCommit(): string {
+  // Use VITE_GIT_COMMIT env var if available (set during Docker builds)
+  if (process.env.VITE_GIT_COMMIT && process.env.VITE_GIT_COMMIT !== 'unknown') {
+    return process.env.VITE_GIT_COMMIT;
+  }
+  // Fall back to git command for local development
   try {
     return execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
   } catch {
