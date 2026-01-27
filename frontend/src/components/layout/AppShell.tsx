@@ -375,6 +375,9 @@ export function AppShell({ children }: AppShellProps) {
           <p className="text-center text-sm text-slate-500">
             SwimStats - Track Your Swimming Progress
           </p>
+          <p className="text-center text-xs text-slate-400 mt-1">
+            v{__APP_VERSION__} ({__GIT_COMMIT__})
+          </p>
         </div>
       </footer>
     </div>

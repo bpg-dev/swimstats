@@ -8,6 +8,13 @@
       "include-v-in-tag": true,
       "draft": false,
       "prerelease": false,
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "frontend/package.json",
+          "jsonpath": "$.version"
+        }
+      ],
       "changelog-sections": [
         {
           "type": "feat",
