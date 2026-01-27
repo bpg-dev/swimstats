@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -5,14 +6,19 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   ReferenceLine,
   Dot,
+  Label,
 } from 'recharts';
 import { ProgressDataPoint } from '@/types/progress';
 import { formatDate } from '@/utils/timeFormat';
 import { MeetLink } from '@/components/ui';
+
+// Extended data point with timestamp for proper time-based charting
+interface ChartDataPoint extends ProgressDataPoint {
+  timestamp: number;
+}
 
 interface ProgressChartProps {
   data: ProgressDataPoint[];
@@ -24,7 +30,7 @@ interface ProgressChartProps {
 interface CustomDotProps {
   cx?: number;
   cy?: number;
-  payload?: ProgressDataPoint;
+  payload?: ChartDataPoint;
   r?: number;
   fill?: string;
   stroke?: string;
@@ -54,12 +60,12 @@ const CustomDot = (props: CustomDotProps) => {
 // Custom tooltip to show meet details
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: Array<{ payload: ProgressDataPoint }>;
+  payload?: Array<{ payload: ChartDataPoint }>;
 }
 
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const data = payload[0].payload as ProgressDataPoint;
+    const data = payload[0].payload as ChartDataPoint;
     return (
       <div className="bg-white p-3 border border-slate-200 rounded-md shadow-lg">
         <p className="font-semibold text-slate-900">{data.time_formatted}</p>
@@ -87,9 +93,42 @@ const formatYAxis = (timeMs: number) => {
   return `${minutes}:${seconds.toString().padStart(2, '0')}.${hundredths.toString().padStart(2, '0')}`;
 };
 
-// Format date for X-axis
-const formatXAxis = (date: string) => {
-  return formatDate(date);
+// Format timestamp for X-axis (receives Unix timestamp in ms)
+const formatXAxis = (timestamp: number) => {
+  const date = new Date(timestamp);
+  return formatDate(date.toISOString().split('T')[0]);
+};
+
+// Calculate nice round tick values for Y-axis (times in ms)
+const calculateYTicks = (minMs: number, maxMs: number): number[] => {
+  const range = maxMs - minMs;
+
+  // Choose interval based on range (in ms)
+  // Prefer intervals like 0.5s, 1s, 2s, 5s, 10s, 30s, 1min
+  const intervals = [500, 1000, 2000, 5000, 10000, 30000, 60000];
+  let interval = intervals[0];
+
+  for (const i of intervals) {
+    if (range / i >= 3 && range / i <= 8) {
+      interval = i;
+      break;
+    }
+    if (range / i < 3) {
+      break;
+    }
+    interval = i;
+  }
+
+  // Round min down and max up to interval boundaries
+  const startTick = Math.floor(minMs / interval) * interval;
+  const endTick = Math.ceil(maxMs / interval) * interval;
+
+  const ticks: number[] = [];
+  for (let tick = startTick; tick <= endTick; tick += interval) {
+    ticks.push(tick);
+  }
+
+  return ticks;
 };
 
 // Format time helper (reuse the formatYAxis logic)
@@ -129,7 +168,15 @@ const ReferenceLabel = (props: ReferenceLabelProps) => {
 };
 
 export function ProgressChart({ data, standardTime, standardName }: ProgressChartProps) {
-  if (!data || data.length === 0) {
+  // Transform data to include numeric timestamps for proper time-based scaling
+  const chartData: ChartDataPoint[] = useMemo(() => {
+    return data.map((point) => ({
+      ...point,
+      timestamp: new Date(point.date).getTime(),
+    }));
+  }, [data]);
+
+  if (!chartData || chartData.length === 0) {
     return (
       <div className="text-center py-12 text-slate-500">
         <p>No times recorded yet for this event.</p>
@@ -139,7 +186,7 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
   }
 
   // Find min and max times for Y-axis domain (add 5% padding)
-  const times = data.map((d) => d.time_ms);
+  const times = chartData.map((d) => d.time_ms);
   const minTime = Math.min(...times);
   const maxTime = Math.max(...times);
   const padding = (maxTime - minTime) * 0.05;
@@ -151,19 +198,39 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
     yDomain[1] = Math.max(yDomain[1], standardTime + padding);
   }
 
+  // Find min and max timestamps for X-axis domain (add padding for visual margin)
+  const timestamps = chartData.map((d) => d.timestamp);
+  const minTimestamp = Math.min(...timestamps);
+  const maxTimestamp = Math.max(...timestamps);
+  const timePadding = (maxTimestamp - minTimestamp) * 0.05 || 86400000; // 1 day fallback for single point
+  const xDomain = [minTimestamp - timePadding, maxTimestamp + timePadding];
+
+  // Calculate nice round tick values for Y-axis
+  const yTicks = calculateYTicks(yDomain[0], yDomain[1]);
+
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+      <LineChart data={chartData} margin={{ top: 30, right: 30, left: 20, bottom: 20 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
         <XAxis
-          dataKey="date"
+          dataKey="timestamp"
+          type="number"
+          scale="time"
+          domain={xDomain}
           tickFormatter={formatXAxis}
           stroke="#64748b"
           style={{ fontSize: '12px' }}
+          label={{
+            value: 'Date',
+            position: 'insideBottom',
+            offset: -10,
+            style: { fontSize: '14px', fill: '#64748b' },
+          }}
         />
         <YAxis
           reversed
           domain={yDomain}
+          ticks={yTicks}
           tickFormatter={formatYAxis}
           stroke="#64748b"
           style={{ fontSize: '12px' }}
@@ -173,9 +240,15 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
             position: 'insideLeft',
             style: { fontSize: '14px', fill: '#64748b' },
           }}
-        />
+        >
+          <Label
+            value="Faster"
+            position="top"
+            offset={15}
+            style={{ fontSize: '11px', fill: '#64748b' }}
+          />
+        </YAxis>
         <Tooltip content={<CustomTooltip />} />
-        <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="line" />
 
         {/* Reference line for standard time */}
         {standardTime && (
