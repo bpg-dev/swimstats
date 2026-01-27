@@ -355,6 +355,14 @@ If changes to files don't trigger hot reload:
 
 Verify all OIDC environment variables are correctly set and the OIDC provider is accessible.
 
+## How This Was Built
+
+This project was built entirely using [Claude Opus 4.5](https://www.anthropic.com/claude) and [spec-kit](https://github.com/bpg/spec-kit), with a healthy dose of vibe coding along the way. No hand-written code here - just conversations with an AI, iterating on specs, and watching the codebase come together.
+
+It started as a fun experiment to see what frontier LLM models with agentic tool chains can actually do when given a real-world project. Turns out, quite a lot! From database schema design to React components to CI/CD pipelines - Claude handled it all.
+
+Was it perfect? Nope. Were there moments of "wait, that's not what I meant"? Absolutely. But that's part of the adventure. If you're curious about AI-assisted development, feel free to poke around the commit history and see how it evolved.
+
 ## License
 
 [AGPL-3.0](LICENSE)
