@@ -8,11 +8,11 @@
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet?logo=anthropic)](https://claude.ai/claude-code)
 
-[![Go](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go&logoColor=white)](https://go.dev)
+[![Go](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go&logoColor=white)](https://go.dev)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
 [![GHCR Backend](https://img.shields.io/badge/ghcr.io-backend-blue?logo=docker)](https://ghcr.io/bpg/swimstats/backend)
 [![GHCR Frontend](https://img.shields.io/badge/ghcr.io-frontend-blue?logo=docker)](https://ghcr.io/bpg/swimstats/frontend)
@@ -82,7 +82,7 @@ A web application for competitive swimmers to track their times, view personal b
 
 **Backend:**
 
-- Go 1.24+
+- Go 1.25+
 - Chi router
 - PostgreSQL with SQLC
 - OIDC authentication (Authentik/Keycloak compatible)
@@ -97,8 +97,8 @@ A web application for competitive swimmers to track their times, view personal b
 
 ## Prerequisites
 
-- [Go 1.24+](https://go.dev/dl/)
-- [Node.js 18+](https://nodejs.org/)
+- [Go 1.25+](https://go.dev/dl/)
+- [Node.js 20+](https://nodejs.org/)
 - [Docker](https://www.docker.com/) & Docker Compose
 
 ## Quick Start (Development Mode)
