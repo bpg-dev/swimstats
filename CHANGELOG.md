@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/bpg/swimstats/compare/v1.0.1...v1.0.2) (2026-01-27)
+
+
+### Miscellaneous
+
+* **docs:** fix version inconsistencies across documentation ([#124](https://github.com/bpg/swimstats/issues/124)) ([776cd0c](https://github.com/bpg/swimstats/commit/776cd0cfc45e922eeb9d47078efe0b57174ce777))
+
 ## [0.11.0](https://github.com/bpg/swimstats/compare/v0.10.1...v0.11.0) (2026-01-26)
 
 
