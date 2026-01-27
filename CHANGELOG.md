@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.12.0](https://github.com/bpg/swimstats/compare/v0.11.0...v0.12.0) (2026-01-27)
+
+
+### Features
+
+* **ui:** add swimmer silhouette favicon and header logo ([#118](https://github.com/bpg/swimstats/issues/118)) ([6f2e109](https://github.com/bpg/swimstats/commit/6f2e109a0f23aed595bd579d11133f352cf91d58))
+* **ui:** display build version and git commit in footer ([#117](https://github.com/bpg/swimstats/issues/117)) ([5a0b9f4](https://github.com/bpg/swimstats/commit/5a0b9f46f18003951c9e2a0acc754d6f517d3498))
+
+
+### Bug Fixes
+
+* **api:** sync export/import with schema and add format versioning ([#120](https://github.com/bpg/swimstats/issues/120)) ([8ec3ebf](https://github.com/bpg/swimstats/commit/8ec3ebf08dc2d47dc77c04fa42e4576d82a288de))
+* **ui:** correct Prettier formatting in AppShell ([#119](https://github.com/bpg/swimstats/issues/119)) ([1855fca](https://github.com/bpg/swimstats/commit/1855fca17816b0e1652187b4acb8a75e31f93445))
+* **ui:** use proportional time scale in progress charts ([#121](https://github.com/bpg/swimstats/issues/121)) ([c537374](https://github.com/bpg/swimstats/commit/c537374f9a28b397a988c4a4b3058f6f4d865ea1))
+
+
+### Miscellaneous
+
+* **docs:** update documentation for standards page filters ([#115](https://github.com/bpg/swimstats/issues/115)) ([1e84d98](https://github.com/bpg/swimstats/commit/1e84d98be46a69553d7a1556a52d6e67ac550cbf))
+
 ## [0.11.0](https://github.com/bpg/swimstats/compare/v0.10.1...v0.11.0) (2026-01-26)
 
 
