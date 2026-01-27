@@ -2,7 +2,7 @@
 
 **Feature Branch**: `001-swim-progress-tracker`  
 **Created**: 2026-01-17  
-**Status**: Draft  
+**Status**: Complete  
 **Input**: User description: "Build an application that can help me track progress of a competitive swimmer (my daughter) across the ages and seasons. It should track her current times across all competitive swimming disciplines for 25 and 50 meter courses (times), personal bests, and comparison against various time standards. Time standards can be added/removed/modified at any time, time standards are usually age-based. I also want to see graphs showing progress over time, and standing/difference against a specified standard."
 
 **Context**: Canadian competitive swimmer  
@@ -261,9 +261,9 @@ As a swim parent, I want to export all my daughter's swim data to a JSON file fo
 
 **Swimmer Profile**
 
-- **FR-010**: System MUST store swimmer information including name, birth date, and gender
-- **FR-011**: System MUST calculate swimmer's current age and age on any given date
-- **FR-012**: System MUST support a single swimmer profile initially, with data model designed to accommodate multiple swimmers in future updates
+- **FR-015**: System MUST store swimmer information including name, birth date, and gender
+- **FR-016**: System MUST calculate swimmer's current age and age on any given date
+- **FR-017**: System MUST support a single swimmer profile initially, with data model designed to accommodate multiple swimmers in future updates
 
 **Meets**
 
