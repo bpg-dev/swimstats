@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.4](https://github.com/bpg/swimstats/compare/v1.0.3...v1.0.4) (2026-01-27)
+
+
+### Bug Fixes
+
+* **ci:** filter manifest digest output to prevent multiline errors ([#130](https://github.com/bpg/swimstats/issues/130)) ([954f5f7](https://github.com/bpg/swimstats/commit/954f5f7c4f9f95ccfd70f36981ad8ebc92c0df60))
+* **docker:** address container image vulnerabilities ([#132](https://github.com/bpg/swimstats/issues/132)) ([dd318d1](https://github.com/bpg/swimstats/commit/dd318d13f65ee19509a5b2336f0d72502835736e))
+
 ## [1.0.3](https://github.com/bpg/swimstats/compare/v1.0.2...v1.0.3) (2026-01-27)
 
 
