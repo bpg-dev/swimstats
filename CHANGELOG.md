@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/bpg/swimstats/compare/v1.0.4...v1.0.5) (2026-01-27)
+
+
+### Bug Fixes
+
+* **ci:** extract manifest digest from imagetools output ([#133](https://github.com/bpg/swimstats/issues/133)) ([f4735ae](https://github.com/bpg/swimstats/commit/f4735ae7319dd87ce53404fb329628a338481def))
+
 ## [1.0.4](https://github.com/bpg/swimstats/compare/v1.0.3...v1.0.4) (2026-01-27)
 
 
