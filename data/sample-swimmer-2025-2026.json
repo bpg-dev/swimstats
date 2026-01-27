@@ -1,32 +1,10 @@
 {
   "swimmer": {
-    "name": "Alice Boldyrev",
-    "birth_date": "2013-01-22",
+    "name": "Sample Swimmer",
+    "birth_date": "2012-06-15",
     "gender": "female"
   },
   "meets": [
-    {
-      "name": "Age Group International LC",
-      "city": "Etobicoke",
-      "country": "Canada",
-      "start_date": "2024-05-31",
-      "end_date": "2024-05-31",
-      "course_type": "50m",
-      "times": [
-        {
-          "event": "200FL",
-          "time": "3:03.66",
-          "event_date": "2024-05-31",
-          "notes": ""
-        },
-        {
-          "event": "100BR",
-          "time": "1:32.52",
-          "event_date": "2024-05-31",
-          "notes": ""
-        }
-      ]
-    },
     {
       "name": "New Years Cup",
       "city": "Toronto",
@@ -42,9 +20,61 @@
           "notes": ""
         },
         {
+          "event": "400FR",
+          "time": "4:51.38",
+          "event_date": "2025-01-10",
+          "notes": ""
+        },
+        {
+          "event": "800FR",
+          "time": "9:50.20",
+          "event_date": "2025-01-10",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.04",
+          "event_date": "2025-01-11",
+          "notes": ""
+        },
+        {
           "event": "50BR",
           "time": "37.52",
           "event_date": "2025-01-12",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:12.29",
+          "event_date": "2025-01-12",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Grand Prix",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-01-24",
+      "end_date": "2025-01-25",
+      "course_type": "50m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "29.38",
+          "event_date": "2025-01-24",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:18.66",
+          "event_date": "2025-01-24",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:53.73",
+          "event_date": "2025-01-25",
           "notes": ""
         }
       ]
@@ -57,6 +87,12 @@
       "end_date": "2025-03-02",
       "course_type": "50m",
       "times": [
+        {
+          "event": "100FR",
+          "time": "1:01.79",
+          "event_date": "2025-03-01",
+          "notes": ""
+        },
         {
           "event": "400IM",
           "time": "5:30.31",
@@ -78,11 +114,11 @@
       ]
     },
     {
-      "name": "Dr. Ralph Hicken International",
+      "name": "Dr. Ralph Hicken Internat",
       "city": "Etobicoke",
       "country": "Canada",
       "start_date": "2025-05-15",
-      "end_date": "2025-05-17",
+      "end_date": "2025-05-18",
       "course_type": "50m",
       "times": [
         {
@@ -92,9 +128,33 @@
           "notes": ""
         },
         {
+          "event": "100FR",
+          "time": "1:01.90",
+          "event_date": "2025-05-16",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:15.01",
+          "event_date": "2025-05-17",
+          "notes": ""
+        },
+        {
           "event": "200IM",
           "time": "2:33.25",
           "event_date": "2025-05-17",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "28.91",
+          "event_date": "2025-05-18",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:47.57",
+          "event_date": "2025-05-18",
           "notes": ""
         }
       ]
@@ -103,13 +163,31 @@
       "name": "Age Group International LC",
       "city": "Etobicoke",
       "country": "Canada",
-      "start_date": "2025-06-08",
+      "start_date": "2025-06-06",
       "end_date": "2025-06-08",
       "course_type": "50m",
       "times": [
         {
+          "event": "200FR",
+          "time": "2:14.42",
+          "event_date": "2025-06-06",
+          "notes": ""
+        },
+        {
+          "event": "50FR",
+          "time": "29.00",
+          "event_date": "2025-06-07",
+          "notes": ""
+        },
+        {
           "event": "100FR",
           "time": "1:01.25",
+          "event_date": "2025-06-08",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:54.21",
           "event_date": "2025-06-08",
           "notes": ""
         }
@@ -130,14 +208,38 @@
           "notes": ""
         },
         {
+          "event": "100FR",
+          "time": "1:01.93",
+          "event_date": "2025-07-10",
+          "notes": ""
+        },
+        {
           "event": "400FR",
           "time": "4:44.77",
           "event_date": "2025-07-11",
           "notes": ""
         },
         {
+          "event": "50FR",
+          "time": "29.22",
+          "event_date": "2025-07-11",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:02.52",
+          "event_date": "2025-07-11",
+          "notes": ""
+        },
+        {
           "event": "50BK",
           "time": "33.36",
+          "event_date": "2025-07-12",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:14.93",
           "event_date": "2025-07-12",
           "notes": ""
         }
@@ -147,10 +249,28 @@
       "name": "SCAR Cindy Nicholas Memorial",
       "city": "Unionville",
       "country": "Canada",
-      "start_date": "2025-11-02",
+      "start_date": "2025-11-01",
       "end_date": "2025-11-02",
       "course_type": "25m",
       "times": [
+        {
+          "event": "400FR",
+          "time": "4:42.32",
+          "event_date": "2025-11-01",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:11.35",
+          "event_date": "2025-11-01",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "59.18",
+          "event_date": "2025-11-02",
+          "notes": ""
+        },
         {
           "event": "200IM",
           "time": "2:28.71",
@@ -160,13 +280,35 @@
       ]
     },
     {
+      "name": "Time Trials",
+      "city": "Etobicoke",
+      "country": "Canada",
+      "start_date": "2025-11-11",
+      "end_date": "2025-11-11",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "100FR",
+          "time": "57.75",
+          "event_date": "2025-11-11",
+          "notes": ""
+        }
+      ]
+    },
+    {
       "name": "NYAC Cup",
       "city": "Toronto",
       "country": "Canada",
-      "start_date": "2025-11-15",
+      "start_date": "2025-11-14",
       "end_date": "2025-11-16",
       "course_type": "25m",
       "times": [
+        {
+          "event": "100FR",
+          "time": "59.14",
+          "event_date": "2025-11-14",
+          "notes": ""
+        },
         {
           "event": "50FR",
           "time": "27.36",
@@ -190,6 +332,18 @@
           "time": "30.66",
           "event_date": "2025-11-16",
           "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:08.99",
+          "event_date": "2025-11-16",
+          "notes": ""
+        },
+        {
+          "event": "800FR",
+          "time": "9:43.02",
+          "event_date": "2025-11-16",
+          "notes": ""
         }
       ]
     },
@@ -208,8 +362,20 @@
           "notes": ""
         },
         {
+          "event": "400FR",
+          "time": "4:46.90",
+          "event_date": "2025-11-27",
+          "notes": ""
+        },
+        {
           "event": "100BR",
           "time": "1:17.31",
+          "event_date": "2025-11-28",
+          "notes": ""
+        },
+        {
+          "event": "200FR",
+          "time": "2:07.78",
           "event_date": "2025-11-28",
           "notes": ""
         },
@@ -223,6 +389,12 @@
           "event": "400IM",
           "time": "5:20.03",
           "event_date": "2025-11-29",
+          "notes": ""
+        },
+        {
+          "event": "50FL",
+          "time": "29.65",
+          "event_date": "2025-11-30",
           "notes": ""
         },
         {
@@ -260,9 +432,61 @@
           "notes": ""
         },
         {
+          "event": "50FR",
+          "time": "27.37",
+          "event_date": "2025-12-06",
+          "notes": ""
+        },
+        {
           "event": "200FR",
           "time": "2:07.26",
           "event_date": "2025-12-07",
+          "notes": ""
+        },
+        {
+          "event": "400FR",
+          "time": "4:44.25",
+          "event_date": "2025-12-07",
+          "notes": ""
+        },
+        {
+          "event": "800FR",
+          "time": "9:42.67",
+          "event_date": "2025-12-07",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Beast Cup",
+      "city": "Belleville",
+      "country": "Canada",
+      "start_date": "2026-01-10",
+      "end_date": "2026-01-11",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "27.71",
+          "event_date": "2026-01-10",
+          "notes": ""
+        },
+        {
+          "event": "50FL",
+          "time": "29.79",
+          "event_date": "2026-01-10",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:00.15",
+          "event_date": "2026-01-11",
+          "notes": ""
+        },
+        {
+          "event": "100FL",
+          "time": "1:08.19",
+          "event_date": "2026-01-11",
           "notes": ""
         }
       ]
@@ -284,6 +508,12 @@
         {
           "event": "50BR",
           "time": "38.91",
+          "event_date": "2026-01-17",
+          "notes": ""
+        },
+        {
+          "event": "100FR",
+          "time": "1:01.36",
           "event_date": "2026-01-17",
           "notes": ""
         },

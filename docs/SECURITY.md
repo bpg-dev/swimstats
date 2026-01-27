@@ -254,6 +254,6 @@ Production deployment should use:
 
 ## Reporting Security Issues
 
-Report security vulnerabilities to: security@example.com
+Report security vulnerabilities via [GitHub Security Advisories](../../security/advisories/new)
 
 Do not open public issues for security vulnerabilities.

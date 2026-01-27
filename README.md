@@ -3,7 +3,7 @@
 [![CI](https://github.com/bpg/swimstats/actions/workflows/ci.yaml/badge.svg)](https://github.com/bpg/swimstats/actions/workflows/ci.yaml)
 [![Release](https://img.shields.io/github/v/release/bpg/swimstats)](https://github.com/bpg/swimstats/releases)
 [![codecov](https://codecov.io/gh/bpg/swimstats/branch/main/graph/badge.svg)](https://codecov.io/gh/bpg/swimstats)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet?logo=anthropic)](https://claude.ai/claude-code)
