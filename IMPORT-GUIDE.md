@@ -72,7 +72,7 @@ This will:
    - Swimmer profile (name, birth date, gender)
    - Meets with their times
 
-See `data/IMPORT-README.md` for the complete format specification.
+See the Field Reference section below for the complete format specification.
 
 ### 3. Start the Backend
 
@@ -361,6 +361,3 @@ This contains realistic data for a 13-14 age group female swimmer with 3 meets a
 
 The import endpoint is now fully implemented and ready to use!
 
----
-
-For more details on the import format, see `/data/IMPORT-README.md`.

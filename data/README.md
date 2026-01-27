@@ -1,6 +1,18 @@
-# Time Standards Data
+# Data Files
 
-This directory contains time standards in JSON format for import into SwimStats.
+This directory contains data files for import into SwimStats.
+
+## Swimmer Data Import
+
+For importing swimmer data (meets and times), see the main [IMPORT-GUIDE.md](../IMPORT-GUIDE.md).
+
+Sample files:
+- `sample-swimmer-import.json` - Example with 3 meets and 13 times
+- `swimmer-import-template.json` - Minimal template to copy and fill in
+
+## Time Standards
+
+This directory also contains time standards in JSON format for import.
 
 ## Available Standards
 
