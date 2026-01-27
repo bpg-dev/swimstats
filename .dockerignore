@@ -1,0 +1,47 @@
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+specs/
+.specify/
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Go
+*.exe
+*.test
+*.out
+
+# Build artifacts
+coverage/
+dist/
+build/
+
+# Docker
+Dockerfile*
+docker-compose*.yaml
+.dockerignore
+
+# CI/CD
+.github/
+
+# OS
+.DS_Store
+Thumbs.db

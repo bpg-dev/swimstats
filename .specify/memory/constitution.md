@@ -1,0 +1,325 @@
+<!--
+================================================================================
+SYNC IMPACT REPORT
+================================================================================
+Version Change: 1.4.0 → 1.5.0
+
+Modified Principles: N/A
+
+Added Sections:
+  - Data Portability Requirements: Schema evolution checklist for export/import
+
+Modified Sections: N/A
+
+Removed Sections: N/A
+
+Templates Status:
+  - .specify/templates/plan-template.md ✅ Compatible
+  - .specify/templates/spec-template.md ✅ Compatible
+  - .specify/templates/tasks-template.md ✅ Compatible
+  - .specify/templates/checklist-template.md ✅ Compatible
+  - .specify/templates/agent-file-template.md ✅ Compatible
+
+Follow-up TODOs: None
+================================================================================
+-->
+
+# SwimStats Constitution
+
+## Core Principles
+
+### I. Code Quality Excellence
+
+All code contributions MUST adhere to consistent quality standards that ensure
+maintainability, readability, and long-term sustainability of the codebase.
+
+- **Readability**: Code MUST be self-documenting with clear naming conventions;
+  comments are reserved for explaining "why," not "what"
+- **Single Responsibility**: Each module, class, and function MUST have one
+  well-defined purpose
+- **DRY Compliance**: Duplicated logic MUST be extracted into reusable
+  components; copy-paste code is prohibited
+- **Linting Enforcement**: All code MUST pass configured linters with zero
+  warnings before merge
+- **Type Safety**: Explicit typing MUST be used where supported by the language;
+  `any` types are prohibited except with documented justification
+
+**Rationale**: Consistent code quality reduces cognitive load during reviews,
+accelerates onboarding, and minimizes technical debt accumulation.
+
+### II. Test-Driven Development
+
+Tests are not optional artifacts—they are the specification that drives
+implementation. The Red-Green-Refactor cycle is mandatory for all features.
+
+- **Test-First**: Tests MUST be written before implementation; PRs without
+  corresponding tests for new functionality will be rejected
+- **Coverage Thresholds**: New code MUST maintain or improve overall test
+  coverage; critical paths require >90% coverage
+- **Test Categories**:
+  - **Unit Tests**: Isolated logic validation (MUST exist for all services)
+  - **Integration Tests**: Cross-component interaction (MUST exist for APIs)
+  - **Contract Tests**: External interface guarantees (MUST exist for public APIs)
+- **Test Independence**: Each test MUST be runnable in isolation without
+  depending on other tests or external state
+- **Failure Verification**: Tests MUST demonstrably fail before implementation
+  proves them correct
+
+**Rationale**: TDD catches defects early, serves as living documentation, and
+enables confident refactoring without regression fear.
+
+### III. User Experience Consistency
+
+Every user-facing interface MUST deliver a cohesive, predictable, and accessible
+experience that reflects SwimStats brand standards.
+
+- **Design System Adherence**: All UI components MUST use established design
+  tokens (colors, typography, spacing); custom styles require approval
+- **Interaction Patterns**: Common actions (navigation, forms, feedback) MUST
+  follow documented UX patterns consistently across all views
+- **Accessibility Compliance**: All interfaces MUST meet WCAG 2.1 AA standards;
+  keyboard navigation and screen reader support are non-negotiable
+- **Responsive Behavior**: Layouts MUST function correctly across defined
+  breakpoints (mobile, tablet, desktop)
+- **Loading States**: All async operations MUST display appropriate loading
+  indicators; users MUST never see blank screens during data fetch
+- **Error Communication**: Error messages MUST be user-friendly, actionable,
+  and never expose technical details to end users
+
+**Rationale**: Consistent UX builds user trust, reduces support burden, and
+differentiates SwimStats through quality of experience.
+
+### IV. Performance Standards
+
+Performance is a feature, not an afterthought. All code MUST meet defined
+performance budgets and degrade gracefully under load.
+
+- **Response Time Targets**:
+  - API endpoints: p95 < 200ms for read operations, p95 < 500ms for writes
+  - Page load: Time to Interactive (TTI) < 3 seconds on 4G connection
+  - UI interactions: < 100ms feedback for user actions
+- **Resource Budgets**:
+  - JavaScript bundle: < 250KB gzipped for initial load
+  - Memory: No memory leaks; stable usage under sustained operation
+  - Database queries: No N+1 patterns; all queries MUST be optimized with indexes
+- **Scalability Requirements**: System MUST handle 10x current load without
+  architectural changes
+- **Monitoring Obligation**: All production code MUST emit performance metrics;
+  degradations trigger alerts
+- **Performance Testing**: Load tests MUST validate performance targets before
+  release of performance-sensitive features
+
+**Rationale**: Poor performance directly impacts user retention and system
+reliability; proactive budgets prevent gradual degradation.
+
+## Quality Gates
+
+All contributions MUST pass the following gates before merge:
+
+| Gate | Requirement | Enforcement |
+|------|-------------|-------------|
+| Lint | Zero errors, zero warnings | CI blocking |
+| Type Check | Full type coverage, no suppressions without justification | CI blocking |
+| Unit Tests | All pass, coverage threshold met | CI blocking |
+| Integration Tests | All pass for affected components | CI blocking |
+| Performance | No regression beyond 10% on benchmarks | CI warning, manual review |
+| Accessibility | aXe/Lighthouse audit pass | CI blocking for UI changes |
+| Code Review | Minimum 1 approval from code owner | GitHub branch protection |
+
+**Exceptions**: Gate bypasses require documented justification in PR description
+and explicit approval from a maintainer. All bypasses are logged and reviewed
+in retrospectives.
+
+## Development Workflow
+
+### Pull Request Requirement
+
+**All changes to the codebase MUST be submitted via Pull Requests.** Direct commits
+to any branch are prohibited. This applies to all contributors regardless of role.
+
+- No exceptions for "small fixes" or "trivial changes"
+- Emergency hotfixes still require PRs (expedited review permitted)
+- Automated updates (e.g., Renovate) are submitted as PRs
+
+**Rationale**: PRs ensure all changes are reviewed, tested by CI, and tracked in
+project history with proper context.
+
+### Branch Strategy
+
+- `main`: Production-ready code; direct pushes prohibited
+- `feature/*`: Individual features; branch from and merge to `main`
+- `fix/*`: Bug fixes; branch from and merge to `main`
+- `release/*`: Release preparation; created from `main` when stabilizing
+
+### AI Assistant Guidelines
+
+When Claude Code or other AI assistants work on this codebase, they MUST follow these rules:
+
+- **Never commit to main**: AI assistants MUST NOT commit directly to the `main` branch.
+  All work MUST be done on feature or fix branches.
+- **Always create a new branch**: When starting work on a new feature or fix, AI assistants
+  MUST create an appropriately named branch (`feature/*` or `fix/*`) before making any commits.
+- **Verify quality gates before PR**: AI assistants MUST run all checks and tests locally
+  and ensure they pass BEFORE creating a Pull Request. This includes:
+  - Frontend: `cd frontend && make check && npm test -- --run` (lint, format, typecheck, tests)
+  - Backend: `cd backend && golangci-lint run && go test ./...`
+  PRs with failing CI are considered defects in the AI assistant's work.
+- **Push and create PRs when done**: AI assistants MAY push branches and create Pull Requests
+  when work is complete, to streamline the workflow.
+- **Never merge PRs**: AI assistants MUST NOT merge Pull Requests. Merging is the sole
+  responsibility of human maintainers who provide final review and approval.
+
+**Rationale**: These constraints ensure human oversight of all code changes entering the
+main branch while allowing AI assistants to complete the development workflow up to the
+point of final approval. Pre-PR verification prevents wasted CI cycles and reviewer time.
+
+### Commit Standards
+
+Commits MUST follow the [Conventional Commits](https://www.conventionalcommits.org/)
+format. This is **mandatory** because the automated release process uses commit messages
+to generate changelogs and determine version bumps.
+
+- **Format**: `type(scope): description`
+- **Types** (with release impact):
+  - `feat`: New feature → triggers **minor** version bump, appears in "Features" section
+  - `fix`: Bug fix → triggers **patch** version bump, appears in "Bug Fixes" section
+  - `perf`: Performance improvement → triggers **patch** version bump, appears in "Performance" section
+  - `chore`: Maintenance tasks → no version bump, appears in "Miscellaneous" section
+  - `style`: Code style changes → no version bump, excluded from changelog
+  - `refactor`: Code refactoring → no version bump, excluded from changelog
+  - `test`: Test additions/changes → no version bump, excluded from changelog
+- **Note**: Use `chore(docs):` for documentation changes so they appear in "Miscellaneous"
+- **Breaking Changes**: Add `!` after type or include `BREAKING CHANGE:` in footer
+  to trigger a **major** version bump (e.g., `feat!: remove deprecated API`)
+- Each commit MUST represent a single logical change
+- Commit messages MUST be descriptive; "fix bug" or "update" are prohibited
+
+**Examples**:
+```
+feat(api): add endpoint for bulk time import
+fix(frontend): correct date picker timezone handling
+perf(db): add index for swimmer lookup queries
+chore(ci): update GitHub Actions versions
+chore(docs): update README badges
+feat!: change authentication to require OIDC
+```
+
+### Code Review Requirements
+
+- All PRs require at least one approval before merge
+- Reviewers MUST verify alignment with Constitution principles
+- Authors MUST respond to all review comments before re-requesting review
+- Stale PRs (>7 days without activity) are subject to closure
+
+### Definition of Done
+
+A feature is complete when:
+
+1. All acceptance criteria from spec are met
+2. All quality gates pass
+3. Documentation is updated (if applicable)
+4. Performance targets are verified
+5. Accessibility requirements are validated
+6. Code review is approved
+
+### Data Portability Requirements
+
+The export/import functionality enables users to back up and restore their data.
+Maintaining this capability across schema changes is critical for data integrity.
+
+**Schema Evolution Checklist**
+
+When modifying the database schema (adding, removing, or changing fields), you MUST:
+
+1. **Update Export Types** (`backend/internal/domain/exporter/types.go`):
+   - Add new fields to the appropriate export struct
+   - Update field documentation with format requirements
+
+2. **Update Export Service** (`backend/internal/domain/exporter/service.go`):
+   - Populate new fields when building export data
+   - Ensure the field is included in the export JSON
+
+3. **Update Import Types** (`backend/internal/domain/importer/types.go`):
+   - Add new fields to the appropriate import struct
+   - Mark optional fields with `omitempty` for backward compatibility
+
+4. **Update Import Service** (`backend/internal/domain/importer/service.go`):
+   - Parse and validate new fields
+   - Pass new fields to domain services for persistence
+
+5. **Update Integration Tests** (`backend/tests/integration/export_test.go`):
+   - Add the new field to test type definitions
+   - Verify the field in the roundtrip test (export → clean → import → export)
+   - Ensure the field value is preserved through the cycle
+
+6. **Consider Format Versioning**:
+   - The export format includes a `format_version` field (currently "1.0")
+   - Increment version for breaking changes that require migration logic
+   - Add migration code if old exports need to be upgraded
+
+**Rationale**: Export/import is the user's safety net. Schema changes that break
+export/import silently corrupt backups, which may not be discovered until the
+user needs to restore their data—the worst possible time.
+
+### Release Process
+
+Releases are automated using [release-please](https://github.com/googleapis/release-please).
+The process is driven entirely by conventional commit messages.
+
+**How it works**:
+
+1. **Accumulate Changes**: Merge PRs to `main` with conventional commit messages
+2. **Release PR**: release-please automatically creates/updates a "Release PR" that:
+   - Aggregates all changes since the last release
+   - Generates a changelog grouped by commit type
+   - Bumps the version based on commit types (feat→minor, fix→patch, breaking→major)
+3. **Create Release**: When the Release PR is merged:
+   - A GitHub Release is created with the changelog
+   - A version tag is created (e.g., `v0.2.0`)
+   - Docker images are built and tagged with the version
+
+**Version Tracking**:
+- Current version is tracked in `.release-please-manifest.json`
+- Changelog is maintained in `CHANGELOG.md`
+- Configuration is in `release-please-config.json`
+
+**Docker Image Tags** (on release):
+- `ghcr.io/bpg/swimstats/backend:0.2.0` - exact version
+- `ghcr.io/bpg/swimstats/backend:0.2` - minor version (latest patch)
+- `ghcr.io/bpg/swimstats/backend:latest` - most recent release
+
+**Important**: The quality of releases depends entirely on commit message discipline.
+Poorly written commit messages result in unclear changelogs.
+
+## Governance
+
+This Constitution is the authoritative source for SwimStats development
+standards. All other documentation, practices, and decisions are subordinate.
+
+### Amendment Process
+
+1. **Proposal**: Submit amendment as PR to `.specify/memory/constitution.md`
+2. **Discussion**: Minimum 3-day comment period for non-trivial changes
+3. **Approval**: Requires approval from at least 2 maintainers
+4. **Versioning**: Bump version according to semantic rules:
+   - MAJOR: Principle removal or incompatible redefinition
+   - MINOR: New principle or significant guidance expansion
+   - PATCH: Clarifications, typo fixes, non-semantic changes
+5. **Propagation**: Verify all dependent templates remain aligned
+
+### Compliance Verification
+
+- All PRs MUST include Constitution compliance verification in review checklist
+- Quarterly audits assess adherence across the codebase
+- Violations discovered post-merge MUST be remediated within one sprint
+
+### Conflict Resolution
+
+When Constitution principles conflict with external requirements:
+
+1. Document the conflict explicitly
+2. Propose a scoped exception with expiration date
+3. Obtain maintainer approval for the exception
+4. Track exception in project backlog for future resolution
+
+**Version**: 1.5.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-26

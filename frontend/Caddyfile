@@ -1,0 +1,45 @@
+{
+	admin localhost:2019
+}
+
+:80 {
+	root * /usr/share/caddy
+	file_server
+
+	encode gzip zstd
+
+	header {
+		X-Frame-Options "SAMEORIGIN"
+		X-Content-Type-Options "nosniff"
+		X-XSS-Protection "1; mode=block"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "geolocation=(), microphone=(), camera=()"
+	}
+
+	# Cache static assets for 1 year
+	@static {
+		path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2
+	}
+	header @static Cache-Control "public, max-age=31536000, immutable"
+
+	# SPA routing - serve index.html for all non-file routes
+	try_files {path} /index.html
+
+	# Proxy API requests to backend
+	reverse_proxy /api/* backend:8080
+
+	log {
+		output stdout
+		format console
+	}
+}
+
+:2019 {
+	metrics /metrics
+
+	# Health check endpoint
+	respond /health 200 {
+		body "healthy"
+		close
+	}
+}

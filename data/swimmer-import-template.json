@@ -1,0 +1,59 @@
+{
+  "swimmer": {
+    "name": "Jane Doe",
+    "birth_date": "2010-03-15",
+    "gender": "female"
+  },
+  "meets": [
+    {
+      "name": "City Championships 2025",
+      "city": "Toronto",
+      "country": "Canada",
+      "start_date": "2025-11-15",
+      "end_date": "2025-11-17",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "28.45",
+          "event_date": "2025-11-15",
+          "notes": "Heat 3, Lane 4"
+        },
+        {
+          "event": "100FR",
+          "time": "1:02.34",
+          "event_date": "2025-11-16",
+          "notes": "Finals"
+        },
+        {
+          "event": "200FR",
+          "time": "2:18.67",
+          "event_date": "2025-11-17",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "name": "Regional Qualifiers 2025",
+      "city": "Ottawa",
+      "country": "Canada",
+      "start_date": "2025-12-08",
+      "end_date": "2025-12-08",
+      "course_type": "25m",
+      "times": [
+        {
+          "event": "50FR",
+          "time": "27.89",
+          "event_date": "2025-12-08",
+          "notes": "PB"
+        },
+        {
+          "event": "100BK",
+          "time": "1:08.23",
+          "event_date": "2025-12-08",
+          "notes": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:18-alpine@sha256:b40d931bd0e7ce6eecc59a5a6ac3b3c04a01e559750e73e7086b6dbd7f8bf545
+    container_name: swimstats-postgres
+    environment:
+      POSTGRES_USER: swimstats
+      POSTGRES_PASSWORD: swimstats
+      POSTGRES_DB: swimstats
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swimstats -d swimstats"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Run database migrations using the backend binary
+  migrate:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: swimstats-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://swimstats:swimstats@postgres:5432/swimstats?sslmode=disable
+    command: ["migrate"]
+    profiles:
+      - migrate
+
+volumes:
+  postgres_data:

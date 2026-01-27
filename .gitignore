@@ -1,0 +1,54 @@
+# Cursor
+.cursor/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Node.js / Frontend
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+frontend/dist/
+frontend/build/
+frontend/.vite/
+*.tsbuildinfo
+
+# Go / Backend
+backend/bin/
+backend/tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+# sqlc generated (keep in repo, but can regenerate)
+# backend/internal/store/queries/*.sql.go
+
+# Build outputs
+*.log
+tmp/
+temp/
+coverage/
+
+# Local data
+*.sqlite
+*.db

@@ -1,0 +1,74 @@
+{
+  "season": "2026-2028",
+  "source": "Swimming Canada",
+  "course_type": "50m",
+  "gender": "female",
+  "standards": {
+    "SENIOR": {
+      "name": "Swimming Canada Trials Senior 2026-2028",
+      "description": "Swimming Canada Trials Senior Standards (Female)"
+    },
+    "JUNIOR": {
+      "name": "Swimming Canada Trials Junior 2026-2028",
+      "description": "Swimming Canada Trials Junior Standards (Female)"
+    },
+    "CDN_OPEN": {
+      "name": "Swimming Canada Canadian Open LCM 2026-2028",
+      "description": "Swimming Canada Canadian Open LCM Standards (Female)"
+    }
+  },
+  "age_groups": ["OPEN"],
+  "times": {
+    "50FR": {
+      "OPEN": { "SENIOR": "26.30", "JUNIOR": "26.88", "CDN_OPEN": "27.15" }
+    },
+    "100FR": {
+      "OPEN": { "SENIOR": "56.79", "JUNIOR": "58.30", "CDN_OPEN": "58.31" }
+    },
+    "200FR": {
+      "OPEN": { "SENIOR": "2:03.73", "JUNIOR": "2:06.68", "CDN_OPEN": "2:06.14" }
+    },
+    "400FR": {
+      "OPEN": { "SENIOR": "4:22.57", "JUNIOR": "4:26.87", "CDN_OPEN": "4:28.98" }
+    },
+    "800FR": {
+      "OPEN": { "SENIOR": "9:06.54", "JUNIOR": "9:14.67", "CDN_OPEN": "9:18.86" }
+    },
+    "1500FR": {
+      "OPEN": { "SENIOR": "17:41.18", "JUNIOR": "17:48.37", "CDN_OPEN": "18:07.87" }
+    },
+    "50BK": {
+      "OPEN": { "SENIOR": "30.16", "JUNIOR": "30.58", "CDN_OPEN": "30.86" }
+    },
+    "100BK": {
+      "OPEN": { "SENIOR": "1:03.80", "JUNIOR": "1:05.39", "CDN_OPEN": "1:05.55" }
+    },
+    "200BK": {
+      "OPEN": { "SENIOR": "2:19.21", "JUNIOR": "2:21.82", "CDN_OPEN": "2:22.03" }
+    },
+    "50BR": {
+      "OPEN": { "SENIOR": "33.48", "JUNIOR": "33.95", "CDN_OPEN": "34.26" }
+    },
+    "100BR": {
+      "OPEN": { "SENIOR": "1:12.46", "JUNIOR": "1:14.37", "CDN_OPEN": "1:14.46" }
+    },
+    "200BR": {
+      "OPEN": { "SENIOR": "2:37.81", "JUNIOR": "2:41.47", "CDN_OPEN": "2:42.05" }
+    },
+    "50FL": {
+      "OPEN": { "SENIOR": "28.13", "JUNIOR": "28.68", "CDN_OPEN": "28.78" }
+    },
+    "100FL": {
+      "OPEN": { "SENIOR": "1:02.26", "JUNIOR": "1:03.43", "CDN_OPEN": "1:03.81" }
+    },
+    "200FL": {
+      "OPEN": { "SENIOR": "2:19.43", "JUNIOR": "2:21.61", "CDN_OPEN": "2:22.01" }
+    },
+    "200IM": {
+      "OPEN": { "SENIOR": "2:19.92", "JUNIOR": "2:23.27", "CDN_OPEN": "2:24.40" }
+    },
+    "400IM": {
+      "OPEN": { "SENIOR": "5:00.92", "JUNIOR": "5:05.36", "CDN_OPEN": "5:06.78" }
+    }
+  }
+}

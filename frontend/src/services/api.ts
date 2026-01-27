@@ -1,0 +1,128 @@
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import { useAuthStore } from '@/stores/authStore';
+
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+/**
+ * API error response structure.
+ */
+export interface ApiError {
+  error: string;
+  code?: string;
+  details?: Record<string, string>;
+}
+
+/**
+ * Custom error class that includes the error code from the API.
+ */
+export class ApiRequestError extends Error {
+  code?: string;
+
+  constructor(message: string, code?: string) {
+    super(message);
+    this.name = 'ApiRequestError';
+    this.code = code;
+  }
+}
+
+/**
+ * Create configured axios instance.
+ */
+function createApiClient(): AxiosInstance {
+  const client = axios.create({
+    baseURL: API_URL,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+  });
+
+  // Request interceptor for auth
+  client.interceptors.request.use(
+    (config) => {
+      const authStore = useAuthStore.getState();
+
+      // In development mode, add mock user header
+      if (import.meta.env.DEV) {
+        if (!config.headers.Authorization && authStore.isAuthenticated) {
+          // For dev mode, we use mock auth
+          // Base64 encode to avoid "Invalid header value char" errors with Vite proxy
+          const mockUser = {
+            email: 'dev@swimstats.local',
+            name: 'Developer',
+            access: authStore.canWrite() ? 'full' : 'view_only',
+          };
+          config.headers['X-Mock-User'] = btoa(JSON.stringify(mockUser));
+        }
+      } else {
+        // In production mode, add Authorization header with id_token
+        if (!config.headers.Authorization && authStore.token) {
+          config.headers.Authorization = `Bearer ${authStore.token}`;
+        }
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  // Response interceptor for error handling
+  client.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError<ApiError>) => {
+      // Handle 401 - redirect to login
+      if (error.response?.status === 401) {
+        useAuthStore.getState().logout();
+        // Don't redirect here - let the ProtectedRoute handle it
+      }
+
+      // Extract error message and code
+      const message =
+        error.response?.data?.error || error.message || 'An unexpected error occurred';
+      const code = error.response?.data?.code;
+
+      return Promise.reject(new ApiRequestError(message, code));
+    }
+  );
+
+  return client;
+}
+
+export const apiClient = createApiClient();
+
+/**
+ * Generic API request function.
+ */
+export async function api<T>(config: AxiosRequestConfig): Promise<T> {
+  const response = await apiClient.request<T>(config);
+  return response.data;
+}
+
+/**
+ * GET request helper.
+ */
+export async function get<T>(url: string, params?: Record<string, unknown>): Promise<T> {
+  return api<T>({ method: 'GET', url, params });
+}
+
+/**
+ * POST request helper.
+ */
+export async function post<T>(url: string, data?: unknown): Promise<T> {
+  return api<T>({ method: 'POST', url, data });
+}
+
+/**
+ * PUT request helper.
+ */
+export async function put<T>(url: string, data?: unknown): Promise<T> {
+  return api<T>({ method: 'PUT', url, data });
+}
+
+/**
+ * DELETE request helper.
+ */
+export async function del<T>(url: string): Promise<T> {
+  return api<T>({ method: 'DELETE', url });
+}
+
+export default apiClient;
