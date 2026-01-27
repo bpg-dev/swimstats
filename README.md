@@ -19,6 +19,8 @@
 
 A web application for competitive swimmers to track their times, view personal bests, and visualize their progress over time.
 
+> **Note:** This is a personal tracking tool. Swim times are entered manually - there is no automatic import from meet results systems, federation databases, or other external sources.
+
 ## Features
 
 - 🏆 **Personal Bests** - Track fastest times across all events with achieved standards badges; click to view all times
