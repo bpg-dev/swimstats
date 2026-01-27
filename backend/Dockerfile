@@ -4,8 +4,9 @@ FROM golang:1.25-alpine@sha256:d9b2e14101f27ec8d09674cd01186798d227bb0daec90e032
 WORKDIR /app
 
 # Install build dependencies (with cache mount)
+# tzdata is needed for copying to distroless runtime image
 RUN --mount=type=cache,target=/var/cache/apk \
-    apk add --no-cache git ca-certificates
+    apk add --no-cache git ca-certificates tzdata
 
 # Copy go mod files
 COPY go.mod go.sum ./
@@ -27,24 +28,17 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     -o /app/server \
     ./cmd/server
 
-# Runtime stage
-FROM alpine:3.23@sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62
+# Runtime stage - distroless for minimal attack surface
+# nonroot variant runs as uid 65532 by default
+FROM gcr.io/distroless/static-debian12:nonroot@sha256:cba10d7abd3e203428e86f5b2d7fd5eb7d8987c387864ae4996cf97191b33764
 
 WORKDIR /app
 
-# Install runtime dependencies
-RUN apk add --no-cache ca-certificates tzdata
-
-# Create non-root user
-RUN addgroup -S swimstats && adduser -S swimstats -G swimstats
+# Copy timezone data from builder (distroless has no package manager)
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
 # Copy binary from builder (migrations are embedded via Go embed)
 COPY --from=builder /app/server /app/server
-
-# Set ownership
-RUN chown -R swimstats:swimstats /app
-
-USER swimstats
 
 EXPOSE 8080
 
