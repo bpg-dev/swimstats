@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.0.6](https://github.com/bpg/swimstats/compare/v1.0.5...v1.0.6) (2026-01-31)
+
+
+### Miscellaneous
+
+* **ci:** update docker/login-action digest (5e57cd1 → c94ce9f) ([#135](https://github.com/bpg/swimstats/issues/135)) ([4f0fb97](https://github.com/bpg/swimstats/commit/4f0fb974fcdc24c2a2bad10de2d311dad88eb514))
+* **ci:** update image postgres (b40d931 → 4eb15de) ([#136](https://github.com/bpg/swimstats/issues/136)) ([7db995a](https://github.com/bpg/swimstats/commit/7db995a3fa12f71f75c1eed22c2cd7a98a7c970b))
+* **container:** update image caddy (14fa514 → 8f2f33e) ([#137](https://github.com/bpg/swimstats/issues/137)) ([eaf9d59](https://github.com/bpg/swimstats/commit/eaf9d59d5d7e3976c0cd3950bdfebb73ff53a176))
+* **container:** update image golang (d9b2e14 → 98e6cff) ([#138](https://github.com/bpg/swimstats/issues/138)) ([4907214](https://github.com/bpg/swimstats/commit/49072147d0610014a60569b7140bde3445a0861c))
+* **container:** update image node (931d7d5 → cd6fb7e) ([#139](https://github.com/bpg/swimstats/issues/139)) ([644ca36](https://github.com/bpg/swimstats/commit/644ca36ce55fdf7896121bb2053465df8b981788))
+* **deps:** update @tanstack/react-query (5.90.19 → 5.90.20) ([#140](https://github.com/bpg/swimstats/issues/140)) ([e163263](https://github.com/bpg/swimstats/commit/e163263689967b4ebad88bc8d3cc230802b5a757))
+* **deps:** update @types/node (25.0.10 → 25.1.0) ([#147](https://github.com/bpg/swimstats/issues/147)) ([d1e3ca3](https://github.com/bpg/swimstats/commit/d1e3ca3164404f053309a0cf4c51912bb77865b1))
+* **deps:** update autoprefixer (10.4.23 → 10.4.24) ([#146](https://github.com/bpg/swimstats/issues/146)) ([448a4e7](https://github.com/bpg/swimstats/commit/448a4e7ea9adca8d4d2e15cf5bbfc2abd3ad0f4f))
+* **deps:** update axios (1.13.2 → 1.13.4) ([#141](https://github.com/bpg/swimstats/issues/141)) ([4ac0781](https://github.com/bpg/swimstats/commit/4ac07815067c44878e9426a7e862afa38d05f3ad))
+* **deps:** update globals (17.1.0 → 17.2.0) ([#148](https://github.com/bpg/swimstats/issues/148)) ([faf6b86](https://github.com/bpg/swimstats/commit/faf6b863aa7eb115bcdaa85aa4e5fdfe7d4bbccc))
+* **deps:** update react monorepo ([#142](https://github.com/bpg/swimstats/issues/142)) ([737b17e](https://github.com/bpg/swimstats/commit/737b17e64e83f514009e1f290cf1485054f29aa3))
+* **deps:** update react-router-dom (7.12.0 → 7.13.0) ([#143](https://github.com/bpg/swimstats/issues/143)) ([02b7042](https://github.com/bpg/swimstats/commit/02b70421418f361174840863600daeca90f467aa))
+* **deps:** update typescript-eslint monorepo (8.53.1 → 8.54.0) ([#144](https://github.com/bpg/swimstats/issues/144)) ([8e1105e](https://github.com/bpg/swimstats/commit/8e1105e3b42511d7cb5049cc691952c5364dc54b))
+
 ## [1.0.5](https://github.com/bpg/swimstats/compare/v1.0.4...v1.0.5) (2026-01-27)
 
 
