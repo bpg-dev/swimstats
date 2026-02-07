@@ -21,7 +21,7 @@ COPY . .
 RUN npm run build
 
 # Runtime stage - use latest 2.11 for security fixes
-FROM caddy:2.11-alpine@sha256:8f2f33e163ae1fc4f83c6f718b31d5e475ea31ef8f1991bb7a41836203dd795e
+FROM caddy:2.11-alpine@sha256:cde41549d21e8614840d767dd4cdcdffa8d5fffc312a1c69759fa3163594b2dc
 
 # Copy Caddyfile
 COPY Caddyfile /etc/caddy/Caddyfile
