@@ -30,7 +30,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 
 # Runtime stage - distroless for minimal attack surface
 # nonroot variant runs as uid 65532 by default
-FROM gcr.io/distroless/static-debian12:nonroot@sha256:cba10d7abd3e203428e86f5b2d7fd5eb7d8987c387864ae4996cf97191b33764
+FROM gcr.io/distroless/static-debian12:nonroot@sha256:a9329520abc449e3b14d5bc3a6ffae065bdde0f02667fa10880c49b35c109fd1
 
 WORKDIR /app
 
