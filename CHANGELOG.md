@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0.1](https://github.com/bpg-dev/swimstats/compare/v3.0.0...v3.0.1) (2026-02-28)
+
+
+### Miscellaneous
+
+* **deps:** update @types/node (25.3.0 → 25.3.2) ([#200](https://github.com/bpg-dev/swimstats/issues/200)) ([8e3e537](https://github.com/bpg-dev/swimstats/commit/8e3e53757b366e9d175475bbd5fe14961f60e0d8))
+* **deps:** update autoprefixer (10.4.24 → 10.4.27) ([#201](https://github.com/bpg-dev/swimstats/issues/201)) ([a4988a5](https://github.com/bpg-dev/swimstats/commit/a4988a56bfbfc7a1006ab3ecbb9a7a39c512ce56))
+* **deps:** update axios (1.13.5 → 1.13.6) ([#202](https://github.com/bpg-dev/swimstats/issues/202)) ([b7b4498](https://github.com/bpg-dev/swimstats/commit/b7b449804f81a6c3ceff0f485f1fe79569654804))
+
 ## [3.0.0](https://github.com/bpg-dev/swimstats/compare/v2.0.0...v3.0.0) (2026-02-28)
 
 
