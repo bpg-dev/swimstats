@@ -1,5 +1,30 @@
 # Changelog
 
+## [4.0.0](https://github.com/bpg-dev/swimstats/compare/v3.1.0...v4.0.0) (2026-03-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ci:** Update docker/setup-buildx-action action (v3 → v4) ([#215](https://github.com/bpg-dev/swimstats/issues/215))
+* **ci:** Update docker/metadata-action action (v5 → v6) ([#214](https://github.com/bpg-dev/swimstats/issues/214))
+* **ci:** Update docker/login-action action (v3 → v4) ([#213](https://github.com/bpg-dev/swimstats/issues/213))
+* **ci:** Update docker/build-push-action action (v6 → v7) ([#212](https://github.com/bpg-dev/swimstats/issues/212))
+
+### Features
+
+* add relay split times support ([#218](https://github.com/bpg-dev/swimstats/issues/218)) ([0496639](https://github.com/bpg-dev/swimstats/commit/04966393f35174c3c7fa192f0d8ea434f483fdd4))
+
+
+### Miscellaneous
+
+* **ci:** update actions/setup-node digest (6044e13 → 53b8394) ([#209](https://github.com/bpg-dev/swimstats/issues/209)) ([f25f1ee](https://github.com/bpg-dev/swimstats/commit/f25f1eee3266fd3b64cb16d2e49d487797d946c1))
+* **ci:** Update docker/build-push-action action (v6 → v7) ([#212](https://github.com/bpg-dev/swimstats/issues/212)) ([3eb7ef3](https://github.com/bpg-dev/swimstats/commit/3eb7ef3216cda84955fc68f799a193007457b260))
+* **ci:** Update docker/login-action action (v3 → v4) ([#213](https://github.com/bpg-dev/swimstats/issues/213)) ([f5b197a](https://github.com/bpg-dev/swimstats/commit/f5b197a673e344ebb6afd5d297fadcc068723385))
+* **ci:** Update docker/metadata-action action (v5 → v6) ([#214](https://github.com/bpg-dev/swimstats/issues/214)) ([d10e0f8](https://github.com/bpg-dev/swimstats/commit/d10e0f848b09269bb505ee786d621bad8917bc7a))
+* **ci:** Update docker/setup-buildx-action action (v3 → v4) ([#215](https://github.com/bpg-dev/swimstats/issues/215)) ([b898869](https://github.com/bpg-dev/swimstats/commit/b8988693a99a9467433483c0f542ca961e4b4b39))
+* **container:** update image golang (d4c4845 → 2389ebf) ([#210](https://github.com/bpg-dev/swimstats/issues/210)) ([3769309](https://github.com/bpg-dev/swimstats/commit/37693094bc3c0121e8fd827906df94b8b78ee869))
+* **deps:** update postcss (8.5.6 → 8.5.8) ([#211](https://github.com/bpg-dev/swimstats/issues/211)) ([3811ad9](https://github.com/bpg-dev/swimstats/commit/3811ad9593fb8e82518e1834f4f8522be68424a3))
+
 ## [3.1.0](https://github.com/bpg-dev/swimstats/compare/v3.0.1...v3.1.0) (2026-03-06)
 
 
