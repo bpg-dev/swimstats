@@ -110,7 +110,7 @@ export function Home() {
         <MeetList
           courseType={courseType}
           limit={5}
-          onSelectMeet={(meet) => navigate(`/meets?id=${meet.id}`)}
+          onSelectMeet={(meet) => navigate(`/meets/${meet.id}`)}
           emptyMessage="No meets yet. Add your first competition!"
         />
 
