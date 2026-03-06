@@ -29,6 +29,12 @@ const eventNames: Record<string, string> = {
   '200FL': '200m Fly',
   '200IM': '200m IM',
   '400IM': '400m IM',
+  // Split events
+  '50FRS': '50m Free Split',
+  '100FRS': '100m Free Split',
+  '200FRS': '200m Free Split',
+  '50BKS': '50m Back Split',
+  '100BKS': '100m Back Split',
 };
 
 // Group events by stroke
@@ -174,6 +180,14 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
                       <div>
                         <div className="text-sm font-mono tabular-nums text-slate-900 font-semibold">
                           {comp.swimmer_time_formatted}
+                          {comp.is_from_split && (
+                            <span
+                              className="ml-1 inline-flex items-center rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700 font-sans"
+                              aria-label="from relay split"
+                            >
+                              Split
+                            </span>
+                          )}
                         </div>
                         {comp.date && (
                           <div className="text-xs text-slate-500 mt-0.5">

@@ -528,6 +528,181 @@ func TestTimeBatchAPI(t *testing.T) {
 	})
 }
 
+func TestSplitTimeAPI(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode")
+	}
+
+	ctx := context.Background()
+	testDB := SetupTestDB(ctx, t)
+	defer testDB.TeardownTestDB(ctx, t)
+
+	handler := setupTestHandler(t, testDB)
+	client := NewAPIClient(t, handler)
+	client.SetMockUser("full")
+
+	setupSwimmerAndMeet := func(t *testing.T, courseType string) (swimmerID, meetID string) {
+		t.Helper()
+
+		swimmerInput := SwimmerInput{
+			Name:      "Test Swimmer",
+			BirthDate: "2012-05-15",
+			Gender:    "female",
+		}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		var swimmer Swimmer
+		AssertJSONBody(t, rr, &swimmer)
+		swimmerID = swimmer.ID
+
+		meetInput := MeetInput{
+			Name:       "Test Meet",
+			City:       "Toronto",
+			StartDate:  "2026-03-15",
+			CourseType: courseType,
+		}
+		rr = client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		var meet Meet
+		AssertJSONBody(t, rr, &meet)
+		meetID = meet.ID
+
+		return swimmerID, meetID
+	}
+
+	t.Run("POST /times creates a split time", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID := setupSwimmerAndMeet(t, "25m")
+
+		input := TimeInput{
+			MeetID:    meetID,
+			Event:     "100FRS",
+			TimeMS:    63210, // 1:03.21
+			EventDate: "2026-03-15",
+			Notes:     "Relay leadoff",
+		}
+
+		rr := client.Post("/api/v1/times", input)
+
+		assert.Equal(t, http.StatusCreated, rr.Code, "got %d: %s", rr.Code, rr.Body.String())
+
+		var time TimeRecord
+		AssertJSONBody(t, rr, &time)
+		assert.NotEmpty(t, time.ID)
+		assert.Equal(t, meetID, time.MeetID)
+		assert.Equal(t, "100FRS", time.Event)
+		assert.Equal(t, 63210, time.TimeMS)
+	})
+
+	t.Run("base and split events coexist at same meet", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID := setupSwimmerAndMeet(t, "25m")
+
+		// Create base event time
+		baseInput := TimeInput{
+			MeetID:    meetID,
+			Event:     "100FR",
+			TimeMS:    65320,
+			EventDate: "2026-03-15",
+		}
+		rr := client.Post("/api/v1/times", baseInput)
+		require.Equal(t, http.StatusCreated, rr.Code, "base event failed: %s", rr.Body.String())
+
+		// Create split event time at the same meet
+		splitInput := TimeInput{
+			MeetID:    meetID,
+			Event:     "100FRS",
+			TimeMS:    63210,
+			EventDate: "2026-03-15",
+		}
+		rr = client.Post("/api/v1/times", splitInput)
+
+		assert.Equal(t, http.StatusCreated, rr.Code, "split event failed: %s", rr.Body.String())
+
+		var time TimeRecord
+		AssertJSONBody(t, rr, &time)
+		assert.Equal(t, "100FRS", time.Event)
+	})
+
+	t.Run("duplicate split event rejected", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID := setupSwimmerAndMeet(t, "25m")
+
+		// Create split time
+		input := TimeInput{
+			MeetID:    meetID,
+			Event:     "100FRS",
+			TimeMS:    63210,
+			EventDate: "2026-03-15",
+		}
+		rr := client.Post("/api/v1/times", input)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Try to create the same split event again at the same meet
+		input.TimeMS = 62000
+		rr = client.Post("/api/v1/times", input)
+
+		assert.Equal(t, http.StatusConflict, rr.Code)
+		AssertJSONError(t, rr, "DUPLICATE_EVENT")
+	})
+
+	t.Run("invalid split code rejected", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID := setupSwimmerAndMeet(t, "25m")
+
+		input := TimeInput{
+			MeetID:    meetID,
+			Event:     "400FRS",
+			TimeMS:    240000,
+			EventDate: "2026-03-15",
+		}
+
+		rr := client.Post("/api/v1/times", input)
+
+		assert.Equal(t, http.StatusBadRequest, rr.Code, "got %d: %s", rr.Code, rr.Body.String())
+	})
+
+	t.Run("batch entry with base and split events", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID := setupSwimmerAndMeet(t, "25m")
+
+		input := map[string]interface{}{
+			"meet_id": meetID,
+			"times": []map[string]interface{}{
+				{"event": "100FR", "time_ms": 65320, "event_date": "2026-03-15"},
+				{"event": "100FRS", "time_ms": 63210, "event_date": "2026-03-15"},
+			},
+		}
+
+		rr := client.Post("/api/v1/times/batch", input)
+
+		assert.Equal(t, http.StatusCreated, rr.Code, "got %d: %s", rr.Code, rr.Body.String())
+
+		var response BatchResponse
+		AssertJSONBody(t, rr, &response)
+		assert.Len(t, response.Times, 2)
+	})
+
+	t.Run("batch entry rejects duplicate splits", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		_, meetID := setupSwimmerAndMeet(t, "25m")
+
+		input := map[string]interface{}{
+			"meet_id": meetID,
+			"times": []map[string]interface{}{
+				{"event": "100FRS", "time_ms": 63210, "event_date": "2026-03-15"},
+				{"event": "100FRS", "time_ms": 62000, "event_date": "2026-03-15"},
+			},
+		}
+
+		rr := client.Post("/api/v1/times/batch", input)
+
+		assert.Equal(t, http.StatusBadRequest, rr.Code, "got %d: %s", rr.Code, rr.Body.String())
+	})
+}
+
 func TestTimeFormatting(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test in short mode")

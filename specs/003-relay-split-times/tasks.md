@@ -39,7 +39,7 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T004 [US1] Write integration tests for split time creation in `backend/tests/integration/time_test.go`: test creating a split time succeeds, test base+split coexist at same meet, test duplicate split rejected (409 DUPLICATE_EVENT), test invalid split code rejected (e.g., `400FRS`), test batch entry with split events (base+split in same batch allowed, two identical splits rejected), test PUT /times/{id} rejects changing event code from base to split (e.g., 100FR to 100FRS)
+- [x] T004 [US1] Write integration tests for split time creation in `backend/tests/integration/time_test.go`: test creating a split time succeeds, test base+split coexist at same meet, test duplicate split rejected (409 DUPLICATE_EVENT), test invalid split code rejected (e.g., `400FRS`), test batch entry with split events (base+split in same batch allowed, two identical splits rejected), test PUT /times/{id} rejects changing event code from base to split (e.g., 100FR to 100FRS)
 
 ### Implementation for User Story 1
 
@@ -80,17 +80,17 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T009 [US3] Write integration tests for PB merging with splits in `backend/tests/integration/personalbest_test.go`: test split faster than base (PB = split, `is_from_split=true`), test base faster than split (PB = base, `is_from_split=false`), test only split exists (PB = split), test only base exists (PB = base, `is_from_split=false`)
+- [x] T009 [US3] Write integration tests for PB merging with splits in `backend/tests/integration/personalbest_test.go`: test split faster than base (PB = split, `is_from_split=true`), test base faster than split (PB = base, `is_from_split=false`), test only split exists (PB = split), test only base exists (PB = base, `is_from_split=false`)
 
 ### Implementation for User Story 3
 
-- [ ] T010 [US3] Add PB merge logic to `backend/internal/api/handlers/personalbest.go`: after fetching raw PBs from DB, iterate split event PBs and merge into base event PBs (keep faster time), add `is_from_split` boolean field to JSON response per data-model.md merge algorithm
-- [ ] T011 [US3] Update comparison service in `backend/internal/domain/comparison/service.go`: merge split PBs into `pbMap` before comparison loop (same merge logic as PB handler), change comparison iteration from `domain.ValidEventCodes` to `domain.IndividualEventCodes` (17 base events only), add `is_from_split` field to comparison response items
-- [ ] T012 [US3] (Optional) Add split events to standard time ordering CASE in `backend/internal/store/queries/standardtime.sql` and regenerate sqlc (`cd backend && make sqlc`). Note: standards only exist for base events, so split codes should not appear in standard_times queries. Only needed if the ordering CASE is used in a context that could include split event codes from joins. Skip if analysis confirms it is unnecessary.
-- [ ] T013 [P] [US3] Add `is_from_split` boolean field to `PersonalBest` interface in `frontend/src/types/personalbest.ts`
-- [ ] T014 [US3] Show "from relay split" indicator on PBs in `frontend/src/pages/PersonalBests.tsx` when `is_from_split` is true — small badge or text. Include accessible labeling (`aria-label` or visually hidden text) for screen readers.
-- [ ] T015 [P] [US3] Show split indicator on PB grid items in `frontend/src/components/comparison/PersonalBestGrid.tsx` when `is_from_split` is true. Include accessible labeling for screen readers.
-- [ ] T016 [US3] Update comparison display in `frontend/src/components/comparison/ComparisonTable.tsx`: add split event names to hardcoded `eventNames` map, show `is_from_split` indicator on comparison rows with accessible labeling
+- [x] T010 [US3] Add PB merge logic to `backend/internal/api/handlers/personalbest.go`: after fetching raw PBs from DB, iterate split event PBs and merge into base event PBs (keep faster time), add `is_from_split` boolean field to JSON response per data-model.md merge algorithm
+- [x] T011 [US3] Update comparison service in `backend/internal/domain/comparison/service.go`: merge split PBs into `pbMap` before comparison loop (same merge logic as PB handler), change comparison iteration from `domain.ValidEventCodes` to `domain.IndividualEventCodes` (17 base events only), add `is_from_split` field to comparison response items
+- [x] T012 [US3] (Optional/Skipped) Add split events to standard time ordering CASE in `backend/internal/store/queries/standardtime.sql` and regenerate sqlc (`cd backend && make sqlc`). Note: standards only exist for base events, so split codes should not appear in standard_times queries. Only needed if the ordering CASE is used in a context that could include split event codes from joins. Skip if analysis confirms it is unnecessary.
+- [x] T013 [P] [US3] Add `is_from_split` boolean field to `PersonalBest` interface in `frontend/src/types/personalbest.ts`
+- [x] T014 [US3] Show "from relay split" indicator on PBs in `frontend/src/pages/PersonalBests.tsx` when `is_from_split` is true — small badge or text. Include accessible labeling (`aria-label` or visually hidden text) for screen readers.
+- [x] T015 [P] [US3] Show split indicator on PB grid items in `frontend/src/components/comparison/PersonalBestGrid.tsx` when `is_from_split` is true. Include accessible labeling for screen readers.
+- [x] T016 [US3] Update comparison display in `frontend/src/components/comparison/ComparisonTable.tsx`: add split event names to hardcoded `eventNames` map, show `is_from_split` indicator on comparison rows with accessible labeling
 
 **Checkpoint**: PBs correctly reflect fastest time across base and split events. Comparisons include split times. Split origin is indicated in all views.
 
@@ -127,8 +127,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T022 [US5] Replace hardcoded valid events map with `domain.IsValidEvent()` call in `backend/internal/domain/importer/service.go` (around lines 246-252) to accept split event codes on import. This is a DRY fix — the hardcoded map duplicates `ValidEventCodes`.
-- [ ] T023 [US5] Write integration test verifying export includes split event codes and import restores them correctly in `backend/tests/integration/` — test export with splits, test import with splits, test import of old export without splits (backward compat)
+- [x] T022 [US5] Replace hardcoded valid events map with `domain.IsValidEvent()` call in `backend/internal/domain/importer/service.go` (around lines 246-252) to accept split event codes on import. This is a DRY fix — the hardcoded map duplicates `ValidEventCodes`.
+- [x] T023 [US5] Write integration test verifying export includes split event codes and import restores them correctly in `backend/tests/integration/` — test export with splits, test import with splits, test import of old export without splits (backward compat)
 
 **Checkpoint**: Data portability works with split times. Old exports without splits import normally.
 

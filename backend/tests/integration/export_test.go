@@ -140,6 +140,288 @@ func TestExportAPI(t *testing.T) {
 		assert.Empty(t, exportData.Standards)
 	})
 
+	t.Run("GET /data/export includes split event codes", func(t *testing.T) {
+		testDB.CleanTables(t)
+
+		// Create swimmer
+		swimmerInput := SwimmerInput{
+			Name:      "Split Export Swimmer",
+			BirthDate: "2012-06-01",
+			Gender:    "female",
+		}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		// Create a meet
+		meetInput := MeetInput{
+			Name:       "Split Export Meet",
+			City:       "Toronto",
+			Country:    "Canada",
+			StartDate:  "2026-02-01",
+			EndDate:    "2026-02-01",
+			CourseType: "25m",
+		}
+		rr = client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var meet Meet
+		AssertJSONBody(t, rr, &meet)
+
+		// Add a regular time and a split time
+		regularTime := TimeInput{
+			MeetID:    meet.ID,
+			Event:     "100FR",
+			TimeMS:    62000,
+			EventDate: "2026-02-01",
+			Notes:     "Regular event",
+		}
+		rr = client.Post("/api/v1/times", regularTime)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		splitTime := TimeInput{
+			MeetID:    meet.ID,
+			Event:     "100FRS",
+			TimeMS:    61500,
+			EventDate: "2026-02-01",
+			Notes:     "Relay leadoff split",
+		}
+		rr = client.Post("/api/v1/times", splitTime)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Export data
+		rr = client.Get("/api/v1/data/export")
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		var exportData ExportData
+		AssertJSONBody(t, rr, &exportData)
+
+		// Verify meet has both times
+		require.Len(t, exportData.Meets, 1)
+		require.Len(t, exportData.Meets[0].Times, 2)
+
+		// Find the split time in the export
+		var foundSplit bool
+		var foundRegular bool
+		for _, te := range exportData.Meets[0].Times {
+			if te.Event == "100FRS" {
+				foundSplit = true
+				assert.Equal(t, "1:01.50", te.Time)
+				assert.Equal(t, "Relay leadoff split", te.Notes)
+			}
+			if te.Event == "100FR" {
+				foundRegular = true
+				assert.Equal(t, "1:02.00", te.Time)
+				assert.Equal(t, "Regular event", te.Notes)
+			}
+		}
+		assert.True(t, foundSplit, "export should contain split event code 100FRS")
+		assert.True(t, foundRegular, "export should contain regular event code 100FR")
+	})
+
+	t.Run("Import restores split times correctly", func(t *testing.T) {
+		testDB.CleanTables(t)
+
+		// Create swimmer first
+		swimmerInput := SwimmerInput{
+			Name:      "Split Import Swimmer",
+			BirthDate: "2012-07-01",
+			Gender:    "male",
+		}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		// Import data with split event codes
+		importReq := ImportRequest{
+			Data: ImportData{
+				Meets: []MeetExport{
+					{
+						Name:       "Split Import Meet",
+						City:       "Vancouver",
+						Country:    "Canada",
+						StartDate:  "2026-02-10",
+						EndDate:    "2026-02-10",
+						CourseType: "50m",
+						Times: []TimeExport{
+							{Event: "50FR", Time: "28.50", EventDate: "2026-02-10", Notes: "Individual"},
+							{Event: "50FRS", Time: "28.10", EventDate: "2026-02-10", Notes: "Relay split"},
+							{Event: "100BKS", Time: "1:05.00", EventDate: "2026-02-10", Notes: "Backstroke relay split"},
+						},
+					},
+				},
+			},
+			Confirmed: true,
+		}
+
+		rr = client.Post("/api/v1/data/import", importReq)
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		// Export and verify split times were stored correctly
+		rr = client.Get("/api/v1/data/export")
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		var exportData ExportData
+		AssertJSONBody(t, rr, &exportData)
+
+		require.Len(t, exportData.Meets, 1)
+		require.Len(t, exportData.Meets[0].Times, 3)
+
+		// Verify all events are present including splits
+		eventSet := make(map[string]bool)
+		for _, te := range exportData.Meets[0].Times {
+			eventSet[te.Event] = true
+		}
+		assert.True(t, eventSet["50FR"], "should contain 50FR")
+		assert.True(t, eventSet["50FRS"], "should contain 50FRS")
+		assert.True(t, eventSet["100BKS"], "should contain 100BKS")
+	})
+
+	t.Run("Import old data without split codes still works (backward compatibility)", func(t *testing.T) {
+		testDB.CleanTables(t)
+
+		// Create swimmer first
+		swimmerInput := SwimmerInput{
+			Name:      "Compat Test Swimmer",
+			BirthDate: "2011-03-15",
+			Gender:    "female",
+		}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		// Import data with only traditional event codes (no splits)
+		importReq := ImportRequest{
+			Data: ImportData{
+				Meets: []MeetExport{
+					{
+						Name:       "Old Format Meet",
+						City:       "Montreal",
+						Country:    "Canada",
+						StartDate:  "2025-06-15",
+						EndDate:    "2025-06-16",
+						CourseType: "50m",
+						Times: []TimeExport{
+							{Event: "50FR", Time: "30.50", EventDate: "2025-06-15"},
+							{Event: "200IM", Time: "2:45.00", EventDate: "2025-06-16"},
+							{Event: "100BK", Time: "1:10.00", EventDate: "2025-06-15"},
+						},
+					},
+				},
+			},
+			Confirmed: true,
+		}
+
+		rr = client.Post("/api/v1/data/import", importReq)
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		// Verify import succeeded
+		var importResult struct {
+			Success      bool `json:"success"`
+			MeetsCreated int  `json:"meets_created"`
+			TimesCreated int  `json:"times_created"`
+		}
+		AssertJSONBody(t, rr, &importResult)
+
+		assert.True(t, importResult.Success)
+		assert.Equal(t, 1, importResult.MeetsCreated)
+		assert.Equal(t, 3, importResult.TimesCreated)
+
+		// Verify data is accessible via export
+		rr = client.Get("/api/v1/data/export")
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		var exportData ExportData
+		AssertJSONBody(t, rr, &exportData)
+
+		require.Len(t, exportData.Meets, 1)
+		require.Len(t, exportData.Meets[0].Times, 3)
+	})
+
+	t.Run("Export and import round-trip preserves split times", func(t *testing.T) {
+		testDB.CleanTables(t)
+
+		// Create swimmer with meet containing both regular and split times
+		swimmerInput := SwimmerInput{
+			Name:      "Roundtrip Split Swimmer",
+			BirthDate: "2012-09-01",
+			Gender:    "male",
+		}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		meetInput := MeetInput{
+			Name:       "Roundtrip Split Meet",
+			City:       "Ottawa",
+			Country:    "Canada",
+			StartDate:  "2026-03-01",
+			EndDate:    "2026-03-02",
+			CourseType: "25m",
+		}
+		rr = client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var meet Meet
+		AssertJSONBody(t, rr, &meet)
+
+		// Add regular and split times
+		timesToAdd := []TimeInput{
+			{MeetID: meet.ID, Event: "50FR", TimeMS: 28500, EventDate: "2026-03-01", Notes: "Individual"},
+			{MeetID: meet.ID, Event: "50FRS", TimeMS: 28100, EventDate: "2026-03-01", Notes: "Relay split"},
+			{MeetID: meet.ID, Event: "200FR", TimeMS: 130000, EventDate: "2026-03-02"},
+			{MeetID: meet.ID, Event: "200FRS", TimeMS: 129500, EventDate: "2026-03-02", Notes: "Relay 200 split"},
+		}
+		for _, ti := range timesToAdd {
+			rr = client.Post("/api/v1/times", ti)
+			require.Equal(t, http.StatusCreated, rr.Code)
+		}
+
+		// Export
+		rr = client.Get("/api/v1/data/export")
+		require.Equal(t, http.StatusOK, rr.Code)
+		var exportData ExportData
+		AssertJSONBody(t, rr, &exportData)
+
+		require.Len(t, exportData.Meets, 1)
+		require.Len(t, exportData.Meets[0].Times, 4)
+
+		// Clean and re-import
+		testDB.CleanTables(t)
+
+		importReq := struct {
+			Data      ExportData `json:"data"`
+			Confirmed bool       `json:"confirmed"`
+		}{
+			Data:      exportData,
+			Confirmed: true,
+		}
+		rr = client.Post("/api/v1/data/import", importReq)
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		// Export again and compare
+		rr = client.Get("/api/v1/data/export")
+		require.Equal(t, http.StatusOK, rr.Code)
+		var secondExport ExportData
+		AssertJSONBody(t, rr, &secondExport)
+
+		require.Len(t, secondExport.Meets, 1)
+		require.Len(t, secondExport.Meets[0].Times, len(exportData.Meets[0].Times))
+
+		// Build event maps from both exports for comparison
+		firstEvents := make(map[string]TimeExport)
+		for _, te := range exportData.Meets[0].Times {
+			firstEvents[te.Event] = te
+		}
+		secondEvents := make(map[string]TimeExport)
+		for _, te := range secondExport.Meets[0].Times {
+			secondEvents[te.Event] = te
+		}
+
+		// Verify all events are preserved including splits
+		for event, firstTime := range firstEvents {
+			secondTime, ok := secondEvents[event]
+			assert.True(t, ok, "event %s should be present in re-exported data", event)
+			assert.Equal(t, firstTime.Time, secondTime.Time, "time mismatch for event %s", event)
+			assert.Equal(t, firstTime.EventDate, secondTime.EventDate, "event_date mismatch for event %s", event)
+			assert.Equal(t, firstTime.Notes, secondTime.Notes, "notes mismatch for event %s", event)
+		}
+	})
+
 	t.Run("Export and import round-trip preserves data integrity", func(t *testing.T) {
 		// Setup: Create a fresh swimmer with meet, times, and custom standard
 		testDB.CleanTables(t)

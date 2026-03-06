@@ -57,6 +57,7 @@ type EventComparison struct {
 	AgeGroup              string           `json:"age_group"`
 	MeetName              *string          `json:"meet_name"`
 	Date                  *string          `json:"date"`
+	IsFromSplit           bool             `json:"is_from_split"`
 
 	// Adjacent age groups
 	PrevAgeGroup              *string `json:"prev_age_group,omitempty"`
@@ -135,6 +136,19 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 		pbMap[pb.Event] = pb
 	}
 
+	// Merge split PBs into base event PBs
+	for event, pb := range pbMap {
+		ec := domain.EventCode(event)
+		if ec.IsSplit() {
+			baseEvent := string(ec.BaseEvent())
+			basePB, hasBase := pbMap[baseEvent]
+			if !hasBase || pb.TimeMs < basePB.TimeMs {
+				pbMap[baseEvent] = pb
+			}
+			delete(pbMap, event)
+		}
+	}
+
 	// Determine threshold
 	threshold := DefaultThresholdPercent
 	if thresholdPercent != nil {
@@ -145,8 +159,8 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 	currentAge := domain.AgeAtDate(swimmer.BirthDate.Time, time.Now())
 	currentAgeGroup := string(domain.AgeGroupFromAge(currentAge))
 
-	// Build comparisons for all events
-	allEvents := domain.ValidEventCodes
+	// Build comparisons for all events (only base events, not splits)
+	allEvents := domain.IndividualEventCodes
 	comparisons := make([]EventComparison, 0, len(allEvents))
 	summary := ComparisonSummary{}
 
@@ -159,6 +173,9 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 		pb, hasPB := pbMap[string(event)]
 
 		if hasPB {
+			isFromSplit := domain.EventCode(pb.Event).IsSplit()
+			comp.IsFromSplit = isFromSplit
+
 			swimmerTime := int(pb.TimeMs)
 			swimmerTimeFormatted := domain.FormatTime(swimmerTime)
 			comp.SwimmerTimeMS = &swimmerTime
