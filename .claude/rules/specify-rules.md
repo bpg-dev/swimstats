@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-03-06
 
 ## Active Technologies
+- Go 1.24 (backend), TypeScript 5.9 + React 19 (frontend) + chi v5, sqlc, pgx v5, React Query v5, Recharts v3, TailwindCSS 4 (003-relay-split-times)
+- PostgreSQL 18 — no schema changes required (003-relay-split-times)
 
 - **Backend**: Go 1.26, chi router, sqlc for type-safe SQL
 - **Frontend**: React 19, TypeScript 5.x, Vite 7, TailwindCSS, React Query
@@ -158,21 +160,10 @@ Router defined in `backend/internal/api/router.go`.
 - React Query for client-side caching and mutations
 
 ## Recent Changes
+- 003-relay-split-times: Added Go 1.24 (backend), TypeScript 5.9 + React 19 (frontend) + chi v5, sqlc, pgx v5, React Query v5, Recharts v3, TailwindCSS 4
 
 - 2026-01-26: Export format now includes `format_version` field and swimmer's `threshold_percent`
 - 2026-01-26: Added schema evolution checklist to Constitution (see Data Portability Requirements)
-- 2026-01-25: Standards page now filters by course type (global filter) and gender (defaults to swimmer's gender)
-- 2026-01-25: JSON import form includes collapsible format reference with example
-- 2026-01-24: Embedded database migrations - `./server migrate` CLI subcommand, no external tools needed
-- 2026-01-23: Added release-please for automated releases and versioned Docker images
-- 2026-01-21: All phases complete - project feature-complete
-- 2026-01-21: Completed Phase 8 (data export/import, accessibility, documentation)
-- 2026-01-21: Completed Phase 7 (progress graphs with recharts)
-- 2026-01-19: Completed Phase 6 (US4 + US6 - Compare Times Against Standards with standing dashboard)
-- 2026-01-19: Integrated speckit from .cursor to .claude
-- 2026-01-17: Completed Phase 5 (US3 - Time Standards with JSON import)
-- 2026-01-17: Added multi-day meet support and event dates
-- 2026-01-17: Added one-event-per-meet validation
 
 ## Quality Gates (CI Blocking)
 
