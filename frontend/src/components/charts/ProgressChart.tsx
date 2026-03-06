@@ -43,27 +43,44 @@ const CustomDot = (props: CustomDotProps) => {
     return null;
   }
 
-  if (payload?.is_pb) {
+  const isSplit = payload?.is_split;
+  const isPB = payload?.is_pb;
+
+  // Split times always use diamond shape; color depends on PB status
+  if (isSplit) {
+    const size = isPB ? 7 : 5;
+    const fill = isPB ? '#10b981' : '#8b5cf6';
+    return (
+      <g>
+        <polygon
+          points={`${cx},${cy - size} ${cx + size},${cy} ${cx},${cy + size} ${cx - size},${cy}`}
+          fill={fill}
+          stroke="#fff"
+          strokeWidth={1.5}
+        />
+        {isPB && (
+          <text
+            x={cx}
+            y={cy - size - 4}
+            textAnchor="middle"
+            fontSize={12}
+            fill="#10b981"
+            fontWeight="bold"
+          >
+            PB
+          </text>
+        )}
+      </g>
+    );
+  }
+
+  if (isPB) {
     return (
       <g>
         <circle cx={cx} cy={cy} r={6} fill="#10b981" stroke="#fff" strokeWidth={2} />
         <text x={cx} y={cy - 12} textAnchor="middle" fontSize={12} fill="#10b981" fontWeight="bold">
           PB
         </text>
-      </g>
-    );
-  }
-
-  // Split times use a diamond shape with a different color
-  if (payload?.is_split) {
-    return (
-      <g>
-        <polygon
-          points={`${cx},${cy - 5} ${cx + 5},${cy} ${cx},${cy + 5} ${cx - 5},${cy}`}
-          fill="#8b5cf6"
-          stroke="#fff"
-          strokeWidth={1.5}
-        />
       </g>
     );
   }
@@ -184,11 +201,35 @@ const ReferenceLabel = (props: ReferenceLabelProps) => {
 
 export function ProgressChart({ data, standardTime, standardName }: ProgressChartProps) {
   // Transform data to include numeric timestamps for proper time-based scaling
+  // Offset same-date points so they can be selected independently
   const chartData: ChartDataPoint[] = useMemo(() => {
-    return data.map((point) => ({
+    const points = data.map((point) => ({
       ...point,
       timestamp: new Date(point.date).getTime(),
     }));
+
+    // Detect same-date groups and apply symmetric offsets
+    const dateGroups = new Map<number, number[]>();
+    points.forEach((point, idx) => {
+      const group = dateGroups.get(point.timestamp) || [];
+      group.push(idx);
+      dateGroups.set(point.timestamp, group);
+    });
+
+    const OFFSET_MS = 8 * 60 * 60 * 1000; // 8 hours
+    dateGroups.forEach((indices) => {
+      if (indices.length > 1) {
+        const half = (indices.length - 1) / 2;
+        indices.forEach((idx, i) => {
+          points[idx] = {
+            ...points[idx],
+            timestamp: points[idx].timestamp + (i - half) * OFFSET_MS,
+          };
+        });
+      }
+    });
+
+    return points;
   }, [data]);
 
   if (!chartData || chartData.length === 0) {
