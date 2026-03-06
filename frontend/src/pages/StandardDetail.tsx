@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   useStandard,
@@ -9,6 +9,7 @@ import {
 import { StandardForm, StandardTimesEditor } from '@/components/standards';
 import { StandardInput, StandardTimeInput, AgeGroup } from '@/types/standard';
 import { useAuthStore } from '@/stores/authStore';
+import { useCourseType } from '@/stores/courseFilterStore';
 import {
   Card,
   CardContent,
@@ -53,8 +54,17 @@ export function StandardDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const canWrite = useAuthStore((state) => state.canWrite);
+  const courseType = useCourseType();
+  const initialCourseType = useRef(courseType);
   const [mode, setMode] = useState<ViewMode>('view');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // Navigate back to standards list when course type changes
+  useEffect(() => {
+    if (courseType !== initialCourseType.current) {
+      navigate('/standards');
+    }
+  }, [courseType, navigate]);
 
   const { data: standard, isLoading, error } = useStandard(id || '');
   const updateStandard = useUpdateStandard();

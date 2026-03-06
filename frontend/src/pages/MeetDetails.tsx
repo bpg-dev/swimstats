@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, Button, Loading, ErrorBanner } from '@/components/ui';
 import { MeetTimesList } from '@/components/meets/MeetTimesList';
+import { MeetForm } from '@/components/meets/MeetForm';
 import { useMeet, useDeleteMeet } from '@/hooks/useMeets';
 import { useAuthStore } from '@/stores/authStore';
 import { formatDateRange } from '@/utils/timeFormat';
@@ -14,6 +16,7 @@ export function MeetDetails() {
   const canWrite = useAuthStore((state) => state.canWrite);
   const { data: meet, isLoading, error, refetch } = useMeet(id || '');
   const deleteMutation = useDeleteMeet();
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleDelete = async () => {
     if (
@@ -42,6 +45,18 @@ export function MeetDetails() {
             ← Back to Meets
           </Link>
         </div>
+      </div>
+    );
+  }
+
+  if (isEditing) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <MeetForm
+          initialData={meet}
+          onSuccess={() => setIsEditing(false)}
+          onCancel={() => setIsEditing(false)}
+        />
       </div>
     );
   }
@@ -150,7 +165,7 @@ export function MeetDetails() {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => navigate(`/meets?id=${meet.id}`)}
+                onClick={() => setIsEditing(true)}
                 disabled={!canWrite()}
               >
                 Edit
