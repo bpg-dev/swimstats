@@ -129,8 +129,18 @@ var SplitEventCodes = []EventCode{
 	Event50BKS, Event100BKS,
 }
 
-// ValidEventCodes contains all valid event codes (individual + split).
-var ValidEventCodes = append(append([]EventCode{}, IndividualEventCodes...), SplitEventCodes...)
+// validEventCodes is the internal set for O(1) event code validation.
+var validEventCodes map[EventCode]struct{}
+
+func init() {
+	validEventCodes = make(map[EventCode]struct{}, len(IndividualEventCodes)+len(SplitEventCodes))
+	for _, ec := range IndividualEventCodes {
+		validEventCodes[ec] = struct{}{}
+	}
+	for _, ec := range SplitEventCodes {
+		validEventCodes[ec] = struct{}{}
+	}
+}
 
 // splitToBase maps split event codes to their base events.
 var splitToBase = map[EventCode]EventCode{
@@ -173,12 +183,8 @@ func (e EventCode) SplitVariant() (EventCode, bool) {
 
 // IsValid checks if the event code is valid.
 func (e EventCode) IsValid() bool {
-	for _, valid := range ValidEventCodes {
-		if e == valid {
-			return true
-		}
-	}
-	return false
+	_, ok := validEventCodes[e]
+	return ok
 }
 
 // String returns the string representation.

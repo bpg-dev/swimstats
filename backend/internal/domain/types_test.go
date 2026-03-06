@@ -141,17 +141,25 @@ func TestSplitEventCodes(t *testing.T) {
 }
 
 func TestValidEventCodes_IncludesSplits(t *testing.T) {
-	// Should contain all 22 event codes (17 individual + 5 split)
-	assert.Len(t, ValidEventCodes, 22)
+	// Build the combined list locally for assertions
+	allCodes := append(append([]EventCode{}, IndividualEventCodes...), SplitEventCodes...)
 
-	// Check all split codes are present
+	// Should contain all 22 event codes (17 individual + 5 split)
+	assert.Len(t, allCodes, 22)
+
+	// Check all split codes are valid
 	for _, split := range SplitEventCodes {
-		assert.Contains(t, ValidEventCodes, split)
+		assert.True(t, split.IsValid(), "split event %s should be valid", split)
 	}
 
-	// Check all individual codes are present
+	// Check all individual codes are valid
 	for _, ind := range IndividualEventCodes {
-		assert.Contains(t, ValidEventCodes, ind)
+		assert.True(t, ind.IsValid(), "individual event %s should be valid", ind)
+	}
+
+	// Verify the map-based validation covers all codes
+	for _, ec := range allCodes {
+		assert.True(t, ec.IsValid(), "event code %s should be valid", ec)
 	}
 }
 

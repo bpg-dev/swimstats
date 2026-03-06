@@ -98,7 +98,7 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
                     {isSplitEvent(time.event) && (
                       <span
                         className="ml-1.5 inline-flex items-center rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700"
-                        aria-label="from relay split"
+                        aria-hidden="true"
                       >
                         Split
                       </span>

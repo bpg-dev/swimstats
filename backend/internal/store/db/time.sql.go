@@ -312,7 +312,7 @@ FROM times t
 JOIN meets m ON m.id = t.meet_id
 WHERE t.swimmer_id = $1
   AND m.course_type = $2
-  AND t.event IN ($3, $4)
+  AND (t.event = $3 OR ($4 <> '' AND t.event = $4))
   AND ($5::date IS NULL OR COALESCE(t.event_date, m.start_date) >= $5)
   AND ($6::date IS NULL OR COALESCE(t.event_date, m.start_date) <= $6)
 ORDER BY COALESCE(t.event_date, m.start_date) ASC, t.time_ms ASC
@@ -322,7 +322,7 @@ type GetProgressDataParams struct {
 	SwimmerID  uuid.UUID   `json:"swimmer_id"`
 	CourseType string      `json:"course_type"`
 	Event      string      `json:"event"`
-	Event_2    string      `json:"event_2"`
+	Column4    interface{} `json:"column_4"`
 	Column5    pgtype.Date `json:"column_5"`
 	Column6    pgtype.Date `json:"column_6"`
 }
@@ -345,7 +345,7 @@ func (q *Queries) GetProgressData(ctx context.Context, arg GetProgressDataParams
 		arg.SwimmerID,
 		arg.CourseType,
 		arg.Event,
-		arg.Event_2,
+		arg.Column4,
 		arg.Column5,
 		arg.Column6,
 	)

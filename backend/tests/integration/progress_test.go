@@ -317,6 +317,11 @@ func TestProgressAPIWithSplits(t *testing.T) {
 		assert.True(t, progressData.DataPoints[1].IsPersonalBest)  // 63500 split - PB
 	})
 
+	t.Run("GET /progress/{event} rejects split event codes", func(t *testing.T) {
+		rr := client.Get("/api/v1/progress/100FRS?course_type=25m")
+		assert.Equal(t, http.StatusBadRequest, rr.Code)
+	})
+
 	t.Run("is_split field is present and correct on data points", func(t *testing.T) {
 		rr := client.Get("/api/v1/progress/100FR?course_type=25m")
 		require.Equal(t, http.StatusOK, rr.Code)

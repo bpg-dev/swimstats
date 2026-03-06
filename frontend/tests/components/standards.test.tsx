@@ -136,10 +136,9 @@ describe('StandardForm', () => {
     const onSubmit = vi.fn();
     const onCancel = vi.fn();
 
-    render(
-      <StandardForm standard={mockStandard} onSubmit={onSubmit} onCancel={onCancel} />,
-      { wrapper: createWrapper() }
-    );
+    render(<StandardForm standard={mockStandard} onSubmit={onSubmit} onCancel={onCancel} />, {
+      wrapper: createWrapper(),
+    });
 
     expect(screen.getByRole('button', { name: /update standard/i })).toBeInTheDocument();
   });
@@ -148,10 +147,9 @@ describe('StandardForm', () => {
     const onSubmit = vi.fn();
     const onCancel = vi.fn();
 
-    render(
-      <StandardForm standard={mockStandard} onSubmit={onSubmit} onCancel={onCancel} />,
-      { wrapper: createWrapper() }
-    );
+    render(<StandardForm standard={mockStandard} onSubmit={onSubmit} onCancel={onCancel} />, {
+      wrapper: createWrapper(),
+    });
 
     expect(screen.getByDisplayValue('Test Standard')).toBeInTheDocument();
   });
@@ -162,10 +160,9 @@ describe('StandardTimesEditor', () => {
     const onSave = vi.fn();
     const onCancel = vi.fn();
 
-    render(
-      <StandardTimesEditor times={[]} onSave={onSave} onCancel={onCancel} />,
-      { wrapper: createWrapper() }
-    );
+    render(<StandardTimesEditor times={[]} onSave={onSave} onCancel={onCancel} />, {
+      wrapper: createWrapper(),
+    });
 
     // Check for some event names
     expect(screen.getByText('50 Free')).toBeInTheDocument();
@@ -178,7 +175,11 @@ describe('StandardTimesEditor', () => {
     const onCancel = vi.fn();
 
     render(
-      <StandardTimesEditor times={mockStandardWithTimes.times} onSave={onSave} onCancel={onCancel} />,
+      <StandardTimesEditor
+        times={mockStandardWithTimes.times}
+        onSave={onSave}
+        onCancel={onCancel}
+      />,
       { wrapper: createWrapper() }
     );
 
@@ -192,10 +193,9 @@ describe('StandardTimesEditor', () => {
     const onSave = vi.fn();
     const onCancel = vi.fn();
 
-    render(
-      <StandardTimesEditor times={[]} onSave={onSave} onCancel={onCancel} />,
-      { wrapper: createWrapper() }
-    );
+    render(<StandardTimesEditor times={[]} onSave={onSave} onCancel={onCancel} />, {
+      wrapper: createWrapper(),
+    });
 
     // Find and fill a time input (50 Free, 13-14)
     const inputs = screen.getAllByPlaceholderText('--');
@@ -221,10 +221,9 @@ describe('StandardTimesEditor', () => {
     const onSave = vi.fn();
     const onCancel = vi.fn();
 
-    render(
-      <StandardTimesEditor times={[]} onSave={onSave} onCancel={onCancel} />,
-      { wrapper: createWrapper() }
-    );
+    render(<StandardTimesEditor times={[]} onSave={onSave} onCancel={onCancel} />, {
+      wrapper: createWrapper(),
+    });
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
     await user.click(cancelButton);

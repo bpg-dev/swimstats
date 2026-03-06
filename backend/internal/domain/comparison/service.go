@@ -136,17 +136,21 @@ func (s *ComparisonService) Compare(ctx context.Context, swimmerID, standardID u
 		pbMap[pb.Event] = pb
 	}
 
-	// Merge split PBs into base event PBs
-	for event, pb := range pbMap {
-		ec := domain.EventCode(event)
-		if ec.IsSplit() {
-			baseEvent := string(ec.BaseEvent())
-			basePB, hasBase := pbMap[baseEvent]
-			if !hasBase || pb.TimeMs < basePB.TimeMs {
-				pbMap[baseEvent] = pb
-			}
-			delete(pbMap, event)
+	// Merge split PBs into base event PBs (collect first, then modify to avoid map mutation during iteration)
+	var splitEvents []string
+	for event := range pbMap {
+		if domain.EventCode(event).IsSplit() {
+			splitEvents = append(splitEvents, event)
 		}
+	}
+	for _, event := range splitEvents {
+		pb := pbMap[event]
+		baseEvent := string(domain.EventCode(event).BaseEvent())
+		basePB, hasBase := pbMap[baseEvent]
+		if !hasBase || pb.TimeMs < basePB.TimeMs {
+			pbMap[baseEvent] = pb
+		}
+		delete(pbMap, event)
 	}
 
 	// Determine threshold

@@ -146,7 +146,9 @@ describe('ComparisonTable', () => {
   });
 
   it('shows events without times when showNoTime is true', () => {
-    render(<ComparisonTable comparisons={mockComparisons} showNoTime />, { wrapper: createWrapper() });
+    render(<ComparisonTable comparisons={mockComparisons} showNoTime />, {
+      wrapper: createWrapper(),
+    });
 
     expect(screen.getByText('50m Back')).toBeInTheDocument();
   });

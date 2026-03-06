@@ -140,19 +140,13 @@ describe('MeetForm', () => {
   });
 
   it('shows save changes button when editing', () => {
-    render(
-      <MeetForm initialData={mockMeet} />,
-      { wrapper: createWrapper() }
-    );
+    render(<MeetForm initialData={mockMeet} />, { wrapper: createWrapper() });
 
     expect(screen.getByRole('button', { name: /save changes/i })).toBeInTheDocument();
   });
 
   it('pre-fills form when editing existing meet', () => {
-    render(
-      <MeetForm initialData={mockMeet} />,
-      { wrapper: createWrapper() }
-    );
+    render(<MeetForm initialData={mockMeet} />, { wrapper: createWrapper() });
 
     expect(screen.getByDisplayValue('Test Championship')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Toronto')).toBeInTheDocument();

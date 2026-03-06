@@ -32,7 +32,7 @@ describe('EventFilter', () => {
   it('renders with event options (no "All Events" option)', () => {
     const onChange = vi.fn();
     render(<EventFilter value="50FR" onChange={onChange} />);
-    
+
     expect(screen.getByRole('combobox')).toBeInTheDocument();
     // Should have event options, not "All Events"
     expect(screen.getByText('50m Freestyle')).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe('EventFilter', () => {
   it('renders stroke groups', () => {
     const onChange = vi.fn();
     render(<EventFilter value="" onChange={onChange} />);
-    
+
     expect(screen.getByRole('group', { name: 'Freestyle' })).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'Backstroke' })).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'Breaststroke' })).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('EventFilter', () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(<EventFilter value="" onChange={onChange} />);
-    
+
     await user.selectOptions(screen.getByRole('combobox'), '100FR');
     expect(onChange).toHaveBeenCalledWith('100FR');
   });
@@ -97,7 +97,7 @@ describe('SortToggle', () => {
   it('renders both sort options', () => {
     const onChange = vi.fn();
     render(<SortToggle value="date" onChange={onChange} />);
-    
+
     expect(screen.getByText(/Newest/)).toBeInTheDocument();
     expect(screen.getByText(/Fastest/)).toBeInTheDocument();
   });
@@ -105,10 +105,10 @@ describe('SortToggle', () => {
   it('highlights the selected option', () => {
     const onChange = vi.fn();
     const { rerender } = render(<SortToggle value="date" onChange={onChange} />);
-    
+
     const newestButton = screen.getByText(/Newest/).closest('button');
     expect(newestButton).toHaveClass('bg-white');
-    
+
     rerender(<SortToggle value="time" onChange={onChange} />);
     const fastestButton = screen.getByText(/Fastest/).closest('button');
     expect(fastestButton).toHaveClass('bg-white');
@@ -118,7 +118,7 @@ describe('SortToggle', () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(<SortToggle value="date" onChange={onChange} />);
-    
+
     await user.click(screen.getByText(/Fastest/));
     expect(onChange).toHaveBeenCalledWith('time');
   });
@@ -138,7 +138,8 @@ describe('AllTimesList', () => {
         name: 'Winter Champs',
         city: 'Vancouver',
         country: 'Canada',
-        date: '2026-01-15',
+        start_date: '2026-01-15',
+        end_date: '2026-01-15',
         course_type: '25m',
       },
     },
@@ -153,7 +154,8 @@ describe('AllTimesList', () => {
         name: 'Fall Classic',
         city: 'Calgary',
         country: 'Canada',
-        date: '2025-10-20',
+        start_date: '2025-10-20',
+        end_date: '2025-10-20',
         course_type: '25m',
       },
     },
@@ -169,7 +171,8 @@ describe('AllTimesList', () => {
         name: 'Spring Meet',
         city: 'Toronto',
         country: 'Canada',
-        date: '2025-05-10',
+        start_date: '2025-05-10',
+        end_date: '2025-05-10',
         course_type: '25m',
       },
     },
@@ -177,13 +180,13 @@ describe('AllTimesList', () => {
 
   it('renders empty state when no times', () => {
     renderWithProviders(<AllTimesList times={[]} sortBy="date" />);
-    
+
     expect(screen.getByText(/No times recorded yet/)).toBeInTheDocument();
   });
 
   it('renders times with meet info', () => {
     renderWithProviders(<AllTimesList times={mockTimes} sortBy="date" />);
-    
+
     expect(screen.getByText('1:02.45')).toBeInTheDocument();
     expect(screen.getByText('1:03.12')).toBeInTheDocument();
     expect(screen.getByText('1:01.50')).toBeInTheDocument();
@@ -193,17 +196,15 @@ describe('AllTimesList', () => {
   });
 
   it('highlights PB time with badge', () => {
-    renderWithProviders(
-      <AllTimesList times={mockTimes} pbTimeId="3" sortBy="date" />
-    );
-    
+    renderWithProviders(<AllTimesList times={mockTimes} pbTimeId="3" sortBy="date" />);
+
     // PB badge should appear (component uses "PB", not "PB!")
     expect(screen.getByText('PB')).toBeInTheDocument();
   });
 
   it('sorts by date (newest first) when sortBy is date', () => {
     renderWithProviders(<AllTimesList times={mockTimes} sortBy="date" />);
-    
+
     const timeCards = screen.getAllByText(/1:0\d\.\d{2}/);
     // Newest date is 2026-01-15 (time: 1:02.45)
     expect(timeCards[0]).toHaveTextContent('1:02.45');
@@ -211,7 +212,7 @@ describe('AllTimesList', () => {
 
   it('sorts by time (fastest first) when sortBy is time', () => {
     renderWithProviders(<AllTimesList times={mockTimes} sortBy="time" />);
-    
+
     const timeCards = screen.getAllByText(/1:0\d\.\d{2}/);
     // Fastest is 1:01.50
     expect(timeCards[0]).toHaveTextContent('1:01.50');
@@ -219,7 +220,7 @@ describe('AllTimesList', () => {
 
   it('shows rank badges when sorting by time', () => {
     renderWithProviders(<AllTimesList times={mockTimes} sortBy="time" />);
-    
+
     // Ranks should appear
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('2')).toBeInTheDocument();
@@ -259,7 +260,8 @@ describe('AllTimesList', () => {
           name: 'Winter Champs',
           city: 'Vancouver',
           country: 'Canada',
-          date: '2026-01-15',
+          start_date: '2026-01-15',
+          end_date: '2026-01-15',
           course_type: '25m',
         },
       },
@@ -274,7 +276,8 @@ describe('AllTimesList', () => {
           name: 'Winter Champs',
           city: 'Vancouver',
           country: 'Canada',
-          date: '2026-01-15',
+          start_date: '2026-01-15',
+          end_date: '2026-01-15',
           course_type: '25m',
         },
       },
@@ -286,10 +289,10 @@ describe('AllTimesList', () => {
     const freestyleElements = screen.getAllByText('100m Freestyle');
     expect(freestyleElements).toHaveLength(2); // both rows show "100m Freestyle"
 
-    // Split badge appears for the split time
+    // Split badge appears for the split time and is aria-hidden
     const splitBadge = screen.getByText('Split');
     expect(splitBadge).toBeInTheDocument();
-    expect(splitBadge).toHaveAttribute('aria-label', 'from relay split');
+    expect(splitBadge).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('does not display Split badge for regular event times', () => {

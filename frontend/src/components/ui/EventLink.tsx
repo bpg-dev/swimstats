@@ -30,13 +30,13 @@ export function EventLink({ event, className, children }: EventLinkProps) {
         transition-colors
         ${className ?? ''}
       `.trim()}
-      aria-label={`View all times for ${eventInfo?.name ?? event}`}
+      aria-label={`View all times for ${eventInfo?.name ?? event}${isSplit ? ' (relay split)' : ''}`}
     >
       {displayName}
       {isSplit && (
         <span
           className="ml-1.5 inline-flex items-center rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700"
-          aria-label="from relay split"
+          aria-hidden="true"
         >
           Split
         </span>

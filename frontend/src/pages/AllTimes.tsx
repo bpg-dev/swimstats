@@ -52,6 +52,7 @@ export function AllTimes() {
   const {
     data: splitTimeData,
     isLoading: splitTimesLoading,
+    error: splitTimesError,
     refetch: refetchSplitTimes,
   } = useTimes(splitEvent ? { course_type: courseType, event: splitEvent, limit: 100 } : undefined);
 
@@ -99,9 +100,9 @@ export function AllTimes() {
       </div>
 
       {/* Error */}
-      {timesError && (
+      {(timesError || splitTimesError) && (
         <ErrorBanner
-          message={timesError.message || 'Failed to load times'}
+          message={(timesError || splitTimesError)?.message || 'Failed to load times'}
           onRetry={() => {
             refetchTimes();
             refetchSplitTimes();

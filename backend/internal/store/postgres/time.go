@@ -256,7 +256,7 @@ func (r *TimeRepository) GetProgressData(ctx context.Context, swimmerID uuid.UUI
 		SwimmerID:  swimmerID,
 		CourseType: courseType,
 		Event:      event,
-		Event_2:    splitEvent,
+		Column4:    splitEvent,
 		Column5:    column5,
 		Column6:    column6,
 	})
