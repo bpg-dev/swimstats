@@ -43,8 +43,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Test EventSelector with split events in `frontend/src/components/times/EventSelector.tsx` — verify split events render correctly with the updated EVENTS array. If split events need visual grouping or a "Split" label in the dropdown to distinguish them from base events, implement those changes.
-- [ ] T006 [US1] Test batch time entry with split events in `frontend/src/components/times/TimeEntryForm.tsx` — verify split events are selectable and follow one-per-meet rule per event code. Fix any issues found.
+- [x] T005 [US1] Test EventSelector with split events in `frontend/src/components/times/EventSelector.tsx` — verify split events render correctly with the updated EVENTS array. If split events need visual grouping or a "Split" label in the dropdown to distinguish them from base events, implement those changes.
+- [x] T006 [US1] Test batch time entry with split events in `frontend/src/components/times/TimeEntryForm.tsx` — verify split events are selectable and follow one-per-meet rule per event code. Fix any issues found.
 
 **Checkpoint**: Split times can be created and stored. Event selectors show split events. Core recording capability works.
 
@@ -60,7 +60,7 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T007 [US2] Write component test for split badge rendering in `frontend/tests/components/` — render AllTimes with a mix of regular and split times (via MSW), verify split times display a "Split" badge and regular times do not
+- [x] T007 [US2] Write component test for split badge rendering in `frontend/tests/components/` — render AllTimes with a mix of regular and split times (via MSW), verify split times display a "Split" badge and regular times do not
 
 ### Implementation for User Story 2
 
@@ -106,8 +106,8 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T017 [P] [US4] Write integration test for progress endpoint with split times in `backend/tests/integration/` — test that GET /progress/100FR returns both 100FR and 100FRS times, test that `is_split` field is present on split data points, test that `is_pb` is calculated across both base and split events (e.g., if split 1:03.50 is faster than base 1:05.00, the split is marked `is_pb=true` and the base is not)
-- [ ] T018 [P] [US4] Write component test for split markers on progress chart in `frontend/tests/components/` — render Progress page with mixed base and split data points (via MSW), verify split points have distinct visual markers and a legend entry
+- [x] T017 [P] [US4] Write integration test for progress endpoint with split times in `backend/tests/integration/` — test that GET /progress/100FR returns both 100FR and 100FRS times, test that `is_split` field is present on split data points, test that `is_pb` is calculated across both base and split events (e.g., if split 1:03.50 is faster than base 1:05.00, the split is marked `is_pb=true` and the base is not)
+- [x] T018 [P] [US4] Write component test for split markers on progress chart in `frontend/tests/components/` — render Progress page with mixed base and split data points (via MSW), verify split points have distinct visual markers and a legend entry
 
 ### Implementation for User Story 4
 
@@ -138,9 +138,9 @@
 
 **Purpose**: Final verification across all stories
 
-- [ ] T024 Run backend quality gates: `cd backend && make lint && make test`
-- [ ] T025 Run frontend quality gates: `cd frontend && make check && make test`
-- [ ] T026 Verify all acceptance scenarios from spec.md pass (manual or via integration tests)
+- [x] T024 Run backend quality gates: `cd backend && make lint && make test`
+- [x] T025 Run frontend quality gates: `cd frontend && make check && make test`
+- [x] T026 Verify all acceptance scenarios from spec.md pass (manual or via integration tests)
 
 ---
 

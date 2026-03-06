@@ -17,6 +17,7 @@ type ProgressDataPoint struct {
 	MeetName       string `json:"meet_name"`
 	Event          string `json:"event"`
 	IsPersonalBest bool   `json:"is_pb"`
+	IsSplit        bool   `json:"is_split"`
 }
 
 type ProgressData struct {
@@ -219,5 +220,119 @@ func TestProgressAPI(t *testing.T) {
 		AssertJSONBody(t, rr, &progressData50m)
 		assert.Len(t, progressData50m.DataPoints, 1)
 		assert.Equal(t, "50m Meet", progressData50m.DataPoints[0].MeetName)
+	})
+}
+
+func TestProgressAPIWithSplits(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode")
+	}
+
+	ctx := context.Background()
+	testDB := SetupTestDB(ctx, t)
+	defer testDB.TeardownTestDB(ctx, t)
+
+	testDB.CleanTables(t)
+
+	handler := setupTestHandler(t, testDB)
+	client := NewAPIClient(t, handler)
+	client.SetMockUser("full")
+
+	// Setup swimmer
+	swimmerInput := SwimmerInput{
+		Name:      "Split Progress Swimmer",
+		BirthDate: "2012-05-15",
+		Gender:    "female",
+	}
+	rr := client.Put("/api/v1/swimmer", swimmerInput)
+	require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+	var swimmer Swimmer
+	AssertJSONBody(t, rr, &swimmer)
+
+	// Create meets
+	meet1Input := MeetInput{
+		Name: "Split Meet 1", City: "Toronto", Country: "Canada",
+		StartDate: "2026-02-01", EndDate: "2026-02-01", CourseType: "25m",
+	}
+	rr = client.Post("/api/v1/meets", meet1Input)
+	require.Equal(t, http.StatusCreated, rr.Code)
+	var meet1 Meet
+	AssertJSONBody(t, rr, &meet1)
+
+	meet2Input := MeetInput{
+		Name: "Split Meet 2", City: "Toronto", Country: "Canada",
+		StartDate: "2026-02-10", EndDate: "2026-02-10", CourseType: "25m",
+	}
+	rr = client.Post("/api/v1/meets", meet2Input)
+	require.Equal(t, http.StatusCreated, rr.Code)
+	var meet2 Meet
+	AssertJSONBody(t, rr, &meet2)
+
+	// Add base event time (100FR) at meet1: 1:05.00
+	rr = client.Post("/api/v1/times", TimeInput{
+		MeetID: meet1.ID, Event: "100FR", TimeMS: 65000, EventDate: "2026-02-01",
+	})
+	require.Equal(t, http.StatusCreated, rr.Code)
+
+	// Add split event time (100FRS) at meet2: 1:03.50 (faster)
+	rr = client.Post("/api/v1/times", TimeInput{
+		MeetID: meet2.ID, Event: "100FRS", TimeMS: 63500, EventDate: "2026-02-10",
+	})
+	require.Equal(t, http.StatusCreated, rr.Code)
+
+	t.Run("GET /progress/100FR returns both base and split times", func(t *testing.T) {
+		rr := client.Get("/api/v1/progress/100FR?course_type=25m")
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		var progressData ProgressData
+		AssertJSONBody(t, rr, &progressData)
+
+		assert.Equal(t, swimmer.ID, progressData.SwimmerID)
+		assert.Equal(t, "100FR", progressData.Event)
+		require.Len(t, progressData.DataPoints, 2)
+
+		// First point: base event (chronologically first)
+		assert.Equal(t, "100FR", progressData.DataPoints[0].Event)
+		assert.Equal(t, 65000, progressData.DataPoints[0].TimeMS)
+		assert.False(t, progressData.DataPoints[0].IsSplit)
+
+		// Second point: split event
+		assert.Equal(t, "100FRS", progressData.DataPoints[1].Event)
+		assert.Equal(t, 63500, progressData.DataPoints[1].TimeMS)
+		assert.True(t, progressData.DataPoints[1].IsSplit)
+	})
+
+	t.Run("is_pb is calculated across both base and split events", func(t *testing.T) {
+		rr := client.Get("/api/v1/progress/100FR?course_type=25m")
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		var progressData ProgressData
+		AssertJSONBody(t, rr, &progressData)
+
+		require.Len(t, progressData.DataPoints, 2)
+
+		// The split time (63500) is faster, so it should be the PB
+		assert.False(t, progressData.DataPoints[0].IsPersonalBest) // 65000 base - not PB
+		assert.True(t, progressData.DataPoints[1].IsPersonalBest)  // 63500 split - PB
+	})
+
+	t.Run("is_split field is present and correct on data points", func(t *testing.T) {
+		rr := client.Get("/api/v1/progress/100FR?course_type=25m")
+		require.Equal(t, http.StatusOK, rr.Code)
+
+		var progressData ProgressData
+		AssertJSONBody(t, rr, &progressData)
+
+		require.Len(t, progressData.DataPoints, 2)
+
+		// Verify is_split accurately reflects event type
+		for _, dp := range progressData.DataPoints {
+			if dp.Event == "100FRS" {
+				assert.True(t, dp.IsSplit, "split event should have is_split=true")
+			} else {
+				assert.False(t, dp.IsSplit, "base event should have is_split=false")
+			}
+		}
 	})
 }

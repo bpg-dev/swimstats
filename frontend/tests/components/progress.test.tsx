@@ -34,6 +34,7 @@ describe('ProgressChart', () => {
       meet_name: 'Test Meet 1',
       event: '50FR',
       is_pb: false,
+      is_split: false,
     },
     {
       id: 'time-2',
@@ -44,6 +45,7 @@ describe('ProgressChart', () => {
       meet_name: 'Test Meet 2',
       event: '50FR',
       is_pb: true,
+      is_split: false,
     },
     {
       id: 'time-3',
@@ -54,6 +56,7 @@ describe('ProgressChart', () => {
       meet_name: 'Test Championship',
       event: '50FR',
       is_pb: true,
+      is_split: false,
     },
   ];
 
@@ -105,5 +108,47 @@ describe('ProgressChart', () => {
 
     const responsiveContainer = container.querySelector('.recharts-responsive-container');
     expect(responsiveContainer).toBeInTheDocument();
+  });
+
+  it('renders legend when split data points are present', () => {
+    const mixedData: ProgressDataPoint[] = [
+      {
+        id: 'time-1',
+        meet_id: 'meet-1',
+        time_ms: 62000,
+        time_formatted: '1:02.00',
+        date: '2026-01-10',
+        meet_name: 'Meet 1',
+        event: '100FR',
+        is_pb: false,
+        is_split: false,
+      },
+      {
+        id: 'time-2',
+        meet_id: 'meet-2',
+        time_ms: 61000,
+        time_formatted: '1:01.00',
+        date: '2026-01-15',
+        meet_name: 'Meet 2',
+        event: '100FRS',
+        is_pb: true,
+        is_split: true,
+      },
+    ];
+
+    renderWithProviders(<ProgressChart data={mixedData} />);
+
+    // Legend should appear with split data present
+    expect(screen.getByText('Individual')).toBeInTheDocument();
+    expect(screen.getByText('Relay Split')).toBeInTheDocument();
+    expect(screen.getByText('Personal Best')).toBeInTheDocument();
+  });
+
+  it('does not render legend when no split data points', () => {
+    renderWithProviders(<ProgressChart data={mockProgressData} />);
+
+    // Legend should NOT appear when there are no split data points
+    expect(screen.queryByText('Individual')).not.toBeInTheDocument();
+    expect(screen.queryByText('Relay Split')).not.toBeInTheDocument();
   });
 });

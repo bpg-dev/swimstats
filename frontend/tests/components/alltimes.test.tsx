@@ -212,4 +212,75 @@ describe('AllTimesList', () => {
     const springMeetLink = screen.getByRole('link', { name: /view details for spring meet/i });
     expect(springMeetLink).toHaveAttribute('href', '/meets/meet-3');
   });
+
+  it('displays Split badge for split event times', () => {
+    const mixedTimes: TimeRecord[] = [
+      {
+        id: '1',
+        meet_id: 'meet-1',
+        event: '100FR',
+        time_ms: 62450,
+        time_formatted: '1:02.45',
+        meet: {
+          id: 'meet-1',
+          name: 'Winter Champs',
+          city: 'Vancouver',
+          country: 'Canada',
+          date: '2026-01-15',
+          course_type: '25m',
+        },
+      },
+      {
+        id: '2',
+        meet_id: 'meet-1',
+        event: '100FRS',
+        time_ms: 61200,
+        time_formatted: '1:01.20',
+        meet: {
+          id: 'meet-1',
+          name: 'Winter Champs',
+          city: 'Vancouver',
+          country: 'Canada',
+          date: '2026-01-15',
+          course_type: '25m',
+        },
+      },
+      {
+        id: '3',
+        meet_id: 'meet-2',
+        event: '50FR',
+        time_ms: 28500,
+        time_formatted: '28.50',
+        meet: {
+          id: 'meet-2',
+          name: 'Spring Meet',
+          city: 'Toronto',
+          country: 'Canada',
+          date: '2026-03-10',
+          course_type: '25m',
+        },
+      },
+    ];
+
+    renderWithProviders(<AllTimesList times={mixedTimes} sortBy="date" />);
+
+    // Split event should show a "Split" badge
+    const splitBadges = screen.getAllByText('Split');
+    expect(splitBadges).toHaveLength(1);
+
+    // The split badge should have accessible labeling
+    const badge = splitBadges[0];
+    expect(badge).toHaveAttribute('aria-label', 'from relay split');
+
+    // Regular events should not have split badge
+    expect(screen.getByText('100m Freestyle')).toBeInTheDocument();
+    expect(screen.getByText('50m Freestyle')).toBeInTheDocument();
+  });
+
+  it('does not display Split badge for regular event times', () => {
+    renderWithProviders(<AllTimesList times={mockTimes} sortBy="date" />);
+
+    // No split badges should appear for regular events
+    expect(screen.queryByText('Split')).not.toBeInTheDocument();
+  });
 });
