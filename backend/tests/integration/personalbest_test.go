@@ -481,7 +481,7 @@ func TestComparisonWithSplits(t *testing.T) {
 		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
 
 		// Create standard with 100FR time
-		rr = client.Post("/api/v1/standards/import/json", StandardImportInput{
+		rr = client.Post("/api/v1/standards/import", StandardImportInput{
 			Name: "Split Test Standard", CourseType: "25m", Gender: "female",
 			Times: []StandardTimeInput{
 				{Event: "100FR", AgeGroup: "OPEN", TimeMs: 62000},
@@ -532,7 +532,7 @@ func TestComparisonWithSplits(t *testing.T) {
 		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
 
 		// Create standard
-		rr = client.Post("/api/v1/standards/import/json", StandardImportInput{
+		rr = client.Post("/api/v1/standards/import", StandardImportInput{
 			Name: "Base Test Standard", CourseType: "25m", Gender: "female",
 			Times: []StandardTimeInput{
 				{Event: "100FR", AgeGroup: "OPEN", TimeMs: 62000},
