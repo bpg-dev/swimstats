@@ -31,7 +31,7 @@ Adds 5 new "split" event codes (`50FRS`, `100FRS`, `200FRS`, `50BKS`, `100BKS`) 
 2. Update `EventSelector` to show split events
 3. Update `AllTimes` page to show split badges
 4. Update `PersonalBests` page to show "from split" indicator
-5. Update `Progress` chart to render split data points differently
+5. Update `Progress` chart: diamond markers for splits (purple default, green for PB), same-date offset for independent selection
 
 ### Phase 3: Integration & Polish
 1. Update comparison components for split indication
@@ -59,7 +59,8 @@ Adds 5 new "split" event codes (`50FRS`, `100FRS`, `200FRS`, `50BKS`, `100BKS`) 
 | `src/components/times/EventSelector.tsx` | Show split events grouped with base events |
 | `src/pages/AllTimes.tsx` | Display "Split" badge on split times |
 | `src/pages/PersonalBests.tsx` | Show "from relay split" indicator |
-| `src/pages/Progress.tsx` | Render split data points with different marker |
+| `src/pages/Progress.tsx` | Exclude splits from event selector |
+| `src/components/charts/ProgressChart.tsx` | Diamond markers for splits, same-date point offset |
 | `src/components/comparison/PersonalBestGrid.tsx` | Show split indicator |
 
 ### Tests

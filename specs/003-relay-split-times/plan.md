@@ -92,7 +92,7 @@ frontend/
 │   └── pages/
 │       ├── AllTimes.tsx                     # Merge split variant times, exclude splits from filter
 │       ├── PersonalBests.tsx                # Show "from relay split" indicator
-│       └── Progress.tsx                     # Exclude splits from filter, split markers on chart
+│       └── Progress.tsx                     # Exclude splits from filter, diamond markers on chart
 └── tests/
     └── components/                          # Test split display
 ```
@@ -106,4 +106,5 @@ No constitution violations to justify. All changes follow existing patterns:
 - PB merging: new logic in existing service layer
 - UI display convention: split times show base event name + "Split" badge (not full split event name); full split event names only in add/edit time selectors
 - Event filter/selector dropdowns on All Times and Progress pages exclude split variants — the view automatically includes split data for the selected base event
+- Progress chart: split times always use diamond markers (purple default, green for PB); same-date data points are offset on x-axis for independent selection
 - No new abstractions, no new dependencies

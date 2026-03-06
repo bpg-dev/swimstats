@@ -69,8 +69,9 @@ A user viewing progress over time for an event (e.g., 100FR) wants to see both i
 **Acceptance Scenarios**:
 
 1. **Given** a swimmer with 100FR and 100FR Split times across multiple meets, **When** viewing the 100FR progress graph, **Then** both individual and split times are plotted.
-2. **Given** the progress graph with both time types, **When** viewing data points, **Then** split times are visually distinct from individual times (e.g., different marker shape or color), and the tooltip annotation indicates "Relay Split".
+2. **Given** the progress graph with both time types, **When** viewing data points, **Then** split times always use a diamond marker shape (purple for regular splits, green for PB splits), while individual times use circles. The tooltip annotation indicates "Relay Split".
 3. **Given** the progress page event selector, **When** viewing the dropdown, **Then** only base events are listed — split variants are excluded since the graph automatically includes split times for the selected base event.
+4. **Given** a swimmer with both a regular time and a split time at the same meet (same date), **When** viewing the progress graph, **Then** both data points are independently selectable (offset on the x-axis so they do not overlap).
 
 ---
 

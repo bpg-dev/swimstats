@@ -122,7 +122,7 @@ The progress endpoint accepts base event codes. The query fetches times for both
 GET /api/v1/progress/100FR → returns times for both 100FR and 100FRS
 ```
 
-Each data point includes the `event` field so the frontend can distinguish and render split data points with a different visual marker.
+Each data point includes the `event` and `is_split` fields so the frontend can distinguish split data points. Split times always render as diamond markers (purple for regular splits, green for PB splits); individual times use circles. Same-date data points (e.g., individual + split at the same meet) are offset on the x-axis so both are independently selectable.
 
 ## Export/Import
 
