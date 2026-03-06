@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { EventCode, getEventInfo } from '@/types/time';
+import { EventCode, getEventInfo, isSplitEvent, baseEvent } from '@/types/time';
 
 interface EventLinkProps {
   event: EventCode;
@@ -9,21 +9,18 @@ interface EventLinkProps {
 
 /**
  * EventLink - Clickable event name that navigates to All Times filtered by event.
- *
- * Usage:
- *   <EventLink event="50FR" />
- *   Renders: <Link to="/all-times?event=50FR">50m Freestyle</Link>
- *
- *   <EventLink event="50FR">Custom text</EventLink>
- *   Renders: <Link to="/all-times?event=50FR">Custom text</Link>
+ * For split events, shows the base event name with a "Split" badge and links to
+ * the base event's All Times page (which includes split times).
  */
 export function EventLink({ event, className, children }: EventLinkProps) {
-  const eventInfo = getEventInfo(event);
+  const isSplit = isSplitEvent(event);
+  const resolvedEvent = isSplit ? baseEvent(event) : event;
+  const eventInfo = getEventInfo(resolvedEvent);
   const displayName = children ?? eventInfo?.name ?? event;
 
   return (
     <Link
-      to={`/all-times?event=${event}`}
+      to={`/all-times?event=${resolvedEvent}`}
       className={`
         font-medium text-blue-800 dark:text-blue-300
         border-b border-transparent hover:border-blue-600 dark:hover:border-blue-400
@@ -36,6 +33,14 @@ export function EventLink({ event, className, children }: EventLinkProps) {
       aria-label={`View all times for ${eventInfo?.name ?? event}`}
     >
       {displayName}
+      {isSplit && (
+        <span
+          className="ml-1.5 inline-flex items-center rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700"
+          aria-label="from relay split"
+        >
+          Split
+        </span>
+      )}
     </Link>
   );
 }

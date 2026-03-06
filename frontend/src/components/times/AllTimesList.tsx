@@ -1,4 +1,4 @@
-import { TimeRecord, getEventInfo, isSplitEvent } from '@/types/time';
+import { TimeRecord, getEventInfo, isSplitEvent, baseEvent, EventCode } from '@/types/time';
 import { SortBy } from './SortToggle';
 import { formatDate } from '@/utils/timeFormat';
 import { MeetLink } from '@/components/ui';
@@ -92,7 +92,9 @@ export function AllTimesList({ times, pbTimeId, sortBy }: AllTimesListProps) {
                 {/* Event */}
                 <td className="py-3">
                   <div className="font-medium text-slate-900">
-                    {eventInfo?.name || time.event}
+                    {isSplitEvent(time.event)
+                      ? getEventInfo(baseEvent(time.event as EventCode))?.name || time.event
+                      : eventInfo?.name || time.event}
                     {isSplitEvent(time.event) && (
                       <span
                         className="ml-1.5 inline-flex items-center rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700"

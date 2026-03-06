@@ -141,3 +141,15 @@ export function isSplitEvent(code: EventCode): boolean {
 export function baseEvent(code: EventCode): EventCode {
   return SPLIT_TO_BASE[code] ?? code;
 }
+
+const BASE_TO_SPLIT: Record<string, EventCode> = {
+  '50FR': '50FRS',
+  '100FR': '100FRS',
+  '200FR': '200FRS',
+  '50BK': '50BKS',
+  '100BK': '100BKS',
+};
+
+export function splitVariant(code: EventCode): EventCode | undefined {
+  return BASE_TO_SPLIT[code];
+}

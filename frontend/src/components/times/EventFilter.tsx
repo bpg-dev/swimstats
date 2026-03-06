@@ -1,4 +1,4 @@
-import { EVENTS, EventCode } from '@/types/time';
+import { EVENTS, EventCode, isSplitEvent } from '@/types/time';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -10,6 +10,7 @@ interface EventFilterProps {
   value: EventCode;
   onChange: (event: EventCode) => void;
   className?: string;
+  excludeSplits?: boolean;
 }
 
 const STROKE_ORDER = ['Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'Individual Medley'];
@@ -17,11 +18,19 @@ const STROKE_ORDER = ['Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'I
 /**
  * Event selector dropdown grouped by stroke.
  */
-export function EventFilter({ value, onChange, className = '' }: EventFilterProps) {
+export function EventFilter({
+  value,
+  onChange,
+  className = '',
+  excludeSplits = false,
+}: EventFilterProps) {
+  // Filter events, optionally excluding splits
+  const filteredEvents = excludeSplits ? EVENTS.filter((e) => !isSplitEvent(e.code)) : EVENTS;
+
   // Group events by stroke
   const eventsByStroke = STROKE_ORDER.reduce(
     (acc, stroke) => {
-      acc[stroke] = EVENTS.filter((e) => e.stroke === stroke);
+      acc[stroke] = filteredEvents.filter((e) => e.stroke === stroke);
       return acc;
     },
     {} as Record<string, typeof EVENTS>

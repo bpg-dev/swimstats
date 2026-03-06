@@ -34,9 +34,10 @@ A user views the times list and wants to distinguish split times from individual
 
 **Acceptance Scenarios**:
 
-1. **Given** a swimmer with both regular and split times, **When** viewing the All Times page, **Then** split times are visually distinguished (e.g., labeled "Split" or with a badge).
-2. **Given** a swimmer with split times, **When** viewing times for a specific meet, **Then** split times appear alongside regular times with clear labeling.
-3. **Given** a split time, **When** viewing its details, **Then** the event name shows it is a relay split (e.g., "100m Freestyle Split").
+1. **Given** a swimmer with both regular and split times, **When** viewing the All Times page for a base event (e.g., 100FR), **Then** both individual and split times for that event are shown together, with split times visually distinguished by a "Split" badge.
+2. **Given** the All Times event filter, **When** viewing the dropdown, **Then** only base events are listed — split event variants are excluded since splits are shown alongside their base event.
+3. **Given** a swimmer with split times, **When** viewing times for a specific meet, **Then** split times appear alongside regular times with clear labeling.
+4. **Given** a split time, **When** viewing its details, **Then** the event name shows it is a relay split (e.g., "100m Freestyle Split").
 
 ---
 

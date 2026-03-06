@@ -39,6 +39,39 @@ describe('EventFilter', () => {
     expect(screen.queryByText('All Events')).not.toBeInTheDocument();
   });
 
+  it('excludes split events from dropdown on AllTimes page', () => {
+    const onChange = vi.fn();
+    render(<EventFilter value="50FR" onChange={onChange} excludeSplits />);
+
+    const select = screen.getByRole('combobox');
+    const options = select.querySelectorAll('option');
+    const optionValues = Array.from(options).map((opt) => opt.getAttribute('value'));
+
+    // Split events should not appear
+    expect(optionValues).not.toContain('50FRS');
+    expect(optionValues).not.toContain('100FRS');
+    expect(optionValues).not.toContain('200FRS');
+    expect(optionValues).not.toContain('50BKS');
+    expect(optionValues).not.toContain('100BKS');
+
+    // Base events should still appear
+    expect(optionValues).toContain('50FR');
+    expect(optionValues).toContain('100FR');
+    expect(optionValues).toContain('50BK');
+  });
+
+  it('includes split events when excludeSplits is false', () => {
+    const onChange = vi.fn();
+    render(<EventFilter value="50FR" onChange={onChange} />);
+
+    const select = screen.getByRole('combobox');
+    const options = select.querySelectorAll('option');
+    const optionValues = Array.from(options).map((opt) => opt.getAttribute('value'));
+
+    // Split events should appear by default
+    expect(optionValues).toContain('100FRS');
+  });
+
   it('renders stroke groups', () => {
     const onChange = vi.fn();
     render(<EventFilter value="" onChange={onChange} />);
@@ -213,7 +246,7 @@ describe('AllTimesList', () => {
     expect(springMeetLink).toHaveAttribute('href', '/meets/meet-3');
   });
 
-  it('displays Split badge for split event times', () => {
+  it('displays base event name with Split badge for split times', () => {
     const mixedTimes: TimeRecord[] = [
       {
         id: '1',
@@ -245,42 +278,23 @@ describe('AllTimesList', () => {
           course_type: '25m',
         },
       },
-      {
-        id: '3',
-        meet_id: 'meet-2',
-        event: '50FR',
-        time_ms: 28500,
-        time_formatted: '28.50',
-        meet: {
-          id: 'meet-2',
-          name: 'Spring Meet',
-          city: 'Toronto',
-          country: 'Canada',
-          date: '2026-03-10',
-          course_type: '25m',
-        },
-      },
     ];
 
     renderWithProviders(<AllTimesList times={mixedTimes} sortBy="date" />);
 
-    // Split event should show a "Split" badge
-    const splitBadges = screen.getAllByText('Split');
-    expect(splitBadges).toHaveLength(1);
+    // Split event shows the BASE event name (not "100m Freestyle Split")
+    const freestyleElements = screen.getAllByText('100m Freestyle');
+    expect(freestyleElements).toHaveLength(2); // both rows show "100m Freestyle"
 
-    // The split badge should have accessible labeling
-    const badge = splitBadges[0];
-    expect(badge).toHaveAttribute('aria-label', 'from relay split');
-
-    // Regular events should not have split badge
-    expect(screen.getByText('100m Freestyle')).toBeInTheDocument();
-    expect(screen.getByText('50m Freestyle')).toBeInTheDocument();
+    // Split badge appears for the split time
+    const splitBadge = screen.getByText('Split');
+    expect(splitBadge).toBeInTheDocument();
+    expect(splitBadge).toHaveAttribute('aria-label', 'from relay split');
   });
 
   it('does not display Split badge for regular event times', () => {
     renderWithProviders(<AllTimesList times={mockTimes} sortBy="date" />);
 
-    // No split badges should appear for regular events
     expect(screen.queryByText('Split')).not.toBeInTheDocument();
   });
 });
