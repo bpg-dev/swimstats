@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.0.1](https://github.com/bpg-dev/swimstats/compare/v4.0.0...v4.0.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* **ui:** navigate to meet details page from Recent Meets ([#221](https://github.com/bpg-dev/swimstats/issues/221)) ([9d4ee76](https://github.com/bpg-dev/swimstats/commit/9d4ee76db80a585936985045b8a40577b17ced66))
+
+
+### Miscellaneous
+
+* **deps:** lock file maintenance ([#216](https://github.com/bpg-dev/swimstats/issues/216)) ([3a8ec6e](https://github.com/bpg-dev/swimstats/commit/3a8ec6e7d61115713aed6406f0c6762f1249aab3))
+* **deps:** update @types/node (25.3.3 → 25.3.5) ([#219](https://github.com/bpg-dev/swimstats/issues/219)) ([ca9c4a1](https://github.com/bpg-dev/swimstats/commit/ca9c4a1e6a06567707498785503bbb209ebbe618))
+* **deps:** update golangci/golangci-lint (v2.10.1 → v2.11.1) ([#220](https://github.com/bpg-dev/swimstats/issues/220)) ([a2a8a3e](https://github.com/bpg-dev/swimstats/commit/a2a8a3e2ab7663e48b8092d65c443636b687790d))
+
 ## [4.0.0](https://github.com/bpg-dev/swimstats/compare/v3.1.0...v4.0.0) (2026-03-06)
 
 
