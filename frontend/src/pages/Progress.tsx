@@ -76,6 +76,7 @@ export function Progress() {
               label="Event"
               value={selectedEvent}
               onChange={(e) => setSelectedEvent(e.target.value as EventCode)}
+              excludeSplits
             />
 
             {/* Standard selector (optional reference line) */}

@@ -60,6 +60,19 @@ describe('EventSelector', () => {
     render(<EventSelector error="Event is required" />, { wrapper: createWrapper() });
     expect(screen.getByText('Event is required')).toBeInTheDocument();
   });
+
+  it('excludes split events when excludeSplits is true', () => {
+    render(<EventSelector excludeSplits />, { wrapper: createWrapper() });
+
+    const select = screen.getByRole('combobox');
+    const options = select.querySelectorAll('option');
+    const optionValues = Array.from(options).map((opt) => opt.getAttribute('value'));
+
+    expect(optionValues).not.toContain('100FRS');
+    expect(optionValues).not.toContain('50BKS');
+    expect(optionValues).toContain('100FR');
+    expect(optionValues).toContain('50BK');
+  });
 });
 
 describe('TimeEntryForm', () => {

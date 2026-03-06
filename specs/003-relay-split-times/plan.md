@@ -82,13 +82,17 @@ frontend/
 │   │   └── personalbest.ts                  # Add is_from_split to PersonalBest
 │   ├── components/
 │   │   ├── times/
-│   │   │   └── EventSelector.tsx            # Show split events with base events
+│   │   │   ├── EventSelector.tsx            # excludeSplits prop to hide split variants
+│   │   │   ├── EventFilter.tsx              # excludeSplits prop to hide split variants
+│   │   │   └── AllTimesList.tsx             # Base name + "Split" badge for split times
+│   │   ├── ui/
+│   │   │   └── EventLink.tsx                # Base name + "Split" badge, links to base event
 │   │   └── comparison/
 │   │       └── PersonalBestGrid.tsx         # Show split indicator on PBs
 │   └── pages/
-│       ├── AllTimes.tsx                     # Display "Split" badge
+│       ├── AllTimes.tsx                     # Merge split variant times, exclude splits from filter
 │       ├── PersonalBests.tsx                # Show "from relay split" indicator
-│       └── Progress.tsx                     # Render split data points differently
+│       └── Progress.tsx                     # Exclude splits from filter, split markers on chart
 └── tests/
     └── components/                          # Test split display
 ```
@@ -100,5 +104,6 @@ frontend/
 No constitution violations to justify. All changes follow existing patterns:
 - Event codes: extend existing `EventCode` type
 - PB merging: new logic in existing service layer
-- UI badges: follow existing badge/indicator patterns
+- UI display convention: split times show base event name + "Split" badge (not full split event name); full split event names only in add/edit time selectors
+- Event filter/selector dropdowns on All Times and Progress pages exclude split variants — the view automatically includes split data for the selected base event
 - No new abstractions, no new dependencies
