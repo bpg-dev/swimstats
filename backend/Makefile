@@ -1,7 +1,7 @@
 .PHONY: lint test test-setup test-teardown test-migrate test-run build clean help migrate serve
 
 # Configuration (can be overridden for CI)
-GOLANGCI_LINT_VERSION ?= v2.10.1
+GOLANGCI_LINT_VERSION ?= v2.11.1
 TEST_DB_CONTAINER := swimstats-test-postgres
 TEST_DB_NAME ?= swimstats_test
 TEST_DB_USER ?= swimstats
