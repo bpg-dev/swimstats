@@ -1,12 +1,12 @@
 # swimstats Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-01-25
+Auto-generated from all feature plans. Last updated: 2026-03-06
 
 ## Active Technologies
 
-- **Backend**: Go 1.25+, chi router, sqlc for type-safe SQL
-- **Frontend**: React 18, TypeScript 5.x, Vite, TailwindCSS, React Query
-- **Database**: PostgreSQL 16
+- **Backend**: Go 1.26, chi router, sqlc for type-safe SQL
+- **Frontend**: React 19, TypeScript 5.x, Vite 7, TailwindCSS, React Query
+- **Database**: PostgreSQL 18
 - **Authentication**: OIDC via Authentik (coreos/go-oidc library)
 - **Testing**: Go testing + testify (backend), Vitest + React Testing Library (frontend)
 - **Target Platform**: Modern browsers (Chrome, Firefox, Safari, Edge), Kubernetes
@@ -44,17 +44,26 @@ docker-compose.yaml          # Local development environment
 ## Commands
 
 **Backend**:
-- `cd backend && go test ./...` - Run all tests
-- `cd backend && golangci-lint run` - Lint code
-- `cd backend && sqlc generate` - Generate type-safe SQL code
+- `cd backend && make lint` - Run golangci-lint
+- `cd backend && make test` - Run all tests (starts test DB, runs migrations, tests, tears down)
+- `cd backend && make test-unit` - Run unit tests only (no database)
+- `cd backend && make sqlc` - Generate type-safe SQL code
+- `cd backend && make serve` - Start backend with hot reload (air)
 
 **Frontend**:
-- `cd frontend && npm test` - Run tests
-- `cd frontend && npm run lint` - Lint code
-- `cd frontend && npm run build` - Build production bundle
+- `cd frontend && make check` - Run all checks (lint, format, typecheck)
+- `cd frontend && make test` - Run tests with coverage
+- `cd frontend && make dev` - Start development server
+- `cd frontend && make build` - Build Docker image
+
+**Root Makefile**:
+- `make lint` - Lint both backend and frontend
+- `make test` - Test both backend and frontend
+- `make serve` - Start full dev environment (postgres + backend + frontend)
 
 **Development**:
-- `docker-compose up` - Start PostgreSQL and services locally
+- `docker-compose up` - Start PostgreSQL locally
+- `make dev-up` / `make dev-down` - Start/stop postgres
 
 **Migrations**:
 - `docker-compose --profile migrate up migrate` - Run migrations via Docker
@@ -67,8 +76,10 @@ docker-compose.yaml          # Local development environment
 - **TypeScript**: ESLint, strict mode, no `any` without justification
 - Follow DRY principles and single responsibility
 
-### II. Test-Driven Development (NON-NEGOTIABLE)
-- Tests written FIRST, user approved, tests fail, THEN implement
+### II. Test-Driven Development
+- **New features/user stories**: TDD required — tests written FIRST, must fail, THEN implement
+- **Bug fixes and refactors**: Tests recommended but may be written alongside or after the change
+- **Documentation and config changes**: Tests not required
 - >90% coverage on critical paths
 - Unit tests: Go table-driven tests with testify, React with Vitest + RTL
 - Integration tests: testcontainers (Go), MSW (frontend)
@@ -98,6 +109,21 @@ docker-compose.yaml          # Local development environment
 - Phase 6: US4 + US6 - Compare Times Against Standards (includes standing dashboard)
 - Phase 7: US5 - View Progress Graphs (line charts with recharts, standard reference lines, date filtering)
 - Phase 8: Polish (data export/import with preview, accessibility with ARIA labels, USER-GUIDE.md)
+
+## API Routes (all under /api/v1, authenticated)
+
+- `GET /health`, `GET /api/health` — health check (no auth)
+- **Auth**: `GET auth/me`
+- **Swimmer**: `GET|PUT swimmer`
+- **Meets**: `GET|POST meets`, `GET|PUT|DELETE meets/{id}`
+- **Times**: `GET|POST times`, `POST times/batch`, `GET|PUT|DELETE times/{id}`
+- **Personal Bests**: `GET personal-bests`
+- **Standards**: `GET|POST standards`, `POST standards/import`, `POST standards/import/json`, `GET|PUT|DELETE standards/{id}`, `PUT standards/{id}/times`
+- **Comparisons**: `GET comparisons`
+- **Progress**: `GET progress/{event}`
+- **Data**: `GET data/export`, `POST data/import/preview`, `POST data/import`
+
+Router defined in `backend/internal/api/router.go`.
 
 ## Key Patterns
 
@@ -196,8 +222,8 @@ complete checklist.
    - **NEVER commit to main** - All work must be on feature (`feature/*`) or fix (`fix/*`) branches.
    - **ALWAYS create a branch first** - Before making any commits, create an appropriately named branch.
    - **ALWAYS verify quality gates before PR** - Run linter, format check, type check, and tests locally BEFORE creating a PR:
-     - Frontend: `cd frontend && make check && npm test -- --run`
-     - Backend: `cd backend && golangci-lint run && go test ./...`
+     - Frontend: `cd frontend && make check && make test`
+     - Backend: `cd backend && make lint && make test`
    - **Push and create PRs when done** - You MAY push branches and create PRs to streamline workflow.
    - **NEVER merge PRs** - Merging is the sole responsibility of human maintainers.
 
