@@ -174,7 +174,7 @@ export function QuickEntryForm({
       times: validEntries.map((entry) => ({
         event: entry.event as EventCode,
         time_ms: parseTime(entry.time_str)!,
-        event_date: entry.event_date || undefined,
+        event_date: entry.event_date || selectedMeet?.start_date || undefined,
         notes: entry.notes || undefined,
       })),
     };

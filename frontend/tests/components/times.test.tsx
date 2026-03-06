@@ -317,6 +317,57 @@ describe('QuickEntryForm MeetSelector Integration', () => {
   });
 });
 
+describe('QuickEntryForm single-day meet event_date', () => {
+  it('includes event_date in batch payload for single-day meets', async () => {
+    const user = userEvent.setup();
+    let capturedBody: Record<string, unknown> | null = null;
+
+    // Override batch handler on the global MSW server to capture the request body
+    const { http, HttpResponse } = await import('msw');
+    const { server } = await import('../setup');
+    server.use(
+      http.post('/api/v1/times/batch', async ({ request }) => {
+        capturedBody = (await request.json()) as Record<string, unknown>;
+        const times = ((capturedBody.times as unknown[]) || []).map((t: unknown, i: number) => ({
+          id: `batch-time-${i}`,
+          ...(t as object),
+          time_formatted: '1:05.32',
+        }));
+        return HttpResponse.json({ times, new_pbs: [] }, { status: 201 });
+      }),
+    );
+
+    render(<QuickEntryForm meetId={mockMeet.id} courseType="25m" />, { wrapper: createWrapper() });
+
+    // Wait for form to be ready
+    await waitFor(() => {
+      expect(screen.getAllByRole('combobox').length).toBeGreaterThanOrEqual(1);
+    });
+
+    // Select a split event
+    const selects = screen.getAllByRole('combobox');
+    await user.selectOptions(selects[0], '100FRS');
+
+    // Enter time
+    const timeInputs = screen.getAllByPlaceholderText(/SS\.ss/i);
+    await user.type(timeInputs[0], '1:03.50');
+
+    // Submit
+    const submitButton = screen.getByRole('button', { name: /save all times/i });
+    await user.click(submitButton);
+
+    // Wait for submission
+    await waitFor(() => {
+      expect(capturedBody).not.toBeNull();
+    });
+
+    // Verify event_date is set to the meet's start_date for single-day meet
+    const times = capturedBody!.times as Array<{ event_date?: string }>;
+    expect(times).toHaveLength(1);
+    expect(times[0].event_date).toBe(mockMeet.start_date);
+  });
+});
+
 describe('TimeHistory Link Navigation', () => {
   it('renders event names as links to All Times page', async () => {
     render(<TimeHistory courseType="25m" />, { wrapper: createWrapper() });
