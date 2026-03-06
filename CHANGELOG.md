@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.1.0](https://github.com/bpg-dev/swimstats/compare/v3.0.1...v3.1.0) (2026-03-06)
+
+
+### Features
+
+* add `make serve` for hosting in dev mode ([4f31fd3](https://github.com/bpg-dev/swimstats/commit/4f31fd3e4c5d02f7f0a603b81228de4144e1434b))
+
+
+### Bug Fixes
+
+* editing functionality in meet details ([5c981aa](https://github.com/bpg-dev/swimstats/commit/5c981aa6f027513b6c6180a1a51e5f93bdb45030))
+
+
+### Miscellaneous
+
+* **deps:** update @types/node (25.3.2 → 25.3.3) ([#205](https://github.com/bpg-dev/swimstats/issues/205)) ([c38a6cf](https://github.com/bpg-dev/swimstats/commit/c38a6cf3c50ea11f2c7333a808d2e977986d17a9))
+* **deps:** update globals (17.3.0 → 17.4.0) ([#206](https://github.com/bpg-dev/swimstats/issues/206)) ([cf93feb](https://github.com/bpg-dev/swimstats/commit/cf93feb00184f02725f15e7c6c6e5be504fd98e0))
+* improve LLM agent instructions and project configuration ([#208](https://github.com/bpg-dev/swimstats/issues/208)) ([2a55eb7](https://github.com/bpg-dev/swimstats/commit/2a55eb7d8847bd74b4f05eec5143d2b602ec7684))
+
 ## [3.0.1](https://github.com/bpg-dev/swimstats/compare/v3.0.0...v3.0.1) (2026-03-02)
 
 
