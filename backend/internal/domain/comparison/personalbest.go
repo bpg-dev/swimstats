@@ -4,6 +4,7 @@ package comparison
 import (
 	"context"
 	"fmt"
+	"sort"
 
 	"github.com/google/uuid"
 
@@ -31,6 +32,7 @@ type PersonalBest struct {
 	TimeID        string `json:"time_id"`
 	MeetName      string `json:"meet"`
 	Date          string `json:"date"`
+	IsFromSplit   bool   `json:"is_from_split"`
 }
 
 // PersonalBestList represents a list of personal bests.
@@ -68,9 +70,38 @@ func (s *PersonalBestService) GetPersonalBests(ctx context.Context, swimmerID uu
 		}
 	}
 
+	// Merge split PBs into base event PBs (keep the faster time)
+	pbMap := make(map[string]*PersonalBest)
+	for i := range pbs {
+		baseEvent := string(domain.EventCode(pbs[i].Event).BaseEvent())
+		existing, exists := pbMap[baseEvent]
+		if !exists {
+			pb := pbs[i]
+			pb.IsFromSplit = domain.EventCode(pbs[i].Event).IsSplit()
+			pb.Event = baseEvent
+			pbMap[baseEvent] = &pb
+		} else if pbs[i].TimeMS < existing.TimeMS {
+			// Keep the faster time
+			pb := pbs[i]
+			pb.IsFromSplit = domain.EventCode(pbs[i].Event).IsSplit()
+			pb.Event = baseEvent
+			pbMap[baseEvent] = &pb
+		}
+	}
+
+	// Rebuild the slice from the map
+	merged := make([]PersonalBest, 0, len(pbMap))
+	for _, pb := range pbMap {
+		merged = append(merged, *pb)
+	}
+	// Sort by event code for consistent ordering
+	sort.Slice(merged, func(i, j int) bool {
+		return merged[i].Event < merged[j].Event
+	})
+
 	return &PersonalBestList{
 		CourseType:    courseType,
-		PersonalBests: pbs,
+		PersonalBests: merged,
 	}, nil
 }
 

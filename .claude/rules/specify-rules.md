@@ -159,6 +159,7 @@ Router defined in `backend/internal/api/router.go`.
 
 ## Recent Changes
 
+- 2026-03-06: Added relay split times — 5 split event codes (50FRS, 100FRS, 200FRS, 50BKS, 100BKS), PB merging with splits, split badges in all views, diamond markers on progress chart
 - 2026-01-26: Export format now includes `format_version` field and swimmer's `threshold_percent`
 - 2026-01-26: Added schema evolution checklist to Constitution (see Data Portability Requirements)
 - 2026-01-25: Standards page now filters by course type (global filter) and gender (defaults to swimmer's gender)

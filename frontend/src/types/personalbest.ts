@@ -8,6 +8,7 @@ export interface PersonalBest {
   time_id: string;
   meet: string; // Meet name
   date: string;
+  is_from_split: boolean;
 }
 
 export interface PersonalBestList {

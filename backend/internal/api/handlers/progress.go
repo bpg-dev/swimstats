@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/bpg/swimstats/backend/internal/api/middleware"
+	"github.com/bpg/swimstats/backend/internal/domain"
 	"github.com/bpg/swimstats/backend/internal/domain/comparison"
 	"github.com/bpg/swimstats/backend/internal/domain/swimmer"
 	"github.com/bpg/swimstats/backend/internal/store/postgres"
@@ -49,6 +50,12 @@ func (h *ProgressHandler) GetProgressData(w http.ResponseWriter, r *http.Request
 	event := chi.URLParam(r, "event")
 	if event == "" {
 		middleware.WriteError(w, http.StatusBadRequest, "event is required", "VALIDATION_ERROR")
+		return
+	}
+
+	// Reject split event codes — use base event, splits are included automatically
+	if domain.EventCode(event).IsSplit() {
+		middleware.WriteError(w, http.StatusBadRequest, "use base event code for progress; split times are included automatically", "VALIDATION_ERROR")
 		return
 	}
 

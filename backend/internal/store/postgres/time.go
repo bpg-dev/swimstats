@@ -238,26 +238,27 @@ func (r *TimeRepository) EventExistsForMeet(ctx context.Context, swimmerID, meet
 	return exists, nil
 }
 
-// GetProgressData retrieves time progression data for an event.
-func (r *TimeRepository) GetProgressData(ctx context.Context, swimmerID uuid.UUID, courseType, event string, startDate, endDate *time.Time) ([]db.GetProgressDataRow, error) {
-	var column4, column5 pgtype.Date
+// GetProgressData retrieves time progression data for an event and its split variant.
+func (r *TimeRepository) GetProgressData(ctx context.Context, swimmerID uuid.UUID, courseType, event, splitEvent string, startDate, endDate *time.Time) ([]db.GetProgressDataRow, error) {
+	var column5, column6 pgtype.Date
 
 	if startDate != nil {
-		column4.Time = *startDate
-		column4.Valid = true
+		column5.Time = *startDate
+		column5.Valid = true
 	}
 
 	if endDate != nil {
-		column5.Time = *endDate
-		column5.Valid = true
+		column6.Time = *endDate
+		column6.Valid = true
 	}
 
 	rows, err := r.queries.GetProgressData(ctx, db.GetProgressDataParams{
 		SwimmerID:  swimmerID,
 		CourseType: courseType,
 		Event:      event,
-		Column4:    column4,
+		Column4:    splitEvent,
 		Column5:    column5,
+		Column6:    column6,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("get progress data: %w", err)

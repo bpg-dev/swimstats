@@ -93,9 +93,7 @@ describe('Accessibility: UI Components', () => {
         { value: '25m', label: '25m' },
         { value: '50m', label: '50m' },
       ];
-      const { container } = render(
-        <Select label="Course Type" id="course" options={options} />
-      );
+      const { container } = render(<Select label="Course Type" id="course" options={options} />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
@@ -132,9 +130,7 @@ describe('Accessibility: UI Components', () => {
     });
 
     it('should have no violations with retry button', async () => {
-      const { container } = render(
-        <ErrorBanner message="Failed to load" onRetry={() => {}} />
-      );
+      const { container } = render(<ErrorBanner message="Failed to load" onRetry={() => {}} />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });

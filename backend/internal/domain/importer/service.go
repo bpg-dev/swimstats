@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/bpg/swimstats/backend/internal/domain"
 	"github.com/bpg/swimstats/backend/internal/domain/meet"
 	"github.com/bpg/swimstats/backend/internal/domain/standard"
 	"github.com/bpg/swimstats/backend/internal/domain/swimmer"
@@ -242,16 +243,8 @@ func (s *Service) parseTime(data *TimeData, meetStart, meetEnd time.Time) (*Pars
 		return nil, fmt.Errorf("event is required")
 	}
 
-	// Validate event code (basic validation - list of valid events)
-	validEvents := map[string]bool{
-		"50FR": true, "100FR": true, "200FR": true, "400FR": true, "800FR": true, "1500FR": true,
-		"50BK": true, "100BK": true, "200BK": true,
-		"50BR": true, "100BR": true, "200BR": true,
-		"50FL": true, "100FL": true, "200FL": true,
-		"200IM": true, "400IM": true,
-	}
-
-	if !validEvents[event] {
+	// Validate event code
+	if !domain.IsValidEvent(event) {
 		return nil, fmt.Errorf("invalid event code: %s", event)
 	}
 

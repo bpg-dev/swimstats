@@ -105,8 +105,17 @@ const (
 	Event400IM EventCode = "400IM"
 )
 
-// ValidEventCodes contains all valid event codes.
-var ValidEventCodes = []EventCode{
+// Relay leadoff split events.
+const (
+	Event50FRS  EventCode = "50FRS"
+	Event100FRS EventCode = "100FRS"
+	Event200FRS EventCode = "200FRS"
+	Event50BKS  EventCode = "50BKS"
+	Event100BKS EventCode = "100BKS"
+)
+
+// IndividualEventCodes contains the original 17 base event codes (no splits).
+var IndividualEventCodes = []EventCode{
 	Event50FR, Event100FR, Event200FR, Event400FR, Event800FR, Event1500FR,
 	Event50BK, Event100BK, Event200BK,
 	Event50BR, Event100BR, Event200BR,
@@ -114,14 +123,68 @@ var ValidEventCodes = []EventCode{
 	Event200IM, Event400IM,
 }
 
+// SplitEventCodes contains the 5 relay leadoff split event codes.
+var SplitEventCodes = []EventCode{
+	Event50FRS, Event100FRS, Event200FRS,
+	Event50BKS, Event100BKS,
+}
+
+// validEventCodes is the internal set for O(1) event code validation.
+var validEventCodes map[EventCode]struct{}
+
+func init() {
+	validEventCodes = make(map[EventCode]struct{}, len(IndividualEventCodes)+len(SplitEventCodes))
+	for _, ec := range IndividualEventCodes {
+		validEventCodes[ec] = struct{}{}
+	}
+	for _, ec := range SplitEventCodes {
+		validEventCodes[ec] = struct{}{}
+	}
+}
+
+// splitToBase maps split event codes to their base events.
+var splitToBase = map[EventCode]EventCode{
+	Event50FRS:  Event50FR,
+	Event100FRS: Event100FR,
+	Event200FRS: Event200FR,
+	Event50BKS:  Event50BK,
+	Event100BKS: Event100BK,
+}
+
+// baseToSplit maps base event codes to their split variants.
+var baseToSplit = map[EventCode]EventCode{
+	Event50FR:  Event50FRS,
+	Event100FR: Event100FRS,
+	Event200FR: Event200FRS,
+	Event50BK:  Event50BKS,
+	Event100BK: Event100BKS,
+}
+
+// IsSplit returns true if this is a relay leadoff split event code.
+func (e EventCode) IsSplit() bool {
+	_, ok := splitToBase[e]
+	return ok
+}
+
+// BaseEvent returns the base event code for a split event, or itself for non-split events.
+func (e EventCode) BaseEvent() EventCode {
+	if base, ok := splitToBase[e]; ok {
+		return base
+	}
+	return e
+}
+
+// SplitVariant returns the split variant for a base event code.
+// Returns ("", false) if no split variant exists.
+func (e EventCode) SplitVariant() (EventCode, bool) {
+	split, ok := baseToSplit[e]
+	return split, ok
+}
+
 // IsValid checks if the event code is valid.
 func (e EventCode) IsValid() bool {
-	for _, valid := range ValidEventCodes {
-		if e == valid {
-			return true
-		}
-	}
-	return false
+	_, ok := validEventCodes[e]
+	return ok
 }
 
 // String returns the string representation.
@@ -149,6 +212,12 @@ func (e EventCode) Description() string {
 		Event200FL:  "200m Butterfly",
 		Event200IM:  "200m Individual Medley",
 		Event400IM:  "400m Individual Medley",
+		// Split events
+		Event50FRS:  "50m Freestyle Split",
+		Event100FRS: "100m Freestyle Split",
+		Event200FRS: "200m Freestyle Split",
+		Event50BKS:  "50m Backstroke Split",
+		Event100BKS: "100m Backstroke Split",
 	}
 	if desc, ok := descriptions[e]; ok {
 		return desc
@@ -159,9 +228,11 @@ func (e EventCode) Description() string {
 // Stroke returns the stroke type for the event.
 func (e EventCode) Stroke() string {
 	switch e {
-	case Event50FR, Event100FR, Event200FR, Event400FR, Event800FR, Event1500FR:
+	case Event50FR, Event100FR, Event200FR, Event400FR, Event800FR, Event1500FR,
+		Event50FRS, Event100FRS, Event200FRS:
 		return "Freestyle"
-	case Event50BK, Event100BK, Event200BK:
+	case Event50BK, Event100BK, Event200BK,
+		Event50BKS, Event100BKS:
 		return "Backstroke"
 	case Event50BR, Event100BR, Event200BR:
 		return "Breaststroke"
@@ -174,11 +245,11 @@ func (e EventCode) Stroke() string {
 	}
 }
 
-// EventsByStroke returns events grouped by stroke type.
+// EventsByStroke returns events grouped by stroke type (including splits).
 func EventsByStroke() map[string][]EventCode {
 	return map[string][]EventCode{
-		"Freestyle":         {Event50FR, Event100FR, Event200FR, Event400FR, Event800FR, Event1500FR},
-		"Backstroke":        {Event50BK, Event100BK, Event200BK},
+		"Freestyle":         {Event50FR, Event100FR, Event200FR, Event400FR, Event800FR, Event1500FR, Event50FRS, Event100FRS, Event200FRS},
+		"Backstroke":        {Event50BK, Event100BK, Event200BK, Event50BKS, Event100BKS},
 		"Breaststroke":      {Event50BR, Event100BR, Event200BR},
 		"Butterfly":         {Event50FL, Event100FL, Event200FL},
 		"Individual Medley": {Event200IM, Event400IM},

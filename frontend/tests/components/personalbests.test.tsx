@@ -105,9 +105,7 @@ describe('PersonalBestGrid', () => {
     renderWithProviders(<PersonalBestGrid personalBests={[]} />);
 
     expect(screen.getByText('No Personal Bests Yet')).toBeInTheDocument();
-    expect(
-      screen.getByText(/Start recording swim times/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Start recording swim times/)).toBeInTheDocument();
   });
 
   it('groups personal bests by stroke', () => {
@@ -149,9 +147,7 @@ describe('PersonalBestGrid', () => {
   });
 
   it('sorts events by distance within each stroke', () => {
-    const { container } = renderWithProviders(
-      <PersonalBestGrid personalBests={mockPBs} />
-    );
+    const { container } = renderWithProviders(<PersonalBestGrid personalBests={mockPBs} />);
 
     // Within Freestyle section, 50FR should come before 100FR
     const freestyleSection = container.querySelector('section');

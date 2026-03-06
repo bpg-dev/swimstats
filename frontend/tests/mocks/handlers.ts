@@ -27,7 +27,7 @@ export const mockMeet = {
   city: 'Toronto',
   country: 'Canada',
   start_date: '2026-01-15',
-  end_date: '2026-01-15',  // Single-day meet for tests
+  end_date: '2026-01-15', // Single-day meet for tests
   course_type: '25m' as const,
   time_count: 5,
 };
@@ -87,11 +87,9 @@ export const handlers = [
   http.get(`${API_URL}/meets`, ({ request }) => {
     const url = new URL(request.url);
     const courseType = url.searchParams.get('course_type');
-    
-    const meets = [mockMeet].filter(
-      (m) => !courseType || m.course_type === courseType
-    );
-    
+
+    const meets = [mockMeet].filter((m) => !courseType || m.course_type === courseType);
+
     return HttpResponse.json({
       meets,
       total: meets.length,
@@ -100,10 +98,7 @@ export const handlers = [
 
   http.post(`${API_URL}/meets`, async ({ request }) => {
     const body = await request.json();
-    return HttpResponse.json(
-      { id: 'new-meet-id', ...(body as object) },
-      { status: 201 }
-    );
+    return HttpResponse.json({ id: 'new-meet-id', ...(body as object) }, { status: 201 });
   }),
 
   http.get(`${API_URL}/meets/:id`, ({ params }) => {
@@ -135,7 +130,7 @@ export const handlers = [
   http.get(`${API_URL}/times`, ({ request }) => {
     const url = new URL(request.url);
     const meetId = url.searchParams.get('meet_id');
-    
+
     // Return empty list for unknown meet IDs
     if (meetId === 'no-times-meet') {
       return HttpResponse.json({
@@ -143,23 +138,26 @@ export const handlers = [
         total: 0,
       });
     }
-    
+
     // Filter times by meet_id if provided
-    const times = meetId && meetId !== mockTime.meet_id 
-      ? [] 
-      : [{
-          ...mockTime,
-          meet: {
-            id: mockMeet.id,
-            name: mockMeet.name,
-            city: mockMeet.city,
-            country: mockMeet.country,
-            start_date: mockMeet.start_date,
-            end_date: mockMeet.end_date,
-            course_type: mockMeet.course_type,
-          },
-        }];
-    
+    const times =
+      meetId && meetId !== mockTime.meet_id
+        ? []
+        : [
+            {
+              ...mockTime,
+              meet: {
+                id: mockMeet.id,
+                name: mockMeet.name,
+                city: mockMeet.city,
+                country: mockMeet.country,
+                start_date: mockMeet.start_date,
+                end_date: mockMeet.end_date,
+                course_type: mockMeet.course_type,
+              },
+            },
+          ];
+
     return HttpResponse.json({
       times,
       total: times.length,
@@ -181,10 +179,7 @@ export const handlers = [
       ...(t as object),
       time_formatted: '1:05.32',
     }));
-    return HttpResponse.json(
-      { times, new_pbs: ['100FR'] },
-      { status: 201 }
-    );
+    return HttpResponse.json({ times, new_pbs: ['100FR'] }, { status: 201 });
   }),
 
   http.delete(`${API_URL}/times/:id`, ({ params }) => {
@@ -207,6 +202,7 @@ export const handlers = [
           time_id: 'time-1',
           meet: 'Test Championship',
           date: '2026-01-15',
+          is_from_split: false,
         },
       ],
     });
@@ -281,11 +277,11 @@ export const handlers = [
   http.get(`${API_URL}/comparisons`, ({ request }) => {
     const url = new URL(request.url);
     const standardId = url.searchParams.get('standard_id');
-    
+
     if (!standardId) {
       return HttpResponse.json({ error: 'standard_id is required' }, { status: 400 });
     }
-    
+
     return HttpResponse.json({
       standard_id: standardId,
       standard_name: 'Test Standard',

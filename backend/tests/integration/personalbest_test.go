@@ -16,6 +16,7 @@ type PersonalBest struct {
 	TimeID        string `json:"time_id"`
 	MeetName      string `json:"meet"`
 	Date          string `json:"date"`
+	IsFromSplit   bool   `json:"is_from_split"`
 }
 
 type PersonalBestList struct {
@@ -221,5 +222,349 @@ func TestPersonalBestsAPI(t *testing.T) {
 		rr := client.Get("/api/v1/personal-bests?course_type=25m")
 		assert.Equal(t, http.StatusUnauthorized, rr.Code)
 		client.SetMockUser("full")
+	})
+}
+
+func TestPersonalBestsWithSplits(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode")
+	}
+
+	ctx := context.Background()
+	testDB := SetupTestDB(ctx, t)
+	defer testDB.TeardownTestDB(ctx, t)
+
+	handler := setupTestHandler(t, testDB)
+	client := NewAPIClient(t, handler)
+	client.SetMockUser("full")
+
+	// Helper to create swimmer
+	createSwimmer := func(t *testing.T) {
+		t.Helper()
+		swimmerInput := SwimmerInput{
+			Name:      "Split PB Test Swimmer",
+			BirthDate: "2012-05-15",
+			Gender:    "female",
+		}
+		rr := client.Put("/api/v1/swimmer", swimmerInput)
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+	}
+
+	// Helper to create a meet
+	createMeet := func(t *testing.T, name string, date string) string {
+		t.Helper()
+		meetInput := MeetInput{
+			Name:       name,
+			City:       "Toronto",
+			Country:    "Canada",
+			StartDate:  date,
+			EndDate:    date,
+			CourseType: "25m",
+		}
+		rr := client.Post("/api/v1/meets", meetInput)
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		var meet Meet
+		AssertJSONBody(t, rr, &meet)
+		return meet.ID
+	}
+
+	// Helper to find a PB by event code
+	findPB := func(pbs []PersonalBest, event string) *PersonalBest {
+		for i := range pbs {
+			if pbs[i].Event == event {
+				return &pbs[i]
+			}
+		}
+		return nil
+	}
+
+	t.Run("split faster than base", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		createSwimmer(t)
+
+		meet1 := createMeet(t, "Base Meet", "2026-01-10")
+		meet2 := createMeet(t, "Split Meet", "2026-01-11")
+
+		// Create base 100FR at 65000ms
+		rr := client.Post("/api/v1/times", TimeInput{MeetID: meet1, Event: "100FR", TimeMS: 65000, EventDate: "2026-01-10"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create base time: %s", rr.Body.String())
+
+		// Create split 100FRS at 63500ms (faster)
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet2, Event: "100FRS", TimeMS: 63500, EventDate: "2026-01-11"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create split time: %s", rr.Body.String())
+
+		// GET personal-bests
+		rr = client.Get("/api/v1/personal-bests?course_type=25m")
+		assert.Equal(t, http.StatusOK, rr.Code)
+
+		var pbs PersonalBestList
+		AssertJSONBody(t, rr, &pbs)
+
+		// Should have a single 100FR PB (split merged into base)
+		pb := findPB(pbs.PersonalBests, "100FR")
+		require.NotNil(t, pb, "100FR PB not found in response")
+		assert.Equal(t, 63500, pb.TimeMS, "PB should use the faster split time")
+		assert.True(t, pb.IsFromSplit, "PB should be marked as from split")
+
+		// Should NOT have 100FRS as a separate PB
+		splitPB := findPB(pbs.PersonalBests, "100FRS")
+		assert.Nil(t, splitPB, "100FRS should not appear as separate PB")
+	})
+
+	t.Run("base faster than split", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		createSwimmer(t)
+
+		meet1 := createMeet(t, "Base Meet", "2026-02-10")
+		meet2 := createMeet(t, "Split Meet", "2026-02-11")
+
+		// Create base 100FR at 63500ms (faster)
+		rr := client.Post("/api/v1/times", TimeInput{MeetID: meet1, Event: "100FR", TimeMS: 63500, EventDate: "2026-02-10"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create base time: %s", rr.Body.String())
+
+		// Create split 100FRS at 65000ms
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet2, Event: "100FRS", TimeMS: 65000, EventDate: "2026-02-11"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create split time: %s", rr.Body.String())
+
+		// GET personal-bests
+		rr = client.Get("/api/v1/personal-bests?course_type=25m")
+		assert.Equal(t, http.StatusOK, rr.Code)
+
+		var pbs PersonalBestList
+		AssertJSONBody(t, rr, &pbs)
+
+		pb := findPB(pbs.PersonalBests, "100FR")
+		require.NotNil(t, pb, "100FR PB not found in response")
+		assert.Equal(t, 63500, pb.TimeMS, "PB should use the faster base time")
+		assert.False(t, pb.IsFromSplit, "PB should NOT be marked as from split")
+
+		splitPB := findPB(pbs.PersonalBests, "100FRS")
+		assert.Nil(t, splitPB, "100FRS should not appear as separate PB")
+	})
+
+	t.Run("only split exists", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		createSwimmer(t)
+
+		meet1 := createMeet(t, "Split Only Meet", "2026-03-10")
+
+		// Create only split 100FRS at 63500ms
+		rr := client.Post("/api/v1/times", TimeInput{MeetID: meet1, Event: "100FRS", TimeMS: 63500, EventDate: "2026-03-10"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create split time: %s", rr.Body.String())
+
+		// GET personal-bests
+		rr = client.Get("/api/v1/personal-bests?course_type=25m")
+		assert.Equal(t, http.StatusOK, rr.Code)
+
+		var pbs PersonalBestList
+		AssertJSONBody(t, rr, &pbs)
+
+		pb := findPB(pbs.PersonalBests, "100FR")
+		require.NotNil(t, pb, "100FR PB not found — split should appear as base event")
+		assert.Equal(t, 63500, pb.TimeMS, "PB should use the split time")
+		assert.True(t, pb.IsFromSplit, "PB should be marked as from split")
+
+		splitPB := findPB(pbs.PersonalBests, "100FRS")
+		assert.Nil(t, splitPB, "100FRS should not appear as separate PB")
+	})
+
+	t.Run("only base exists", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		createSwimmer(t)
+
+		meet1 := createMeet(t, "Base Only Meet", "2026-04-10")
+
+		// Create only base 100FR at 65000ms
+		rr := client.Post("/api/v1/times", TimeInput{MeetID: meet1, Event: "100FR", TimeMS: 65000, EventDate: "2026-04-10"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create base time: %s", rr.Body.String())
+
+		// GET personal-bests
+		rr = client.Get("/api/v1/personal-bests?course_type=25m")
+		assert.Equal(t, http.StatusOK, rr.Code)
+
+		var pbs PersonalBestList
+		AssertJSONBody(t, rr, &pbs)
+
+		pb := findPB(pbs.PersonalBests, "100FR")
+		require.NotNil(t, pb, "100FR PB not found")
+		assert.Equal(t, 65000, pb.TimeMS, "PB should use the base time")
+		assert.False(t, pb.IsFromSplit, "PB should NOT be marked as from split")
+
+		splitPB := findPB(pbs.PersonalBests, "100FRS")
+		assert.Nil(t, splitPB, "100FRS should not appear as separate PB")
+	})
+
+	t.Run("equal times - base event preferred", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+		createSwimmer(t)
+
+		meet1 := createMeet(t, "Tie Base Meet", "2026-05-10")
+		meet2 := createMeet(t, "Tie Split Meet", "2026-05-11")
+
+		// Create base and split with identical times
+		rr := client.Post("/api/v1/times", TimeInput{MeetID: meet1, Event: "100FR", TimeMS: 63500, EventDate: "2026-05-10"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create base time: %s", rr.Body.String())
+
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet2, Event: "100FRS", TimeMS: 63500, EventDate: "2026-05-11"})
+		require.Equal(t, http.StatusCreated, rr.Code, "failed to create split time: %s", rr.Body.String())
+
+		rr = client.Get("/api/v1/personal-bests?course_type=25m")
+		assert.Equal(t, http.StatusOK, rr.Code)
+
+		var pbs PersonalBestList
+		AssertJSONBody(t, rr, &pbs)
+
+		pb := findPB(pbs.PersonalBests, "100FR")
+		require.NotNil(t, pb, "100FR PB not found")
+		assert.Equal(t, 63500, pb.TimeMS)
+		// When times are equal, base event is preferred (processed first in DB order)
+		assert.False(t, pb.IsFromSplit, "when times are equal, base event should be preferred")
+	})
+}
+
+func createMeetHelper(t *testing.T, client *APIClient, name, date, courseType string) string { //nolint:unparam
+	t.Helper()
+	meetInput := MeetInput{
+		Name: name, City: "Toronto", Country: "Canada",
+		StartDate: date, EndDate: date, CourseType: courseType,
+	}
+	rr := client.Post("/api/v1/meets", meetInput)
+	require.Equal(t, http.StatusCreated, rr.Code)
+	var meet Meet
+	AssertJSONBody(t, rr, &meet)
+	return meet.ID
+}
+
+type EventComparison struct {
+	Event         string `json:"event"`
+	Status        string `json:"status"`
+	SwimmerTimeMS *int   `json:"swimmer_time_ms"`
+	IsFromSplit   bool   `json:"is_from_split"`
+}
+
+type ComparisonResult struct {
+	StandardID   string            `json:"standard_id"`
+	StandardName string            `json:"standard_name"`
+	Comparisons  []EventComparison `json:"comparisons"`
+}
+
+func TestComparisonWithSplits(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode")
+	}
+
+	ctx := context.Background()
+	testDB := SetupTestDB(ctx, t)
+	defer testDB.TeardownTestDB(ctx, t)
+
+	handler := setupTestHandler(t, testDB)
+	client := NewAPIClient(t, handler)
+	client.SetMockUser("full")
+
+	findComparison := func(comps []EventComparison, event string) *EventComparison {
+		for i := range comps {
+			if comps[i].Event == event {
+				return &comps[i]
+			}
+		}
+		return nil
+	}
+
+	t.Run("comparison uses faster split time with is_from_split", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+
+		// Create swimmer
+		rr := client.Put("/api/v1/swimmer", SwimmerInput{
+			Name: "Comparison Split Swimmer", BirthDate: "2012-05-15", Gender: "female",
+		})
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		// Create standard with 100FR time
+		rr = client.Post("/api/v1/standards/import", StandardImportInput{
+			Name: "Split Test Standard", CourseType: "25m", Gender: "female",
+			Times: []StandardTimeInput{
+				{Event: "100FR", AgeGroup: "OPEN", TimeMs: 62000},
+			},
+		})
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var std Standard
+		AssertJSONBody(t, rr, &std)
+
+		// Create meets
+		meet1 := createMeetHelper(t, client, "Comp Meet 1", "2026-01-10", "25m")
+		meet2 := createMeetHelper(t, client, "Comp Meet 2", "2026-01-11", "25m")
+
+		// Base 100FR at 65000ms
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet1, Event: "100FR", TimeMS: 65000, EventDate: "2026-01-10"})
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Split 100FRS at 63500ms (faster)
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet2, Event: "100FRS", TimeMS: 63500, EventDate: "2026-01-11"})
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Get comparison
+		rr = client.Get("/api/v1/comparisons?standard_id=" + std.ID + "&course_type=25m")
+		assert.Equal(t, http.StatusOK, rr.Code)
+
+		var result ComparisonResult
+		AssertJSONBody(t, rr, &result)
+
+		// 100FR comparison should use the faster split time
+		comp := findComparison(result.Comparisons, "100FR")
+		require.NotNil(t, comp, "100FR comparison not found")
+		require.NotNil(t, comp.SwimmerTimeMS)
+		assert.Equal(t, 63500, *comp.SwimmerTimeMS, "should use faster split time")
+		assert.True(t, comp.IsFromSplit, "should be marked as from split")
+
+		// 100FRS should NOT appear as a separate comparison
+		splitComp := findComparison(result.Comparisons, "100FRS")
+		assert.Nil(t, splitComp, "100FRS should not appear as separate comparison")
+	})
+
+	t.Run("comparison uses base time when it is faster", func(t *testing.T) {
+		testDB.ClearTables(ctx, t)
+
+		// Create swimmer
+		rr := client.Put("/api/v1/swimmer", SwimmerInput{
+			Name: "Comparison Base Swimmer", BirthDate: "2012-05-15", Gender: "female",
+		})
+		require.True(t, rr.Code == http.StatusCreated || rr.Code == http.StatusOK)
+
+		// Create standard
+		rr = client.Post("/api/v1/standards/import", StandardImportInput{
+			Name: "Base Test Standard", CourseType: "25m", Gender: "female",
+			Times: []StandardTimeInput{
+				{Event: "100FR", AgeGroup: "OPEN", TimeMs: 62000},
+			},
+		})
+		require.Equal(t, http.StatusCreated, rr.Code)
+		var std Standard
+		AssertJSONBody(t, rr, &std)
+
+		// Create meets
+		meet1 := createMeetHelper(t, client, "Comp Base Meet", "2026-02-10", "25m")
+		meet2 := createMeetHelper(t, client, "Comp Split Meet", "2026-02-11", "25m")
+
+		// Base 100FR at 63500ms (faster)
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet1, Event: "100FR", TimeMS: 63500, EventDate: "2026-02-10"})
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Split 100FRS at 65000ms
+		rr = client.Post("/api/v1/times", TimeInput{MeetID: meet2, Event: "100FRS", TimeMS: 65000, EventDate: "2026-02-11"})
+		require.Equal(t, http.StatusCreated, rr.Code)
+
+		// Get comparison
+		rr = client.Get("/api/v1/comparisons?standard_id=" + std.ID + "&course_type=25m")
+		assert.Equal(t, http.StatusOK, rr.Code)
+
+		var result ComparisonResult
+		AssertJSONBody(t, rr, &result)
+
+		comp := findComparison(result.Comparisons, "100FR")
+		require.NotNil(t, comp)
+		require.NotNil(t, comp.SwimmerTimeMS)
+		assert.Equal(t, 63500, *comp.SwimmerTimeMS, "should use faster base time")
+		assert.False(t, comp.IsFromSplit, "should NOT be marked as from split")
 	})
 }

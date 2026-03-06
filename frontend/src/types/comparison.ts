@@ -15,6 +15,7 @@ export interface EventComparison {
   age_group: string;
   meet_name: string | null;
   date: string | null;
+  is_from_split: boolean;
 
   // Adjacent age groups
   prev_age_group?: string | null;

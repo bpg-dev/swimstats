@@ -5,13 +5,16 @@ import { useTimes } from '@/hooks/useTimes';
 import { usePersonalBests } from '@/hooks/usePersonalBests';
 import { EventFilter, SortToggle, AllTimesList, SortBy } from '@/components/times';
 import { Loading, ErrorBanner } from '@/components/ui';
-import { EventCode, EVENTS, getEventInfo } from '@/types/time';
+import { EventCode, EVENTS, getEventInfo, isSplitEvent, splitVariant } from '@/types/time';
 
-// Default to first event (50m Freestyle)
-const DEFAULT_EVENT: EventCode = EVENTS[0].code;
+// Only base (non-split) events for the filter
+const BASE_EVENTS = EVENTS.filter((e) => !isSplitEvent(e.code));
 
-// Valid event codes for URL param validation
-const VALID_EVENTS = new Set(EVENTS.map((e) => e.code));
+// Default to first base event (50m Freestyle)
+const DEFAULT_EVENT: EventCode = BASE_EVENTS[0].code;
+
+// Valid event codes for URL param validation (base events only)
+const VALID_EVENTS = new Set(BASE_EVENTS.map((e) => e.code));
 
 /**
  * All Times page - view all recorded times for a selected event.
@@ -44,13 +47,26 @@ export function AllTimes() {
     limit: 100, // Get all times for the event
   });
 
+  // Also fetch split variant times (e.g., 100FRS when viewing 100FR)
+  const splitEvent = splitVariant(selectedEvent);
+  const {
+    data: splitTimeData,
+    isLoading: splitTimesLoading,
+    error: splitTimesError,
+    refetch: refetchSplitTimes,
+  } = useTimes(splitEvent ? { course_type: courseType, event: splitEvent, limit: 100 } : undefined);
+
+  // Merge base and split times
+  const mergedTimes = [...(timeData?.times || []), ...(splitTimeData?.times || [])];
+  const mergedTotal = (timeData?.total || 0) + (splitTimeData?.total || 0);
+
   // Fetch personal bests to identify PB
   const { data: pbData, isLoading: pbLoading } = usePersonalBests(courseType);
 
-  // Find the PB time ID for the selected event
+  // Find the PB time ID for the selected event (could be from base or split)
   const pbTimeId = pbData?.personal_bests.find((pb) => pb.event === selectedEvent)?.time_id;
 
-  const isLoading = timesLoading || pbLoading;
+  const isLoading = timesLoading || splitTimesLoading || pbLoading;
   const eventInfo = getEventInfo(selectedEvent);
 
   return (
@@ -70,7 +86,12 @@ export function AllTimes() {
           <label htmlFor="event-filter" className="block text-sm font-medium text-slate-700 mb-1">
             Event
           </label>
-          <EventFilter value={selectedEvent} onChange={handleEventChange} className="w-full" />
+          <EventFilter
+            value={selectedEvent}
+            onChange={handleEventChange}
+            className="w-full"
+            excludeSplits
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Sort by</label>
@@ -79,10 +100,13 @@ export function AllTimes() {
       </div>
 
       {/* Error */}
-      {timesError && (
+      {(timesError || splitTimesError) && (
         <ErrorBanner
-          message={timesError.message || 'Failed to load times'}
-          onRetry={() => refetchTimes()}
+          message={(timesError || splitTimesError)?.message || 'Failed to load times'}
+          onRetry={() => {
+            refetchTimes();
+            refetchSplitTimes();
+          }}
         />
       )}
 
@@ -90,15 +114,15 @@ export function AllTimes() {
       {isLoading && <Loading />}
 
       {/* Times list */}
-      {!isLoading && timeData && (
+      {!isLoading && (
         <>
           <div className="flex items-center justify-between">
             <p className="text-sm text-slate-600">
-              {timeData.total} time{timeData.total !== 1 ? 's' : ''} recorded for{' '}
+              {mergedTotal} time{mergedTotal !== 1 ? 's' : ''} recorded for{' '}
               {eventInfo?.name || selectedEvent}
             </p>
           </div>
-          <AllTimesList times={timeData.times} pbTimeId={pbTimeId} sortBy={sortBy} />
+          <AllTimesList times={mergedTimes} pbTimeId={pbTimeId} sortBy={sortBy} />
         </>
       )}
     </div>

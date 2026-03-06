@@ -38,6 +38,7 @@ type Querier interface {
 	GetPersonalBests(ctx context.Context, arg GetPersonalBestsParams) ([]GetPersonalBestsRow, error)
 	// Returns time progression for a specific event over time
 	// Used for progress charts visualization
+	// Accepts both base event ($3) and its split variant ($4) to show both on the graph
 	GetProgressData(ctx context.Context, arg GetProgressDataParams) ([]GetProgressDataRow, error)
 	GetRecentMeets(ctx context.Context, arg GetRecentMeetsParams) ([]GetRecentMeetsRow, error)
 	GetStandard(ctx context.Context, id uuid.UUID) (TimeStandard, error)

@@ -60,6 +60,19 @@ describe('EventSelector', () => {
     render(<EventSelector error="Event is required" />, { wrapper: createWrapper() });
     expect(screen.getByText('Event is required')).toBeInTheDocument();
   });
+
+  it('excludes split events when excludeSplits is true', () => {
+    render(<EventSelector excludeSplits />, { wrapper: createWrapper() });
+
+    const select = screen.getByRole('combobox');
+    const options = select.querySelectorAll('option');
+    const optionValues = Array.from(options).map((opt) => opt.getAttribute('value'));
+
+    expect(optionValues).not.toContain('100FRS');
+    expect(optionValues).not.toContain('50BKS');
+    expect(optionValues).toContain('100FR');
+    expect(optionValues).toContain('50BK');
+  });
 });
 
 describe('TimeEntryForm', () => {
@@ -75,10 +88,9 @@ describe('TimeEntryForm', () => {
     const user = userEvent.setup();
     const onSuccess = vi.fn();
 
-    render(
-      <TimeEntryForm meetId={mockMeet.id} onSuccess={onSuccess} />,
-      { wrapper: createWrapper() }
-    );
+    render(<TimeEntryForm meetId={mockMeet.id} onSuccess={onSuccess} />, {
+      wrapper: createWrapper(),
+    });
 
     // Wait for times to be fetched
     await waitFor(() => {
@@ -106,10 +118,9 @@ describe('TimeEntryForm', () => {
     const user = userEvent.setup();
     const onCancel = vi.fn();
 
-    render(
-      <TimeEntryForm meetId={mockMeet.id} onCancel={onCancel} />,
-      { wrapper: createWrapper() }
-    );
+    render(<TimeEntryForm meetId={mockMeet.id} onCancel={onCancel} />, {
+      wrapper: createWrapper(),
+    });
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
     await user.click(cancelButton);
@@ -118,10 +129,7 @@ describe('TimeEntryForm', () => {
   });
 
   it('shows save changes button when editing', async () => {
-    render(
-      <TimeEntryForm initialData={mockTime} />,
-      { wrapper: createWrapper() }
-    );
+    render(<TimeEntryForm initialData={mockTime} />, { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /save changes/i })).toBeInTheDocument();
@@ -167,10 +175,9 @@ describe('QuickEntryForm', () => {
     const user = userEvent.setup();
     const onSuccess = vi.fn();
 
-    render(
-      <QuickEntryForm meetId={mockMeet.id} onSuccess={onSuccess} />,
-      { wrapper: createWrapper() }
-    );
+    render(<QuickEntryForm meetId={mockMeet.id} onSuccess={onSuccess} />, {
+      wrapper: createWrapper(),
+    });
 
     // Fill in the first entry - select first combobox (event selector)
     // Use 200FR since 100FR is already in the mock data for this meet
@@ -193,10 +200,7 @@ describe('QuickEntryForm', () => {
   it('shows PB notification after successful batch submit', async () => {
     const user = userEvent.setup();
 
-    render(
-      <QuickEntryForm meetId={mockMeet.id} />,
-      { wrapper: createWrapper() }
-    );
+    render(<QuickEntryForm meetId={mockMeet.id} />, { wrapper: createWrapper() });
 
     // Fill in entry - use 200FR since 100FR is already in the mock data
     const selects = screen.getAllByRole('combobox');
@@ -220,24 +224,24 @@ describe('QuickEntryForm', () => {
   });
 
   it('excludes already-entered events from dropdown', async () => {
-    render(
-      <QuickEntryForm meetId={mockMeet.id} />,
-      { wrapper: createWrapper() }
-    );
+    render(<QuickEntryForm meetId={mockMeet.id} />, { wrapper: createWrapper() });
 
     // Wait for the form to load AND for the times query to complete
     // The dropdown should eventually NOT contain 100FR since it's already recorded for this meet
-    await waitFor(() => {
-      const select = screen.getByRole('combobox');
-      const options = select.querySelectorAll('option');
-      const has100FR = Array.from(options).some(opt => opt.value === '100FR');
-      expect(has100FR).toBe(false);
-    }, { timeout: 3000 });
-    
+    await waitFor(
+      () => {
+        const select = screen.getByRole('combobox');
+        const options = select.querySelectorAll('option');
+        const has100FR = Array.from(options).some((opt) => opt.value === '100FR');
+        expect(has100FR).toBe(false);
+      },
+      { timeout: 3000 }
+    );
+
     // But it should have 200FR which is available
     const select = screen.getByRole('combobox');
     const options = select.querySelectorAll('option');
-    const has200FR = Array.from(options).some(opt => opt.value === '200FR');
+    const has200FR = Array.from(options).some((opt) => opt.value === '200FR');
     expect(has200FR).toBe(true);
   });
 });
@@ -293,7 +297,7 @@ describe('QuickEntryForm MeetSelector Integration', () => {
     // Find the event selector (not the meet one, has 200FR option - since 100FR is already taken)
     for (const select of allSelects) {
       const options = select.querySelectorAll('option');
-      const has200FR = Array.from(options).some(opt => opt.value === '200FR');
+      const has200FR = Array.from(options).some((opt) => opt.value === '200FR');
       if (has200FR) {
         await user.selectOptions(select, '200FR');
         break;
@@ -314,6 +318,57 @@ describe('QuickEntryForm MeetSelector Integration', () => {
     });
     // Should show View Meet button
     expect(screen.getByRole('button', { name: /view meet/i })).toBeInTheDocument();
+  });
+});
+
+describe('QuickEntryForm single-day meet event_date', () => {
+  it('includes event_date in batch payload for single-day meets', async () => {
+    const user = userEvent.setup();
+    let capturedBody: Record<string, unknown> | null = null;
+
+    // Override batch handler on the global MSW server to capture the request body
+    const { http, HttpResponse } = await import('msw');
+    const { server } = await import('../setup');
+    server.use(
+      http.post('/api/v1/times/batch', async ({ request }) => {
+        capturedBody = (await request.json()) as Record<string, unknown>;
+        const times = ((capturedBody.times as unknown[]) || []).map((t: unknown, i: number) => ({
+          id: `batch-time-${i}`,
+          ...(t as object),
+          time_formatted: '1:05.32',
+        }));
+        return HttpResponse.json({ times, new_pbs: [] }, { status: 201 });
+      })
+    );
+
+    render(<QuickEntryForm meetId={mockMeet.id} courseType="25m" />, { wrapper: createWrapper() });
+
+    // Wait for form to be ready
+    await waitFor(() => {
+      expect(screen.getAllByRole('combobox').length).toBeGreaterThanOrEqual(1);
+    });
+
+    // Select a split event
+    const selects = screen.getAllByRole('combobox');
+    await user.selectOptions(selects[0], '100FRS');
+
+    // Enter time
+    const timeInputs = screen.getAllByPlaceholderText(/SS\.ss/i);
+    await user.type(timeInputs[0], '1:03.50');
+
+    // Submit
+    const submitButton = screen.getByRole('button', { name: /save all times/i });
+    await user.click(submitButton);
+
+    // Wait for submission
+    await waitFor(() => {
+      expect(capturedBody).not.toBeNull();
+    });
+
+    // Verify event_date is set to the meet's start_date for single-day meet
+    const times = capturedBody!.times as Array<{ event_date?: string }>;
+    expect(times).toHaveLength(1);
+    expect(times[0].event_date).toBe(mockMeet.start_date);
   });
 });
 

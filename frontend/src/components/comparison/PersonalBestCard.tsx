@@ -38,7 +38,17 @@ export function PersonalBestCard({ pb, achievedStandards }: PersonalBestCardProp
     >
       <div className="flex justify-between items-start mb-2">
         <div>
-          <h4 className="font-medium text-gray-900 dark:text-gray-100">{eventName}</h4>
+          <h4 className="font-medium text-gray-900 dark:text-gray-100">
+            {eventName}
+            {pb.is_from_split && (
+              <span
+                className="ml-1 inline-flex items-center rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700"
+                aria-label="from relay split"
+              >
+                Split
+              </span>
+            )}
+          </h4>
           <p className="text-sm text-gray-500 dark:text-gray-400">{pb.meet}</p>
         </div>
         <div className="text-right">

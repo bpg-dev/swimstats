@@ -1,6 +1,6 @@
 import { forwardRef, useMemo } from 'react';
 import { Select, SelectProps } from '@/components/ui';
-import { EventCode, EVENTS, EVENTS_BY_STROKE } from '@/types/time';
+import { EventCode, EVENTS, EVENTS_BY_STROKE, isSplitEvent } from '@/types/time';
 
 export interface EventSelectorProps extends Omit<SelectProps, 'options'> {
   groupByStroke?: boolean;
@@ -9,6 +9,8 @@ export interface EventSelectorProps extends Omit<SelectProps, 'options'> {
   labelClassName?: string;
   /** Events to exclude from the dropdown (e.g., already entered for this meet) */
   excludeEvents?: EventCode[];
+  /** Exclude all split event variants from the dropdown */
+  excludeSplits?: boolean;
 }
 
 export const EventSelector = forwardRef<HTMLSelectElement, EventSelectorProps>(
@@ -19,6 +21,7 @@ export const EventSelector = forwardRef<HTMLSelectElement, EventSelectorProps>(
       placeholder = 'Select event',
       labelClassName,
       excludeEvents = [],
+      excludeSplits = false,
       ...props
     },
     ref
@@ -26,13 +29,16 @@ export const EventSelector = forwardRef<HTMLSelectElement, EventSelectorProps>(
     const excludeSet = useMemo(() => new Set(excludeEvents), [excludeEvents]);
 
     const options = useMemo(() => {
+      const shouldExclude = (code: EventCode) =>
+        excludeSet.has(code) || (excludeSplits && isSplitEvent(code));
+
       if (groupByStroke) {
         // Create optgroup-like structure (flattened since Select doesn't support optgroups)
         const grouped: { value: string; label: string; disabled?: boolean }[] = [];
 
         Object.entries(EVENTS_BY_STROKE).forEach(([stroke, events]) => {
           // Only add stroke header if there are available events in this group
-          const availableEvents = events.filter((e) => !excludeSet.has(e.code));
+          const availableEvents = events.filter((e) => !shouldExclude(e.code));
           if (availableEvents.length > 0) {
             grouped.push({ value: `__${stroke}`, label: `── ${stroke} ──`, disabled: true });
             availableEvents.forEach((event) => {
@@ -44,11 +50,11 @@ export const EventSelector = forwardRef<HTMLSelectElement, EventSelectorProps>(
         return grouped;
       }
 
-      return EVENTS.filter((event) => !excludeSet.has(event.code)).map((event) => ({
+      return EVENTS.filter((event) => !shouldExclude(event.code)).map((event) => ({
         value: event.code,
         label: event.name,
       }));
-    }, [groupByStroke, excludeSet]);
+    }, [groupByStroke, excludeSet, excludeSplits]);
 
     return (
       <Select

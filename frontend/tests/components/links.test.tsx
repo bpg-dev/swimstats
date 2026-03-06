@@ -51,16 +51,51 @@ describe('EventLink', () => {
     expect(link).toHaveAttribute('aria-label', 'View all times for 200m IM');
   });
 
+  it('shows base event name with Split badge for split events', () => {
+    renderWithRouter(<EventLink event="100FRS" />);
+
+    const link = screen.getByRole('link');
+    // Should show the base event name, not "100m Freestyle Split"
+    expect(link).toHaveTextContent('100m Freestyle');
+    // Link aria-label should include "(relay split)"
+    expect(link).toHaveAttribute('aria-label', 'View all times for 100m Freestyle (relay split)');
+    // Should have a Split badge that is aria-hidden
+    expect(screen.getByText('Split')).toBeInTheDocument();
+    expect(screen.getByText('Split')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('links to base event on All Times page for split events', () => {
+    renderWithRouter(<EventLink event="100FRS" />);
+
+    const link = screen.getByRole('link');
+    // Should link to the base event, not the split code
+    expect(link).toHaveAttribute('href', '/all-times?event=100FR');
+  });
+
+  it('does not show Split badge for base events', () => {
+    renderWithRouter(<EventLink event="100FR" />);
+
+    expect(screen.queryByText('Split')).not.toBeInTheDocument();
+  });
+
   it('renders different events correctly', () => {
     const { rerender } = renderWithRouter(<EventLink event="50FR" />);
     expect(screen.getByRole('link')).toHaveTextContent('50m Freestyle');
     expect(screen.getByRole('link')).toHaveAttribute('href', '/all-times?event=50FR');
 
-    rerender(<BrowserRouter><EventLink event="100BR" /></BrowserRouter>);
+    rerender(
+      <BrowserRouter>
+        <EventLink event="100BR" />
+      </BrowserRouter>
+    );
     expect(screen.getByRole('link')).toHaveTextContent('100m Breaststroke');
     expect(screen.getByRole('link')).toHaveAttribute('href', '/all-times?event=100BR');
 
-    rerender(<BrowserRouter><EventLink event="400IM" /></BrowserRouter>);
+    rerender(
+      <BrowserRouter>
+        <EventLink event="400IM" />
+      </BrowserRouter>
+    );
     expect(screen.getByRole('link')).toHaveTextContent('400m IM');
     expect(screen.getByRole('link')).toHaveAttribute('href', '/all-times?event=400IM');
   });
