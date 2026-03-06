@@ -50,10 +50,14 @@ accelerates onboarding, and minimizes technical debt accumulation.
 ### II. Test-Driven Development
 
 Tests are not optional artifacts—they are the specification that drives
-implementation. The Red-Green-Refactor cycle is mandatory for all features.
+implementation.
 
-- **Test-First**: Tests MUST be written before implementation; PRs without
-  corresponding tests for new functionality will be rejected
+- **New features and user stories**: TDD is mandatory — tests MUST be written
+  before implementation (Red-Green-Refactor cycle). PRs without corresponding
+  tests for new functionality will be rejected
+- **Bug fixes and refactors**: Tests are recommended but MAY be written
+  alongside or after the change
+- **Documentation and configuration changes**: Tests are not required
 - **Coverage Thresholds**: New code MUST maintain or improve overall test
   coverage; critical paths require >90% coverage
 - **Test Categories**:
@@ -62,11 +66,10 @@ implementation. The Red-Green-Refactor cycle is mandatory for all features.
   - **Contract Tests**: External interface guarantees (MUST exist for public APIs)
 - **Test Independence**: Each test MUST be runnable in isolation without
   depending on other tests or external state
-- **Failure Verification**: Tests MUST demonstrably fail before implementation
-  proves them correct
 
 **Rationale**: TDD catches defects early, serves as living documentation, and
-enables confident refactoring without regression fear.
+enables confident refactoring without regression fear. Relaxed requirements for
+bug fixes and refactors reduce friction while maintaining quality on new work.
 
 ### III. User Experience Consistency
 
