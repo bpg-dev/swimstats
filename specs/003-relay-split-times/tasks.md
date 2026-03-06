@@ -21,9 +21,9 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T001 Write unit tests for split event helpers (`IsSplit`, `BaseEvent`, `SplitVariant`, `IsValid` for split codes, `IndividualEventCodes`, `SplitEventCodes`, `Description`, `Stroke`, `EventsByStroke` with splits) in `backend/internal/domain/types_test.go`
-- [ ] T002 Add split event constants (`Event50FRS`, `Event100FRS`, `Event200FRS`, `Event50BKS`, `Event100BKS`), `SplitEventCodes` slice, `IndividualEventCodes` slice, and helper methods (`IsSplit()`, `BaseEvent()`, `SplitVariant()`) to `backend/internal/domain/types.go`. Update `ValidEventCodes`, `Description()`, `Stroke()`, and `EventsByStroke()` to include split events.
-- [ ] T003 [P] Extend `EventCode` union type with split codes (`'50FRS' | '100FRS' | '200FRS' | '50BKS' | '100BKS'`), add split entries to `EVENTS` array (with display names like "100m Freestyle Split") and `EVENTS_BY_STROKE` map, add `isSplitEvent()` and `baseEvent()` helper functions in `frontend/src/types/time.ts`
+- [x] T001 Write unit tests for split event helpers (`IsSplit`, `BaseEvent`, `SplitVariant`, `IsValid` for split codes, `IndividualEventCodes`, `SplitEventCodes`, `Description`, `Stroke`, `EventsByStroke` with splits) in `backend/internal/domain/types_test.go`
+- [x] T002 Add split event constants (`Event50FRS`, `Event100FRS`, `Event200FRS`, `Event50BKS`, `Event100BKS`), `SplitEventCodes` slice, `IndividualEventCodes` slice, and helper methods (`IsSplit()`, `BaseEvent()`, `SplitVariant()`) to `backend/internal/domain/types.go`. Update `ValidEventCodes`, `Description()`, `Stroke()`, and `EventsByStroke()` to include split events.
+- [x] T003 [P] Extend `EventCode` union type with split codes (`'50FRS' | '100FRS' | '200FRS' | '50BKS' | '100BKS'`), add split entries to `EVENTS` array (with display names like "100m Freestyle Split") and `EVENTS_BY_STROKE` map, add `isSplitEvent()` and `baseEvent()` helper functions in `frontend/src/types/time.ts`
 
 **Checkpoint**: Split event codes are valid in both backend and frontend. Helpers available for all downstream logic.
 

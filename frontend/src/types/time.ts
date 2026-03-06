@@ -17,7 +17,12 @@ export type EventCode =
   | '100FL'
   | '200FL'
   | '200IM'
-  | '400IM';
+  | '400IM'
+  | '50FRS'
+  | '100FRS'
+  | '200FRS'
+  | '50BKS'
+  | '100BKS';
 
 export interface TimeRecord {
   id: string;
@@ -83,10 +88,17 @@ export const EVENTS: EventInfo[] = [
   { code: '400FR', name: '400m Freestyle', stroke: 'Freestyle', distance: 400 },
   { code: '800FR', name: '800m Freestyle', stroke: 'Freestyle', distance: 800 },
   { code: '1500FR', name: '1500m Freestyle', stroke: 'Freestyle', distance: 1500 },
+  // Freestyle splits
+  { code: '50FRS', name: '50m Freestyle Split', stroke: 'Freestyle', distance: 50 },
+  { code: '100FRS', name: '100m Freestyle Split', stroke: 'Freestyle', distance: 100 },
+  { code: '200FRS', name: '200m Freestyle Split', stroke: 'Freestyle', distance: 200 },
   // Backstroke
   { code: '50BK', name: '50m Backstroke', stroke: 'Backstroke', distance: 50 },
   { code: '100BK', name: '100m Backstroke', stroke: 'Backstroke', distance: 100 },
   { code: '200BK', name: '200m Backstroke', stroke: 'Backstroke', distance: 200 },
+  // Backstroke splits
+  { code: '50BKS', name: '50m Backstroke Split', stroke: 'Backstroke', distance: 50 },
+  { code: '100BKS', name: '100m Backstroke Split', stroke: 'Backstroke', distance: 100 },
   // Breaststroke
   { code: '50BR', name: '50m Breaststroke', stroke: 'Breaststroke', distance: 50 },
   { code: '100BR', name: '100m Breaststroke', stroke: 'Breaststroke', distance: 100 },
@@ -110,4 +122,22 @@ export const EVENTS_BY_STROKE: Record<string, EventInfo[]> = {
 
 export function getEventInfo(code: EventCode): EventInfo | undefined {
   return EVENTS.find((e) => e.code === code);
+}
+
+const SPLIT_CODES: Set<EventCode> = new Set(['50FRS', '100FRS', '200FRS', '50BKS', '100BKS']);
+
+const SPLIT_TO_BASE: Record<string, EventCode> = {
+  '50FRS': '50FR',
+  '100FRS': '100FR',
+  '200FRS': '200FR',
+  '50BKS': '50BK',
+  '100BKS': '100BK',
+};
+
+export function isSplitEvent(code: EventCode): boolean {
+  return SPLIT_CODES.has(code);
+}
+
+export function baseEvent(code: EventCode): EventCode {
+  return SPLIT_TO_BASE[code] ?? code;
 }
