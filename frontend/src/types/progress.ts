@@ -7,6 +7,7 @@ export interface ProgressDataPoint {
   meet_name: string;
   event: string;
   is_pb: boolean;
+  is_split: boolean;
 }
 
 export interface ProgressData {

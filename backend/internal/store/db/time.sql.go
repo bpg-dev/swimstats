@@ -306,22 +306,15 @@ SELECT
     COALESCE(t.event_date, m.start_date) AS date,
     m.name AS meet_name,
     t.event,
-    -- Check if this time is the personal best (fastest time for this event/course)
-    (t.time_ms = (
-        SELECT MIN(t2.time_ms)
-        FROM times t2
-        JOIN meets m2 ON m2.id = t2.meet_id
-        WHERE t2.swimmer_id = t.swimmer_id
-          AND m2.course_type = m.course_type
-          AND t2.event = t.event
-    )) AS is_pb
+    -- is_pb is set to false here; recalculated in the service layer across both events
+    false AS is_pb
 FROM times t
 JOIN meets m ON m.id = t.meet_id
 WHERE t.swimmer_id = $1
   AND m.course_type = $2
-  AND t.event = $3
-  AND ($4::date IS NULL OR COALESCE(t.event_date, m.start_date) >= $4)
-  AND ($5::date IS NULL OR COALESCE(t.event_date, m.start_date) <= $5)
+  AND t.event IN ($3, $4)
+  AND ($5::date IS NULL OR COALESCE(t.event_date, m.start_date) >= $5)
+  AND ($6::date IS NULL OR COALESCE(t.event_date, m.start_date) <= $6)
 ORDER BY COALESCE(t.event_date, m.start_date) ASC, t.time_ms ASC
 `
 
@@ -329,8 +322,9 @@ type GetProgressDataParams struct {
 	SwimmerID  uuid.UUID   `json:"swimmer_id"`
 	CourseType string      `json:"course_type"`
 	Event      string      `json:"event"`
-	Column4    pgtype.Date `json:"column_4"`
+	Event_2    string      `json:"event_2"`
 	Column5    pgtype.Date `json:"column_5"`
+	Column6    pgtype.Date `json:"column_6"`
 }
 
 type GetProgressDataRow struct {
@@ -345,13 +339,15 @@ type GetProgressDataRow struct {
 
 // Returns time progression for a specific event over time
 // Used for progress charts visualization
+// Accepts both base event ($3) and its split variant ($4) to show both on the graph
 func (q *Queries) GetProgressData(ctx context.Context, arg GetProgressDataParams) ([]GetProgressDataRow, error) {
 	rows, err := q.db.Query(ctx, getProgressData,
 		arg.SwimmerID,
 		arg.CourseType,
 		arg.Event,
-		arg.Column4,
+		arg.Event_2,
 		arg.Column5,
+		arg.Column6,
 	)
 	if err != nil {
 		return nil, err

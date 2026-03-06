@@ -33,6 +33,7 @@ type ProgressDataPoint struct {
 	MeetName       string `json:"meet_name"`
 	Event          string `json:"event"`
 	IsPersonalBest bool   `json:"is_pb"`
+	IsSplit        bool   `json:"is_split"`
 }
 
 // ProgressData represents the complete progress data for an event.
@@ -46,6 +47,7 @@ type ProgressData struct {
 }
 
 // GetProgressData retrieves time progression data for visualization.
+// Fetches both the base event and its split variant, then recalculates is_pb across both.
 func (s *ProgressService) GetProgressData(
 	ctx context.Context,
 	swimmerID uuid.UUID,
@@ -58,17 +60,36 @@ func (s *ProgressService) GetProgressData(
 	if !domain.CourseType(courseType).IsValid() {
 		return nil, fmt.Errorf("invalid course type: %s", courseType)
 	}
-	if !domain.EventCode(event).IsValid() {
+
+	ec := domain.EventCode(event)
+	if !ec.IsValid() {
 		return nil, fmt.Errorf("invalid event: %s", event)
 	}
 
-	// Query progress data
-	rows, err := s.timeRepo.GetProgressData(ctx, swimmerID, courseType, event, startDate, endDate)
+	// Determine the split variant (may be empty string if none exists)
+	splitEvent := ""
+	if split, ok := ec.SplitVariant(); ok {
+		splitEvent = string(split)
+	}
+
+	// Query progress data for both base and split events
+	rows, err := s.timeRepo.GetProgressData(ctx, swimmerID, courseType, event, splitEvent, startDate, endDate)
 	if err != nil {
 		return nil, fmt.Errorf("get progress data: %w", err)
 	}
 
-	// Convert to domain objects
+	// Find the minimum time across all data points for is_pb calculation
+	minTimeMS := int32(0)
+	if len(rows) > 0 {
+		minTimeMS = rows[0].TimeMs
+		for _, row := range rows[1:] {
+			if row.TimeMs < minTimeMS {
+				minTimeMS = row.TimeMs
+			}
+		}
+	}
+
+	// Convert to domain objects with recalculated is_pb
 	dataPoints := make([]ProgressDataPoint, len(rows))
 	for i, row := range rows {
 		date := ""
@@ -84,7 +105,8 @@ func (s *ProgressService) GetProgressData(
 			Date:           date,
 			MeetName:       row.MeetName,
 			Event:          row.Event,
-			IsPersonalBest: row.IsPb,
+			IsPersonalBest: row.TimeMs == minTimeMS,
+			IsSplit:        domain.EventCode(row.Event).IsSplit(),
 		}
 	}
 

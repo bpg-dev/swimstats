@@ -54,6 +54,20 @@ const CustomDot = (props: CustomDotProps) => {
     );
   }
 
+  // Split times use a diamond shape with a different color
+  if (payload?.is_split) {
+    return (
+      <g>
+        <polygon
+          points={`${cx},${cy - 5} ${cx + 5},${cy} ${cx},${cy + 5} ${cx - 5},${cy}`}
+          fill="#8b5cf6"
+          stroke="#fff"
+          strokeWidth={1.5}
+        />
+      </g>
+    );
+  }
+
   return <Dot {...props} r={4} fill="#3b82f6" />;
 };
 
@@ -73,6 +87,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
           <MeetLink meetId={data.meet_id} meetName={data.meet_name} />
         </p>
         <p className="text-sm text-slate-500">{formatDate(data.date)}</p>
+        {data.is_split && <p className="text-xs text-purple-600 font-medium mt-1">Relay Split</p>}
         {data.is_pb && <p className="text-xs text-green-600 font-semibold mt-1">Personal Best</p>}
       </div>
     );
@@ -214,74 +229,96 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
     yDomain[1] = Math.max(yDomain[1], yTicks[yTicks.length - 1]);
   }
 
+  const hasSplitData = chartData.some((d) => d.is_split);
+
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={chartData} margin={{ top: 30, right: 30, left: 20, bottom: 20 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-        <XAxis
-          dataKey="timestamp"
-          type="number"
-          scale="time"
-          domain={xDomain}
-          tickFormatter={formatXAxis}
-          stroke="#64748b"
-          style={{ fontSize: '12px' }}
-          label={{
-            value: 'Date',
-            position: 'insideBottom',
-            offset: -10,
-            style: { fontSize: '14px', fill: '#64748b' },
-          }}
-        />
-        <YAxis
-          reversed
-          domain={yDomain}
-          ticks={yTicks}
-          tickFormatter={formatYAxis}
-          stroke="#64748b"
-          style={{ fontSize: '12px' }}
-          label={{
-            value: 'Time',
-            angle: -90,
-            position: 'insideLeft',
-            style: { fontSize: '14px', fill: '#64748b' },
-          }}
-        >
-          <Label
-            value="Faster"
-            position="top"
-            offset={15}
-            style={{ fontSize: '11px', fill: '#64748b' }}
+    <div>
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={chartData} margin={{ top: 30, right: 30, left: 20, bottom: 20 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <XAxis
+            dataKey="timestamp"
+            type="number"
+            scale="time"
+            domain={xDomain}
+            tickFormatter={formatXAxis}
+            stroke="#64748b"
+            style={{ fontSize: '12px' }}
+            label={{
+              value: 'Date',
+              position: 'insideBottom',
+              offset: -10,
+              style: { fontSize: '14px', fill: '#64748b' },
+            }}
           />
-        </YAxis>
-        <Tooltip content={<CustomTooltip />} />
+          <YAxis
+            reversed
+            domain={yDomain}
+            ticks={yTicks}
+            tickFormatter={formatYAxis}
+            stroke="#64748b"
+            style={{ fontSize: '12px' }}
+            label={{
+              value: 'Time',
+              angle: -90,
+              position: 'insideLeft',
+              style: { fontSize: '14px', fill: '#64748b' },
+            }}
+          >
+            <Label
+              value="Faster"
+              position="top"
+              offset={15}
+              style={{ fontSize: '11px', fill: '#64748b' }}
+            />
+          </YAxis>
+          <Tooltip content={<CustomTooltip />} />
 
-        {/* Reference line for standard time */}
-        {standardTime && (
-          <ReferenceLine
-            y={standardTime}
-            stroke="#ef4444"
-            strokeDasharray="5 5"
-            strokeWidth={3}
-            label={
-              <ReferenceLabel
-                standardTime={standardTime}
-                standardName={standardName || 'Standard'}
-              />
-            }
+          {/* Reference line for standard time */}
+          {standardTime && (
+            <ReferenceLine
+              y={standardTime}
+              stroke="#ef4444"
+              strokeDasharray="5 5"
+              strokeWidth={3}
+              label={
+                <ReferenceLabel
+                  standardTime={standardTime}
+                  standardName={standardName || 'Standard'}
+                />
+              }
+            />
+          )}
+
+          <Line
+            type="monotone"
+            dataKey="time_ms"
+            stroke="#3b82f6"
+            strokeWidth={2}
+            name="Time"
+            dot={<CustomDot />}
+            activeDot={{ r: 6 }}
           />
-        )}
-
-        <Line
-          type="monotone"
-          dataKey="time_ms"
-          stroke="#3b82f6"
-          strokeWidth={2}
-          name="Time"
-          dot={<CustomDot />}
-          activeDot={{ r: 6 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+        </LineChart>
+      </ResponsiveContainer>
+      {hasSplitData && (
+        <div className="flex items-center justify-center gap-6 mt-2 text-sm text-slate-600">
+          <div className="flex items-center gap-1.5">
+            <span className="inline-block w-3 h-3 rounded-full bg-blue-500" />
+            <span>Individual</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <polygon points="6,1 11,6 6,11 1,6" fill="#8b5cf6" />
+            </svg>
+            <span>Relay Split</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="inline-block w-3 h-3 rounded-full bg-green-500" />
+            <span>Personal Best</span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

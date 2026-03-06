@@ -64,7 +64,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T008 [US2] Add "Split" badge to split times on `frontend/src/pages/AllTimes.tsx` — detect split event codes using `isSplitEvent()` helper and render a small visual badge next to event name. Include accessible labeling (`aria-label` or `sr-only` text like "from relay split") for screen readers.
+- [x] T008 [US2] Add "Split" badge to split times on `frontend/src/pages/AllTimes.tsx` — detect split event codes using `isSplitEvent()` helper and render a small visual badge next to event name. Include accessible labeling (`aria-label` or `sr-only` text like "from relay split") for screen readers.
 
 **Checkpoint**: Split times are visually distinguishable from regular times in the All Times view.
 
@@ -111,9 +111,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T019 [US4] Modify `GetProgressData` query in `backend/internal/store/queries/time.sql` to accept both base and split event codes (change `t.event = $3` to `t.event IN ($3, $4)` or use `ANY` parameter), regenerate sqlc (`cd backend && make sqlc`)
-- [ ] T020 [US4] Update progress service in `backend/internal/domain/comparison/progress.go`: compute split variant for requested base event using `SplitVariant()`, pass both codes to modified query, add `is_split` boolean field to response data points (derived from event code). Recalculate `is_pb` in the service layer after fetching results: find the minimum `time_ms` across ALL returned data points (both base and split events combined), then mark only the fastest time as `is_pb=true`. This replaces the per-event-code `is_pb` from the SQL query.
-- [ ] T021 [US4] Render split data points with distinct visual markers on `frontend/src/pages/Progress.tsx` — use different dot shape, color, or styling for split times vs regular times. Add `is_split` to the frontend progress data type. Include legend entry for split times. Ensure chart markers have accessible labels (e.g., tooltip or `aria-label` distinguishing split from regular).
+- [x] T019 [US4] Modify `GetProgressData` query in `backend/internal/store/queries/time.sql` to accept both base and split event codes (change `t.event = $3` to `t.event IN ($3, $4)` or use `ANY` parameter), regenerate sqlc (`cd backend && make sqlc`)
+- [x] T020 [US4] Update progress service in `backend/internal/domain/comparison/progress.go`: compute split variant for requested base event using `SplitVariant()`, pass both codes to modified query, add `is_split` boolean field to response data points (derived from event code). Recalculate `is_pb` in the service layer after fetching results: find the minimum `time_ms` across ALL returned data points (both base and split events combined), then mark only the fastest time as `is_pb=true`. This replaces the per-event-code `is_pb` from the SQL query.
+- [x] T021 [US4] Render split data points with distinct visual markers on `frontend/src/pages/Progress.tsx` — use different dot shape, color, or styling for split times vs regular times. Add `is_split` to the frontend progress data type. Include legend entry for split times. Ensure chart markers have accessible labels (e.g., tooltip or `aria-label` distinguishing split from regular).
 
 **Checkpoint**: Progress graphs show complete picture with both individual and split times, visually distinguished. PB markers are accurate across both event types.
 
