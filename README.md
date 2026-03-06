@@ -163,16 +163,16 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Backend
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `8080` | Server port |
-| `ENV` | `development` | Environment (`development` or `production`) |
-| `DATABASE_URL` | `postgres://swimstats:swimstats@localhost:5432/swimstats?sslmode=disable` | PostgreSQL connection string |
-| `OIDC_ISSUER` | - | OIDC provider URL (required in production) |
-| `OIDC_CLIENT_ID` | - | OAuth2 client ID |
-| `OIDC_CLIENT_SECRET` | - | OAuth2 client secret |
-| `OIDC_REDIRECT_URL` | `http://localhost:5173/auth/callback` | OAuth2 redirect URL |
-| `OIDC_FULL_ACCESS_CLAIM` | `swimstats_admin` | Claim/group for full access |
+| Variable                 | Default                                                                   | Description                                 |
+|--------------------------|---------------------------------------------------------------------------|---------------------------------------------|
+| `PORT`                   | `8080`                                                                    | Server port                                 |
+| `ENV`                    | `development`                                                             | Environment (`development` or `production`) |
+| `DATABASE_URL`           | `postgres://swimstats:swimstats@localhost:5432/swimstats?sslmode=disable` | PostgreSQL connection string                |
+| `OIDC_ISSUER`            | -                                                                         | OIDC provider URL (required in production)  |
+| `OIDC_CLIENT_ID`         | -                                                                         | OAuth2 client ID                            |
+| `OIDC_CLIENT_SECRET`     | -                                                                         | OAuth2 client secret                        |
+| `OIDC_REDIRECT_URL`      | `http://localhost:5173/auth/callback`                                     | OAuth2 redirect URL                         |
+| `OIDC_FULL_ACCESS_CLAIM` | `swimstats_admin`                                                         | Claim/group for full access                 |
 
 ### Frontend
 

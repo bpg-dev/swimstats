@@ -1,7 +1,7 @@
 .PHONY: all help lint test build clean \
         backend-lint backend-test backend-build \
         frontend-install frontend-lint frontend-check frontend-test frontend-build \
-        dev-up dev-down
+        dev-up dev-down serve
 
 all: lint test build ## Run lint, test, and build for all components
 
@@ -51,6 +51,17 @@ dev-up: ## Start development environment (postgres)
 
 dev-down: ## Stop development environment
 	docker-compose down
+
+serve: dev-up ## Start frontend and backend with hot reload
+	@echo "Waiting for postgres to be ready..."
+	@until docker exec swimstats-postgres pg_isready -U swimstats -d swimstats > /dev/null 2>&1; do sleep 1; done
+	@echo "Running migrations..."
+	@cd backend && DATABASE_URL=postgres://swimstats:swimstats@localhost:5432/swimstats?sslmode=disable go run ./cmd/server migrate
+	@echo "Starting backend (air) and frontend (vite)..."
+	@trap 'kill 0' EXIT; \
+		$(MAKE) -C backend serve & \
+		$(MAKE) -C frontend dev & \
+		wait
 
 # CI targets (used by GitHub Actions)
 ci-backend-test: ## CI: Run backend tests (pass TEST_DB_* vars to override defaults)

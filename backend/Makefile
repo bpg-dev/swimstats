@@ -1,4 +1,4 @@
-.PHONY: lint test test-setup test-teardown test-migrate test-run build clean help migrate
+.PHONY: lint test test-setup test-teardown test-migrate test-run build clean help migrate serve
 
 # Configuration (can be overridden for CI)
 GOLANGCI_LINT_VERSION ?= v2.10.1
@@ -55,6 +55,10 @@ migrate: ## Run migrations using embedded migration tool
 
 test-run: ## Run tests only (no setup/teardown, for CI)
 	DATABASE_URL=$(TEST_DB_URL) go test -v -race -coverprofile=coverage.out ./...
+
+serve: ## Start backend with hot reload (requires air)
+	@command -v air >/dev/null 2>&1 || { echo "Installing air..."; go install github.com/air-verse/air@latest; }
+	air
 
 build: ## Build Docker image
 	docker build -t swimstats-backend:latest .
