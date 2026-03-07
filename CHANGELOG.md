@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/bpg-dev/swimstats/compare/v4.0.1...v4.0.2) (2026-03-07)
+
+
+### Miscellaneous
+
+* **container:** update image caddy (3b2a019 → fce4f15) ([#223](https://github.com/bpg-dev/swimstats/issues/223)) ([9745172](https://github.com/bpg-dev/swimstats/commit/9745172f5c39f1b13a36cdd54114693a497e9dde))
+
 ## [4.0.1](https://github.com/bpg-dev/swimstats/compare/v4.0.0...v4.0.1) (2026-03-06)
 
 
