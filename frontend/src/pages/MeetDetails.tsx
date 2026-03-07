@@ -186,7 +186,7 @@ export function MeetDetails() {
 
       {/* Times List */}
       <Card>
-        <CardContent>
+        <CardContent className="pt-6">
           <MeetTimesList meetId={meet.id} courseType={meet.course_type} />
         </CardContent>
       </Card>

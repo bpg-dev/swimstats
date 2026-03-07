@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,6 +7,22 @@ import { EventFilter } from '@/components/times/EventFilter';
 import { SortToggle } from '@/components/times/SortToggle';
 import { AllTimesList } from '@/components/times/AllTimesList';
 import { TimeRecord } from '@/types/time';
+import * as authStoreModule from '@/stores/authStore';
+
+// Spy on useAuthStore to return full write access
+beforeEach(() => {
+  vi.spyOn(authStoreModule, 'useAuthStore').mockImplementation(
+    (selector?: (state: Record<string, unknown>) => unknown) => {
+      const mockState = {
+        user: { id: 'test-user', name: 'Test User', access_level: 'full' },
+        isAuthenticated: true,
+        canWrite: () => true,
+        accessLevel: () => 'full',
+      };
+      return selector ? selector(mockState) : mockState;
+    }
+  );
+});
 
 // Test helper to render with React Query provider
 function createTestQueryClient() {
@@ -299,5 +315,38 @@ describe('AllTimesList', () => {
     renderWithProviders(<AllTimesList times={mockTimes} sortBy="date" />);
 
     expect(screen.queryByText('Split')).not.toBeInTheDocument();
+  });
+
+  it('shows delete buttons for each time entry', () => {
+    renderWithProviders(<AllTimesList times={mockTimes} sortBy="date" />);
+
+    // Should have delete buttons for each time
+    const deleteButtons = screen.getAllByRole('button', { name: /delete.*time/i });
+    expect(deleteButtons).toHaveLength(3);
+  });
+
+  it('shows edit buttons when onEditTime is provided', () => {
+    const onEditTime = vi.fn();
+
+    renderWithProviders(
+      <AllTimesList times={mockTimes} sortBy="date" onEditTime={onEditTime} />
+    );
+
+    const editButtons = screen.getAllByRole('button', { name: /edit.*time/i });
+    expect(editButtons).toHaveLength(3);
+  });
+
+  it('calls onEditTime when edit button is clicked', async () => {
+    const user = userEvent.setup();
+    const onEditTime = vi.fn();
+
+    renderWithProviders(
+      <AllTimesList times={mockTimes} sortBy="date" onEditTime={onEditTime} />
+    );
+
+    const editButtons = screen.getAllByRole('button', { name: /edit.*time/i });
+    await user.click(editButtons[0]);
+
+    expect(onEditTime).toHaveBeenCalledWith(expect.objectContaining({ id: '1' }));
   });
 });

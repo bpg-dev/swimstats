@@ -304,6 +304,36 @@ describe('MeetTimesList', () => {
     });
   });
 
+  it('shows edit button for each time entry', async () => {
+    render(<MeetTimesList meetId={mockMeet.id} courseType="25m" />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('100m Freestyle')).toBeInTheDocument();
+    });
+
+    // Edit button should be present
+    const editButton = screen.getByRole('button', { name: /edit 100m freestyle time/i });
+    expect(editButton).toBeInTheDocument();
+  });
+
+  it('shows edit form when edit button is clicked', async () => {
+    const user = userEvent.setup();
+
+    render(<MeetTimesList meetId={mockMeet.id} courseType="25m" />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('100m Freestyle')).toBeInTheDocument();
+    });
+
+    const editButton = screen.getByRole('button', { name: /edit 100m freestyle time/i });
+    await user.click(editButton);
+
+    // Should show the edit form
+    await waitFor(() => {
+      expect(screen.getByText('Edit Time')).toBeInTheDocument();
+    });
+  });
+
   it('renders event names as clickable links to All Times page', async () => {
     render(<MeetTimesList meetId={mockMeet.id} courseType="25m" />, { wrapper: createWrapper() });
 

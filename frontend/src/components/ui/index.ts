@@ -19,3 +19,13 @@ export type { ErrorBannerProps } from './ErrorBanner';
 
 export { EventLink } from './EventLink';
 export { MeetLink } from './MeetLink';
+
+export {
+  Table,
+  TableHeader,
+  TableHeaderRow,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from './Table';

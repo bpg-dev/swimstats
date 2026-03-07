@@ -4,8 +4,16 @@ import { useCourseType } from '@/stores/courseFilterStore';
 import { useTimes } from '@/hooks/useTimes';
 import { usePersonalBests } from '@/hooks/usePersonalBests';
 import { EventFilter, SortToggle, AllTimesList, SortBy } from '@/components/times';
-import { Loading, ErrorBanner } from '@/components/ui';
-import { EventCode, EVENTS, getEventInfo, isSplitEvent, splitVariant } from '@/types/time';
+import { TimeEntryForm } from '@/components/times/TimeEntryForm';
+import { Loading, ErrorBanner, Card, CardContent } from '@/components/ui';
+import {
+  EventCode,
+  EVENTS,
+  getEventInfo,
+  isSplitEvent,
+  splitVariant,
+  TimeRecord,
+} from '@/types/time';
 
 // Only base (non-split) events for the filter
 const BASE_EVENTS = EVENTS.filter((e) => !isSplitEvent(e.code));
@@ -24,6 +32,7 @@ export function AllTimes() {
   const courseType = useCourseType();
   const [searchParams, setSearchParams] = useSearchParams();
   const [sortBy, setSortBy] = useState<SortBy>('date');
+  const [editingTime, setEditingTime] = useState<TimeRecord | null>(null);
 
   // Derive selected event from URL, with fallback to default
   const eventFromUrl = searchParams.get('event') as EventCode | null;
@@ -113,17 +122,34 @@ export function AllTimes() {
       {/* Loading */}
       {isLoading && <Loading />}
 
+      {/* Edit form */}
+      {editingTime && (
+        <TimeEntryForm
+          initialData={editingTime}
+          courseType={courseType}
+          onSuccess={() => setEditingTime(null)}
+          onCancel={() => setEditingTime(null)}
+        />
+      )}
+
       {/* Times list */}
-      {!isLoading && (
-        <>
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-600">
-              {mergedTotal} time{mergedTotal !== 1 ? 's' : ''} recorded for{' '}
-              {eventInfo?.name || selectedEvent}
-            </p>
-          </div>
-          <AllTimesList times={mergedTimes} pbTimeId={pbTimeId} sortBy={sortBy} />
-        </>
+      {!isLoading && !editingTime && (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-slate-600">
+                {mergedTotal} time{mergedTotal !== 1 ? 's' : ''} recorded for{' '}
+                {eventInfo?.name || selectedEvent}
+              </p>
+            </div>
+            <AllTimesList
+              times={mergedTimes}
+              pbTimeId={pbTimeId}
+              sortBy={sortBy}
+              onEditTime={setEditingTime}
+            />
+          </CardContent>
+        </Card>
       )}
     </div>
   );
