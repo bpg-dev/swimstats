@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.3](https://github.com/bpg-dev/swimstats/compare/v4.0.2...v4.0.3) (2026-03-07)
+
+
+### Bug Fixes
+
+* **ui:** standardize table design and restore edit time buttons ([#225](https://github.com/bpg-dev/swimstats/issues/225)) ([0218955](https://github.com/bpg-dev/swimstats/commit/0218955e26decb419074b44ec00ab3e8bde23dd1))
+
 ## [4.0.2](https://github.com/bpg-dev/swimstats/compare/v4.0.1...v4.0.2) (2026-03-07)
 
 
