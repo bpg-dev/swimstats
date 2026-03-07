@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import { StandardTime, StandardTimeInput, AgeGroup } from '@/types/standard';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableHeaderRow,
+  TableRow,
+} from '@/components/ui';
 import { parseTimeToMs } from '@/utils/timeFormat';
 
 const EVENTS = [
@@ -100,45 +113,38 @@ export function StandardTimesEditor({
         <CardTitle>Edit Qualifying Times</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead>
-              <tr>
-                <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Event
-                </th>
-                {AGE_GROUPS.map((ag) => (
-                  <th
-                    key={ag.code}
-                    className="px-3 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider"
-                  >
-                    {ag.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-slate-200">
-              {EVENTS.map((event) => (
-                <tr key={event.code}>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-slate-900">
-                    {event.name}
-                  </td>
-                  {AGE_GROUPS.map((ag) => (
-                    <td key={`${event.code}-${ag.code}`} className="px-2 py-1">
-                      <input
-                        type="text"
-                        value={getTimeValue(event.code, ag.code)}
-                        onChange={(e) => handleTimeChange(event.code, ag.code, e.target.value)}
-                        placeholder="--"
-                        className="w-20 px-2 py-1 text-sm text-center border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                    </td>
-                  ))}
-                </tr>
+        <Table>
+          <TableHeader>
+            <TableHeaderRow>
+              <TableHead className="px-3">Event</TableHead>
+              {AGE_GROUPS.map((ag) => (
+                <TableHead key={ag.code} className="px-3 text-center">
+                  {ag.name}
+                </TableHead>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableHeaderRow>
+          </TableHeader>
+          <TableBody>
+            {EVENTS.map((event) => (
+              <TableRow key={event.code}>
+                <TableCell className="px-3 whitespace-nowrap font-medium text-slate-900">
+                  {event.name}
+                </TableCell>
+                {AGE_GROUPS.map((ag) => (
+                  <TableCell key={`${event.code}-${ag.code}`} className="px-2 py-1">
+                    <input
+                      type="text"
+                      value={getTimeValue(event.code, ag.code)}
+                      onChange={(e) => handleTimeChange(event.code, ag.code, e.target.value)}
+                      placeholder="--"
+                      className="w-20 px-2 py-1 text-sm text-center border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
 
         <p className="mt-4 text-sm text-slate-500">
           Enter times in format: 28.45 or 1:05.32. Leave blank for events without a standard.

@@ -149,7 +149,7 @@ export function Progress() {
       {/* Loading state */}
       {isLoading && (
         <Card>
-          <CardContent>
+          <CardContent className="pt-6">
             <Loading text="Loading progress data..." />
           </CardContent>
         </Card>

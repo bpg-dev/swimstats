@@ -70,7 +70,7 @@ export function Compare() {
       {/* Loading state */}
       {isLoading && (
         <Card>
-          <CardContent>
+          <CardContent className="pt-6">
             <Loading text="Loading comparison..." />
           </CardContent>
         </Card>
@@ -131,7 +131,7 @@ export function Compare() {
       {/* Empty state when no standard selected */}
       {!selectedStandardId && !isLoading && (
         <Card>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="text-center py-12 text-slate-500">
               <p>Select a time standard above to see how your times compare.</p>
               <p className="text-sm mt-2">

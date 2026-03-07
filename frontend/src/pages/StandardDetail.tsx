@@ -18,6 +18,13 @@ import {
   Button,
   Loading,
   ErrorBanner,
+  Table,
+  TableHeader,
+  TableHeaderRow,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
 } from '@/components/ui';
 
 const EVENTS = [
@@ -288,48 +295,41 @@ export function StandardDetail() {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200">
-                <thead>
-                  <tr>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Event
-                    </th>
-                    {AGE_GROUPS.map((ag) => (
-                      <th
-                        key={ag.code}
-                        className="px-3 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider"
-                      >
-                        {ag.name}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-slate-200">
-                  {EVENTS.map((event) => {
-                    // Only show events that have at least one time
-                    const hasTime = AGE_GROUPS.some((ag) => timesMap[event.code]?.[ag.code]);
-                    if (!hasTime) return null;
+            <Table>
+              <TableHeader>
+                <TableHeaderRow>
+                  <TableHead className="px-3">Event</TableHead>
+                  {AGE_GROUPS.map((ag) => (
+                    <TableHead key={ag.code} className="px-3 text-center">
+                      {ag.name}
+                    </TableHead>
+                  ))}
+                </TableHeaderRow>
+              </TableHeader>
+              <TableBody>
+                {EVENTS.map((event) => {
+                  // Only show events that have at least one time
+                  const hasTime = AGE_GROUPS.some((ag) => timesMap[event.code]?.[ag.code]);
+                  if (!hasTime) return null;
 
-                    return (
-                      <tr key={event.code}>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-slate-900">
-                          {event.name}
-                        </td>
-                        {AGE_GROUPS.map((ag) => (
-                          <td
-                            key={`${event.code}-${ag.code}`}
-                            className="px-3 py-2 whitespace-nowrap text-sm text-center text-slate-600"
-                          >
-                            {getTime(event.code, ag.code)}
-                          </td>
-                        ))}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                  return (
+                    <TableRow key={event.code}>
+                      <TableCell className="px-3 whitespace-nowrap font-medium text-slate-900">
+                        {event.name}
+                      </TableCell>
+                      {AGE_GROUPS.map((ag) => (
+                        <TableCell
+                          key={`${event.code}-${ag.code}`}
+                          className="px-3 whitespace-nowrap text-center text-slate-600"
+                        >
+                          {getTime(event.code, ag.code)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>

@@ -137,7 +137,7 @@ export function TimeEntryForm({
   };
 
   return (
-    <Card>
+    <Card className="max-w-2xl">
       <CardHeader>
         <CardTitle>{isEditing ? 'Edit Time' : 'Add Time'}</CardTitle>
       </CardHeader>
