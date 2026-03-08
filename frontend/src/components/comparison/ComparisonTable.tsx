@@ -94,10 +94,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
 
   if (filteredByStroke.every((g) => g.events.length === 0)) {
     return (
-      <EmptyState
-        message="No times recorded yet."
-        detail="Add some times to see comparisons."
-      />
+      <EmptyState message="No times recorded yet." detail="Add some times to see comparisons." />
     );
   }
 

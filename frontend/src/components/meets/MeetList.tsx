@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 import { Meet, CourseType } from '@/types/meet';
-import { Card, CardContent, CardHeader, CardTitle, EmptyState, Loading, ErrorBanner } from '@/components/ui';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  Loading,
+  ErrorBanner,
+} from '@/components/ui';
 import { useMeets } from '@/hooks/useMeets';
 import { formatDateRange } from '@/utils/timeFormat';
 
