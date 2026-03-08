@@ -117,7 +117,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
 
   return (
     <Table className="divide-y divide-slate-200 table-fixed" style={{ minWidth: '800px' }}>
-      <TableHeader className="bg-slate-50">
+      <TableHeader>
         <TableHeaderRow>
           <TableHead className="px-4 whitespace-nowrap w-52 align-top">Event</TableHead>
           <TableHead className="px-4 whitespace-nowrap w-28 align-top">Your Time</TableHead>
