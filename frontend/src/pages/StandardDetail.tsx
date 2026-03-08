@@ -213,7 +213,7 @@ export function StandardDetail() {
             {!standard.is_preloaded && (
               <div className="flex items-center gap-2">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => setMode('edit')}
                   disabled={!canWrite()}
@@ -221,10 +221,9 @@ export function StandardDetail() {
                   Edit
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="danger"
                   size="sm"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="text-red-600 hover:text-red-700"
                   disabled={!canWrite()}
                 >
                   Delete
