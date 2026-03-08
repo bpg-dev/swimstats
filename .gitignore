@@ -49,6 +49,9 @@ tmp/
 temp/
 coverage/
 
+# Worktrees
+.worktrees/
+
 # Local data
 *.sqlite
 *.db
