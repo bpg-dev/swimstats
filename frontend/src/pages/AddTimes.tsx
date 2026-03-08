@@ -83,26 +83,24 @@ export function AddTimes() {
         </div>
       </div>
 
-      <div className="max-w-3xl">
-        {mode === 'quick' ? (
-          <QuickEntryForm
-            meetId={meetId}
-            courseType={courseType}
-            onSuccess={handleSuccess}
-            onCancel={handleCancel}
-          />
-        ) : (
-          <TimeEntryForm
-            meetId={meetId}
-            courseType={courseType}
-            onSuccess={() => {
-              // Reset form for next entry by reloading
-              window.location.reload();
-            }}
-            onCancel={handleCancel}
-          />
-        )}
-      </div>
+      {mode === 'quick' ? (
+        <QuickEntryForm
+          meetId={meetId}
+          courseType={courseType}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+        />
+      ) : (
+        <TimeEntryForm
+          meetId={meetId}
+          courseType={courseType}
+          onSuccess={() => {
+            // Reset form for next entry by reloading
+            window.location.reload();
+          }}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   );
 }

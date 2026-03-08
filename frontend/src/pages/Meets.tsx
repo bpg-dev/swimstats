@@ -55,14 +55,12 @@ export function Meets() {
         </Button>
       </div>
 
-      <div className="max-w-2xl">
-        <MeetList
-          courseType={courseType}
-          limit={50}
-          linkToDetails
-          emptyMessage="No meets yet. Click 'Add Meet' to get started!"
-        />
-      </div>
+      <MeetList
+        courseType={courseType}
+        limit={50}
+        linkToDetails
+        emptyMessage="No meets yet. Click 'Add Meet' to get started!"
+      />
     </div>
   );
 }
