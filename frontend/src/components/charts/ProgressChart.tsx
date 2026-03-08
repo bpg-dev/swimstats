@@ -12,6 +12,7 @@ import {
   Label,
 } from 'recharts';
 import { ProgressDataPoint } from '@/types/progress';
+import { EmptyState } from '@/components/ui';
 import { formatDate } from '@/utils/timeFormat';
 import { MeetLink } from '@/components/ui';
 
@@ -234,10 +235,10 @@ export function ProgressChart({ data, standardTime, standardName }: ProgressChar
 
   if (!chartData || chartData.length === 0) {
     return (
-      <div className="text-center py-12 text-slate-500">
-        <p>No times recorded yet for this event.</p>
-        <p className="text-sm mt-2">Add some times to see your progress!</p>
-      </div>
+      <EmptyState
+        message="No times recorded yet for this event."
+        detail="Add some times to see your progress!"
+      />
     );
   }
 

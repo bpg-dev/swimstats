@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { BackLink } from '@/components/ui/BackLink';
 import {
   useStandard,
   useUpdateStandard,
@@ -86,9 +87,7 @@ export function StandardDetail() {
     return (
       <div className="space-y-4">
         <ErrorBanner message="Failed to load standard" />
-        <Link to="/standards" className="text-blue-600 hover:text-blue-700">
-          &larr; Back to Standards
-        </Link>
+        <BackLink to="/standards" label="Standards" />
       </div>
     );
   }
@@ -136,9 +135,7 @@ export function StandardDetail() {
   if (mode === 'edit') {
     return (
       <div className="space-y-4">
-        <Link to="/standards" className="text-blue-600 hover:text-blue-700">
-          &larr; Back to Standards
-        </Link>
+        <BackLink to="/standards" label="Standards" />
         {updateStandard.error && (
           <ErrorBanner message={updateStandard.error.message || 'Failed to update standard'} />
         )}
@@ -155,9 +152,7 @@ export function StandardDetail() {
   if (mode === 'edit-times') {
     return (
       <div className="space-y-4">
-        <Link to="/standards" className="text-blue-600 hover:text-blue-700">
-          &larr; Back to Standards
-        </Link>
+        <BackLink to="/standards" label="Standards" />
         {setTimes.error && (
           <ErrorBanner message={setTimes.error.message || 'Failed to save times'} />
         )}
@@ -174,9 +169,7 @@ export function StandardDetail() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <Link to="/standards" className="text-blue-600 hover:text-blue-700">
-          &larr; Back to Standards
-        </Link>
+        <BackLink to="/standards" label="Standards" />
       </div>
 
       {deleteStandard.error && (
@@ -185,7 +178,7 @@ export function StandardDetail() {
 
       <Card>
         <CardHeader>
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
             <div>
               <CardTitle>{standard.name}</CardTitle>
               {standard.description && (
@@ -220,7 +213,7 @@ export function StandardDetail() {
             {!standard.is_preloaded && (
               <div className="flex items-center gap-2">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => setMode('edit')}
                   disabled={!canWrite()}
@@ -228,10 +221,9 @@ export function StandardDetail() {
                   Edit
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="danger"
                   size="sm"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="text-red-600 hover:text-red-700"
                   disabled={!canWrite()}
                 >
                   Delete

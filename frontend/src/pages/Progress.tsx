@@ -148,11 +148,9 @@ export function Progress() {
 
       {/* Loading state */}
       {isLoading && (
-        <Card>
-          <CardContent className="pt-6">
-            <Loading text="Loading progress data..." />
-          </CardContent>
-        </Card>
+        <div className="flex justify-center py-12">
+          <Loading text="Loading progress data..." />
+        </div>
       )}
 
       {/* Error state */}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Button, Loading, ErrorBanner } from '@/components/ui';
+import { BackLink } from '@/components/ui/BackLink';
 import { MeetTimesList } from '@/components/meets/MeetTimesList';
 import { MeetForm } from '@/components/meets/MeetForm';
 import { useMeet, useDeleteMeet } from '@/hooks/useMeets';
@@ -41,9 +42,7 @@ export function MeetDetails() {
       <div className="max-w-2xl mx-auto">
         <ErrorBanner message={error?.message || 'Meet not found'} onRetry={() => refetch()} />
         <div className="mt-4">
-          <Link to="/meets" className="text-cyan-600 hover:text-cyan-700 font-medium">
-            ← Back to Meets
-          </Link>
+          <BackLink to="/meets" label="Meets" />
         </div>
       </div>
     );
@@ -64,32 +63,12 @@ export function MeetDetails() {
   return (
     <div className="space-y-6">
       {/* Header with back link */}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/meets"
-          className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-          aria-label="Back to Meets"
-        >
-          <svg
-            className="h-5 w-5 text-slate-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold text-slate-900">{meet.name}</h1>
-          <p className="text-slate-600">
-            {meet.city}, {meet.country}
-          </p>
-        </div>
+      <BackLink to="/meets" label="Meets" />
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">{meet.name}</h1>
+        <p className="text-slate-600">
+          {meet.city}, {meet.country}
+        </p>
       </div>
 
       {/* Meet Info Card */}

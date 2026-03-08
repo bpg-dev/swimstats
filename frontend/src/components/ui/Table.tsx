@@ -24,7 +24,9 @@ Table.displayName = 'Table';
 export const TableHeader = forwardRef<
   HTMLTableSectionElement,
   HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => <thead ref={ref} className={cn(className)} {...props} />);
+>(({ className, ...props }, ref) => (
+  <thead ref={ref} className={cn('bg-slate-50', className)} {...props} />
+));
 TableHeader.displayName = 'TableHeader';
 
 export const TableBody = forwardRef<

@@ -90,23 +90,30 @@ export function AllTimes() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-        <div className="flex-1 w-full sm:max-w-xs">
-          <label htmlFor="event-filter" className="block text-sm font-medium text-slate-700 mb-1">
-            Event
-          </label>
-          <EventFilter
-            value={selectedEvent}
-            onChange={handleEventChange}
-            className="w-full"
-            excludeSplits
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Sort by</label>
-          <SortToggle value={sortBy} onChange={setSortBy} />
-        </div>
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div className="flex-1 w-full sm:max-w-xs">
+              <label
+                htmlFor="event-filter"
+                className="block text-sm font-medium text-slate-700 mb-1"
+              >
+                Event
+              </label>
+              <EventFilter
+                value={selectedEvent}
+                onChange={handleEventChange}
+                className="w-full"
+                excludeSplits
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Sort by</label>
+              <SortToggle value={sortBy} onChange={setSortBy} />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Error */}
       {(timesError || splitTimesError) && (
@@ -120,7 +127,11 @@ export function AllTimes() {
       )}
 
       {/* Loading */}
-      {isLoading && <Loading />}
+      {isLoading && (
+        <div className="flex justify-center py-12">
+          <Loading />
+        </div>
+      )}
 
       {/* Edit form */}
       {editingTime && (

@@ -2,6 +2,7 @@ import { TimeRecord, getEventInfo, isSplitEvent, baseEvent, EventCode } from '@/
 import { SortBy } from './SortToggle';
 import { formatDate } from '@/utils/timeFormat';
 import {
+  EmptyState,
   MeetLink,
   Table,
   TableHeader,
@@ -36,11 +37,10 @@ export function AllTimesList({ times, pbTimeId, sortBy, onEditTime }: AllTimesLi
 
   if (times.length === 0) {
     return (
-      <div className="text-center text-slate-500 py-12">
-        <div className="text-4xl mb-4">🏊</div>
-        <p className="text-lg">No times recorded yet.</p>
-        <p className="text-sm mt-2">Add times from the "Add Times" page to see them here.</p>
-      </div>
+      <EmptyState
+        message="No times recorded yet."
+        detail='Add times from the "Add Times" page to see them here.'
+      />
     );
   }
 

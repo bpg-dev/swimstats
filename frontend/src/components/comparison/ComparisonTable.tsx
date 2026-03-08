@@ -3,6 +3,7 @@ import { EventComparison } from '@/types/comparison';
 import { StatusBadge } from './StatusBadge';
 import { formatDate } from '@/utils/timeFormat';
 import {
+  EmptyState,
   EventLink,
   Table,
   TableHeader,
@@ -93,9 +94,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
 
   if (filteredByStroke.every((g) => g.events.length === 0)) {
     return (
-      <div className="text-center py-8 text-slate-500">
-        No times recorded yet. Add some times to see comparisons.
-      </div>
+      <EmptyState message="No times recorded yet." detail="Add some times to see comparisons." />
     );
   }
 
@@ -117,7 +116,7 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
 
   return (
     <Table className="divide-y divide-slate-200 table-fixed" style={{ minWidth: '800px' }}>
-      <TableHeader className="bg-slate-50">
+      <TableHeader>
         <TableHeaderRow>
           <TableHead className="px-4 whitespace-nowrap w-52 align-top">Event</TableHead>
           <TableHead className="px-4 whitespace-nowrap w-28 align-top">Your Time</TableHead>
