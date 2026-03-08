@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.4](https://github.com/bpg-dev/swimstats/compare/v4.0.3...v4.0.4) (2026-03-08)
+
+
+### Bug Fixes
+
+* **ui:** standardize design consistency across all pages ([#227](https://github.com/bpg-dev/swimstats/issues/227)) ([6488895](https://github.com/bpg-dev/swimstats/commit/648889587e9e7eec4efbc2882793e575213bb579))
+
 ## [4.0.3](https://github.com/bpg-dev/swimstats/compare/v4.0.2...v4.0.3) (2026-03-07)
 
 
