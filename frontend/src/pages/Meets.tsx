@@ -39,7 +39,7 @@ export function Meets() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Meets</h1>
           <p className="text-slate-600 mt-1">
@@ -47,7 +47,11 @@ export function Meets() {
             times.
           </p>
         </div>
-        <Button onClick={() => setShowForm(true)} disabled={!canWrite()}>
+        <Button
+          className="self-start sm:self-auto"
+          onClick={() => setShowForm(true)}
+          disabled={!canWrite()}
+        >
           <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>

@@ -82,7 +82,7 @@ export function Compare() {
         <>
           {/* Comparison table */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <CardTitle>{comparison.standard_name}</CardTitle>
                 <p className="text-sm text-slate-500 mt-1">
@@ -109,7 +109,7 @@ export function Compare() {
                   )}
                 </p>
               </div>
-              <label className="flex items-center gap-2 text-sm font-normal">
+              <label className="flex items-center gap-2 text-sm font-normal whitespace-nowrap">
                 <input
                   type="checkbox"
                   checked={showAllEvents}

@@ -178,7 +178,7 @@ export function StandardDetail() {
 
       <Card>
         <CardHeader>
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
             <div>
               <CardTitle>{standard.name}</CardTitle>
               {standard.description && (
