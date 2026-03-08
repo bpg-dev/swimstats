@@ -3,6 +3,7 @@ import { EventComparison } from '@/types/comparison';
 import { StatusBadge } from './StatusBadge';
 import { formatDate } from '@/utils/timeFormat';
 import {
+  EmptyState,
   EventLink,
   Table,
   TableHeader,
@@ -93,9 +94,10 @@ export function ComparisonTable({ comparisons, showNoTime = false }: ComparisonT
 
   if (filteredByStroke.every((g) => g.events.length === 0)) {
     return (
-      <div className="text-center py-8 text-slate-500">
-        No times recorded yet. Add some times to see comparisons.
-      </div>
+      <EmptyState
+        message="No times recorded yet."
+        detail="Add some times to see comparisons."
+      />
     );
   }
 

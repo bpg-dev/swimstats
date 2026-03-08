@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Meet, CourseType } from '@/types/meet';
-import { Card, CardContent, CardHeader, CardTitle, Loading, ErrorBanner } from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle, EmptyState, Loading, ErrorBanner } from '@/components/ui';
 import { useMeets } from '@/hooks/useMeets';
 import { formatDateRange } from '@/utils/timeFormat';
 
@@ -36,7 +36,7 @@ export function MeetList({
   const content = (
     <>
       {meets.length === 0 ? (
-        <p className="text-slate-500 text-center py-8">{emptyMessage}</p>
+        <EmptyState message={emptyMessage} />
       ) : (
         <ul className="divide-y divide-slate-100">
           {meets.map((meet) => {
