@@ -69,11 +69,9 @@ export function Compare() {
 
       {/* Loading state */}
       {isLoading && (
-        <Card>
-          <CardContent className="pt-6">
-            <Loading text="Loading comparison..." />
-          </CardContent>
-        </Card>
+        <div className="flex justify-center py-12">
+          <Loading text="Loading comparison..." />
+        </div>
       )}
 
       {/* Error state */}
