@@ -1,5 +1,6 @@
 # Cursor
 .cursor/
+.serena/
 
 # OS files
 .DS_Store
@@ -16,6 +17,7 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+.local/
 
 # Node.js / Frontend
 node_modules/
