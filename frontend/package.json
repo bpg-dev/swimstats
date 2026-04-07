@@ -30,7 +30,8 @@
   "overrides": {
     "eslint-plugin-react-hooks": {
       "eslint": "$eslint"
-    }
+    },
+    "lru-cache": "~11.2.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.2.2",
