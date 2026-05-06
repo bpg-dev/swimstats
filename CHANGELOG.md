@@ -1,5 +1,19 @@
 # Changelog
 
+## [8.0.1](https://github.com/bpg-dev/swimstats/compare/v8.0.0...v8.0.1) (2026-05-06)
+
+
+### Miscellaneous
+
+* **deps:** lock file maintenance ([#347](https://github.com/bpg-dev/swimstats/issues/347)) ([03dfa6c](https://github.com/bpg-dev/swimstats/commit/03dfa6cacc28ef09358068a2cc715ea307816712))
+* **deps:** update @tanstack/react-query (5.100.5 → 5.100.6) ([#339](https://github.com/bpg-dev/swimstats/issues/339)) ([7ecd6f4](https://github.com/bpg-dev/swimstats/commit/7ecd6f4ba342adf77a0de9550cd61d0d5b374146))
+* **deps:** update golangci/golangci-lint (v2.11.4 → v2.12.1) ([#344](https://github.com/bpg-dev/swimstats/issues/344)) ([7f3ea93](https://github.com/bpg-dev/swimstats/commit/7f3ea939210d002e7463fbb91234a50250c48988))
+* **deps:** update jsdom (29.0.2 → 29.1.0) ([#345](https://github.com/bpg-dev/swimstats/issues/345)) ([cd72115](https://github.com/bpg-dev/swimstats/commit/cd72115d43b3d7e52a7089339ee7de38e2b7b722))
+* **deps:** update msw (2.13.4 → 2.14.0) ([#340](https://github.com/bpg-dev/swimstats/issues/340)) ([9befdca](https://github.com/bpg-dev/swimstats/commit/9befdcae040e5287b916e3dfe69c942a8260773f))
+* **deps:** update postcss (8.5.10 → 8.5.12) ([#341](https://github.com/bpg-dev/swimstats/issues/341)) ([6cf3a4c](https://github.com/bpg-dev/swimstats/commit/6cf3a4c71665348300acc1d1fdf276e27bf67a7a))
+* **deps:** update typescript-eslint monorepo (8.59.0 → 8.59.1) ([#342](https://github.com/bpg-dev/swimstats/issues/342)) ([45a8875](https://github.com/bpg-dev/swimstats/commit/45a887508ab364ba992fb691c3dc9b928a93cc01))
+* **deps:** update vite (8.0.9 → 8.0.10) ([#343](https://github.com/bpg-dev/swimstats/issues/343)) ([f253d6d](https://github.com/bpg-dev/swimstats/commit/f253d6df2890f3640e6da47a07e547348e484d93))
+
 ## [8.0.0](https://github.com/bpg-dev/swimstats/compare/v7.0.0...v8.0.0) (2026-04-28)
 
 
