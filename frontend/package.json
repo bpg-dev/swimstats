@@ -1,7 +1,7 @@
 {
   "name": "swimstats-frontend",
   "private": true,
-  "version": "8.0.2",
+  "version": "9.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
