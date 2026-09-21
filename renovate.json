@@ -5,6 +5,20 @@
     "github>bpg/renovate-config:automerge-github-actions",
     ":semanticCommitTypeAll(chore)"
   ],
+  "packageRules": [
+    {
+      "description": "Bump the CI Go version together with the golang Docker image",
+      "matchDepNames": ["go", "golang"],
+      "matchUpdateTypes": ["major", "minor"],
+      "groupName": "go toolchain"
+    },
+    {
+      "description": "Bump the CI Node version together with the node Docker image",
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["major", "minor"],
+      "groupName": "node toolchain"
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
