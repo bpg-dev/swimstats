@@ -5,6 +5,8 @@
     "github>bpg/renovate-config:automerge-github-actions",
     ":semanticCommitTypeAll(chore)"
   ],
+  "npmrc": "allow-remote=all",
+  "npmrcMerge": true,
   "packageRules": [
     {
       "description": "Bump the CI Go version together with the golang Docker image",
