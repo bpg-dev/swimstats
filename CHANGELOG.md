@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.0.1](https://github.com/bpg-dev/swimstats/compare/v9.0.0...v9.0.1) (2026-09-26)
+
+
+### Bug Fixes
+
+* **renovate:** allow registry tarball fetches in Renovate's npm runs ([#505](https://github.com/bpg-dev/swimstats/issues/505)) ([c5c5293](https://github.com/bpg-dev/swimstats/commit/c5c5293dade1b21edede59100cea594b97744cdb))
+
+
+### Miscellaneous
+
+* **ci:** update image postgres (6c538e7 → 77f5851) ([#507](https://github.com/bpg-dev/swimstats/issues/507)) ([ce2980e](https://github.com/bpg-dev/swimstats/commit/ce2980e3e145a9c5dac8180b0f94efd11c67aca9))
+* **container:** update image caddy (de23def → 6aeddd4) ([#508](https://github.com/bpg-dev/swimstats/issues/508)) ([86c0b3f](https://github.com/bpg-dev/swimstats/commit/86c0b3ff35ede3ce1646a0717d6fc8469f21c25e))
+* **deps:** lock file maintenance ([#445](https://github.com/bpg-dev/swimstats/issues/445)) ([58ca21e](https://github.com/bpg-dev/swimstats/commit/58ca21ea2a53d59b042794c2da1d3ecd4f3fe48d))
+
 ## [9.0.0](https://github.com/bpg-dev/swimstats/compare/v8.0.2...v9.0.0) (2026-09-21)
 
 
