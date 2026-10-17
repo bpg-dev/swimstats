@@ -1,5 +1,16 @@
 # Changelog
 
+## [10.0.0](https://github.com/bpg-dev/swimstats/compare/v9.0.2...v10.0.0) (2026-10-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** Update msw (2.15.0 → 3.0.3) ([#520](https://github.com/bpg-dev/swimstats/issues/520))
+
+### Miscellaneous
+
+* **deps:** Update msw (2.15.0 → 3.0.3) ([#520](https://github.com/bpg-dev/swimstats/issues/520)) ([989ee0b](https://github.com/bpg-dev/swimstats/commit/989ee0b57e0869ad3e79729b9cb4d8c2d6be1bf3))
+
 ## [9.0.2](https://github.com/bpg-dev/swimstats/compare/v9.0.1...v9.0.2) (2026-10-17)
 
 
