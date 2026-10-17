@@ -18,10 +18,11 @@ export const standardKeys = {
   detail: (id: string) => [...standardKeys.details(), id] as const,
 };
 
-export function useStandards(params?: StandardListParams) {
+export function useStandards(params?: StandardListParams, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: standardKeys.list(params),
     queryFn: () => standardService.listStandards(params),
+    enabled: options?.enabled ?? true,
   });
 }
 
