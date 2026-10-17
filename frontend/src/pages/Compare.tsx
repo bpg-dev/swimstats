@@ -17,7 +17,7 @@ export function Compare() {
   );
   const [showAllEvents, setShowAllEvents] = useState(false);
   const courseType = useCourseType();
-  const { data: swimmer } = useSwimmer();
+  const { data: swimmer, isLoading: isSwimmerLoading } = useSwimmer();
 
   // Track the course type to reset selection when it changes
   const [prevCourseType, setPrevCourseType] = useState(courseType);
@@ -57,6 +57,7 @@ export function Compare() {
               value={selectedStandardId}
               onChange={setSelectedStandardId}
               gender={swimmer?.gender as 'female' | 'male' | undefined}
+              enabled={!isSwimmerLoading}
             />
           </div>
           {!selectedStandardId && (

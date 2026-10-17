@@ -6,14 +6,20 @@ interface StandardSelectorProps {
   value: string;
   onChange: (standardId: string) => void;
   gender?: 'female' | 'male';
+  enabled?: boolean;
 }
 
-export function StandardSelector({ value, onChange, gender }: StandardSelectorProps) {
+export function StandardSelector({
+  value,
+  onChange,
+  gender,
+  enabled = true,
+}: StandardSelectorProps) {
   const courseType = useCourseType();
-  const { data, isLoading } = useStandards({
-    course_type: courseType || undefined,
-    gender,
-  });
+  const { data, isLoading } = useStandards(
+    { course_type: courseType || undefined, gender },
+    { enabled }
+  );
 
   const options = [
     { value: '', label: 'Select a standard...' },
@@ -28,7 +34,7 @@ export function StandardSelector({ value, onChange, gender }: StandardSelectorPr
       value={value}
       onChange={(e) => onChange(e.target.value)}
       options={options}
-      disabled={isLoading}
+      disabled={!enabled || isLoading}
     />
   );
 }
