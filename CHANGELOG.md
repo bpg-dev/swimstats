@@ -1,5 +1,21 @@
 # Changelog
 
+## [9.0.2](https://github.com/bpg-dev/swimstats/compare/v9.0.1...v9.0.2) (2026-10-17)
+
+
+### Miscellaneous
+
+* **ci:** update actions/create-github-app-token action (v3.2.0 → v3.3.0) ([#538](https://github.com/bpg-dev/swimstats/issues/538)) ([0eae838](https://github.com/bpg-dev/swimstats/commit/0eae83835212c8b4a9121ef26d3f86d08c0ba7c7))
+* **container:** update image node (ebfe2f9 → 44fce69) ([#531](https://github.com/bpg-dev/swimstats/issues/531)) ([3639d36](https://github.com/bpg-dev/swimstats/commit/3639d367dc187467ba72fb69ff8919c10250bf45))
+* **deps:** update @testing-library/user-event (14.6.7 → 14.6.8) ([#532](https://github.com/bpg-dev/swimstats/issues/532)) ([ede71ae](https://github.com/bpg-dev/swimstats/commit/ede71ae020ece50b3207ac7338fbb006d156e265))
+* **deps:** update golangci/golangci-lint (v2.14.0 → v2.15.0) ([#539](https://github.com/bpg-dev/swimstats/issues/539)) ([5576214](https://github.com/bpg-dev/swimstats/commit/55762144cc473dc2d38eff283f7d7b5fce09d5e5))
+* **deps:** update module github.com/go-chi/chi/v5 (v5.3.2 → v5.5.0) ([#540](https://github.com/bpg-dev/swimstats/issues/540)) ([6344ee1](https://github.com/bpg-dev/swimstats/commit/6344ee1e8491f741ef6de12d36537bc09dad90ee))
+* **deps:** update postcss (8.5.29 → 8.5.30) ([#533](https://github.com/bpg-dev/swimstats/issues/533)) ([6a139d9](https://github.com/bpg-dev/swimstats/commit/6a139d970b943c1f7db630934683421a9e42cf02))
+* **deps:** update prettier (3.9.9 → 3.9.10) ([#534](https://github.com/bpg-dev/swimstats/issues/534)) ([b42c615](https://github.com/bpg-dev/swimstats/commit/b42c6159e0e54c8454abdfd204e516fc9401394d))
+* **deps:** update typescript-eslint monorepo (8.71.1 → 8.71.2) ([#535](https://github.com/bpg-dev/swimstats/issues/535)) ([8e19e48](https://github.com/bpg-dev/swimstats/commit/8e19e483b5b0ee3bbe240596d7396aa011d041d3))
+* **deps:** update vite (8.3.3 → 8.3.4) ([#536](https://github.com/bpg-dev/swimstats/issues/536)) ([e66e94f](https://github.com/bpg-dev/swimstats/commit/e66e94f42f738a1d2950be35ab91001784e99344))
+* **deps:** update vitest monorepo (5.0.3 → 5.0.4) ([#537](https://github.com/bpg-dev/swimstats/issues/537)) ([ddac73a](https://github.com/bpg-dev/swimstats/commit/ddac73a9e4d749ac7a1d7f9bb4f14ac73843e1a8))
+
 ## [9.0.1](https://github.com/bpg-dev/swimstats/compare/v9.0.0...v9.0.1) (2026-10-12)
 
 
