@@ -1,5 +1,29 @@
 # Changelog
 
+## [10.0.0](https://github.com/bpg-dev/swimstats/compare/v9.0.2...v10.0.0) (2026-10-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** Update msw (2.15.0 → 3.0.3) ([#520](https://github.com/bpg-dev/swimstats/issues/520))
+
+### Miscellaneous
+
+* **ci:** update docker/login-action digest (dbcb813 → 81c6f93) ([#544](https://github.com/bpg-dev/swimstats/issues/544)) ([3170e08](https://github.com/bpg-dev/swimstats/commit/3170e0887a4c1549d6389b96b6a97722316b53b5))
+* **ci:** update image postgres (77f5851 → 898c60c) ([#545](https://github.com/bpg-dev/swimstats/issues/545)) ([67c8376](https://github.com/bpg-dev/swimstats/commit/67c83768cd5fcc3676b64c3106272d17dcf1411a))
+* **container:** update image caddy (d8542f4 → eb4d35b) ([#546](https://github.com/bpg-dev/swimstats/issues/546)) ([24de027](https://github.com/bpg-dev/swimstats/commit/24de027ba574820861dded9e034c7dd60b0eba8e))
+* **container:** update image golang (f92b6ef → b8c9b82) ([#547](https://github.com/bpg-dev/swimstats/issues/547)) ([b8a4cb5](https://github.com/bpg-dev/swimstats/commit/b8a4cb5fd692ea278fb7d472ef7ac4a15817ee7c))
+* **container:** update image node (44fce69 → 06d7adf) ([#548](https://github.com/bpg-dev/swimstats/issues/548)) ([ca63f53](https://github.com/bpg-dev/swimstats/commit/ca63f537d1d7afcb3d7c337111b21ffb920365ee))
+* **deps:** lock file maintenance ([#543](https://github.com/bpg-dev/swimstats/issues/543)) ([363a0ad](https://github.com/bpg-dev/swimstats/commit/363a0adc6ca0e2e494a9fbd79f50f11faaaae52c))
+* **deps:** update @tanstack/react-query (5.104.2 → 5.104.5) ([#549](https://github.com/bpg-dev/swimstats/issues/549)) ([9c34023](https://github.com/bpg-dev/swimstats/commit/9c340239d479503513afc923b302f39e6f847ab8))
+* **deps:** update eslint (10.12.0 → 10.13.0) ([#554](https://github.com/bpg-dev/swimstats/issues/554)) ([a792a59](https://github.com/bpg-dev/swimstats/commit/a792a593bc886fe4da709b96338fe34496911ac4))
+* **deps:** update jsdom (30.1.2 → 30.1.3) ([#550](https://github.com/bpg-dev/swimstats/issues/550)) ([8cb1542](https://github.com/bpg-dev/swimstats/commit/8cb15429d90f24304aabf6bbe28bec28f5b60b48))
+* **deps:** Update msw (2.15.0 → 3.0.3) ([#520](https://github.com/bpg-dev/swimstats/issues/520)) ([989ee0b](https://github.com/bpg-dev/swimstats/commit/989ee0b57e0869ad3e79729b9cb4d8c2d6be1bf3))
+* **deps:** update postcss (8.5.30 → 8.5.31) ([#551](https://github.com/bpg-dev/swimstats/issues/551)) ([04ebc62](https://github.com/bpg-dev/swimstats/commit/04ebc62942eca2b0aa47fec6689bce4e257878b7))
+* **deps:** update typescript-eslint monorepo (8.71.2 → 8.72.0) ([#555](https://github.com/bpg-dev/swimstats/issues/555)) ([444efc0](https://github.com/bpg-dev/swimstats/commit/444efc082ad013fe4ea2a08fc433e73ceadae4ba))
+* **deps:** update vite (8.3.4 → 8.3.5) ([#556](https://github.com/bpg-dev/swimstats/issues/556)) ([1041dd8](https://github.com/bpg-dev/swimstats/commit/1041dd8b67fd0109766940eb2d936e8e62784568))
+* **deps:** update vitest monorepo (5.0.4 → 5.0.5) ([#553](https://github.com/bpg-dev/swimstats/issues/553)) ([9410a13](https://github.com/bpg-dev/swimstats/commit/9410a130b34c13bc9057e1b87ed898afe3475dc2))
+
 ## [9.0.2](https://github.com/bpg-dev/swimstats/compare/v9.0.1...v9.0.2) (2026-10-17)
 
 
