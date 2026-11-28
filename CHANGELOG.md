@@ -1,5 +1,25 @@
 # Changelog
 
+## [11.0.1](https://github.com/bpg-dev/swimstats/compare/v11.0.0...v11.0.1) (2026-11-28)
+
+
+### Miscellaneous
+
+* **ci:** update actions/create-github-app-token action (v3.3.0 → v3.4.0) ([#608](https://github.com/bpg-dev/swimstats/issues/608)) ([f564580](https://github.com/bpg-dev/swimstats/commit/f564580c8267e7d440819a27fb0bbc6d8fcc27d8))
+* **ci:** update actions/setup-go digest (b7ad1da → d8cbb80) ([#599](https://github.com/bpg-dev/swimstats/issues/599)) ([59d6845](https://github.com/bpg-dev/swimstats/commit/59d68451a20caeea7023a467d93f505c350d892e))
+* **ci:** update docker/login-action digest (81c6f93 → 8aa5831) ([#581](https://github.com/bpg-dev/swimstats/issues/581)) ([47659ca](https://github.com/bpg-dev/swimstats/commit/47659cabd7c68eaf764d63b6d81d7f5b7520c418))
+* **ci:** update image postgres (1018733 → 0115267) ([#600](https://github.com/bpg-dev/swimstats/issues/600)) ([7d2dad5](https://github.com/bpg-dev/swimstats/commit/7d2dad50784e321ba9c4da88ed66c8c83d1e44cf))
+* **ci:** update image postgres (10a5c69 → 123b179) ([#582](https://github.com/bpg-dev/swimstats/issues/582)) ([3eedb64](https://github.com/bpg-dev/swimstats/commit/3eedb6421517363d1dd33f4bc6fc596601a5b658))
+* **ci:** update image postgres (123b179 → 1018733) ([#586](https://github.com/bpg-dev/swimstats/issues/586)) ([51aa772](https://github.com/bpg-dev/swimstats/commit/51aa77286021528ff79968831e202efc97995d3d))
+* **container:** update image caddy (78bd350 → 003a978) ([#587](https://github.com/bpg-dev/swimstats/issues/587)) ([07127e2](https://github.com/bpg-dev/swimstats/commit/07127e2534a1e64bf43863a64a4a35d8828889cb))
+* **container:** update image caddy (e70b164 → 78bd350) ([#583](https://github.com/bpg-dev/swimstats/issues/583)) ([5ba1835](https://github.com/bpg-dev/swimstats/commit/5ba18351994c2007cabc92d096ac5ffa273e3878))
+* **container:** update image golang (d200d2d → fa3d596) ([#584](https://github.com/bpg-dev/swimstats/issues/584)) ([3a34a67](https://github.com/bpg-dev/swimstats/commit/3a34a67e38cd5586f56dadc8ee13ccf45349cf4a))
+* **container:** update image golang (eb61c38 → 70bd7dd) ([#601](https://github.com/bpg-dev/swimstats/issues/601)) ([4cb35b1](https://github.com/bpg-dev/swimstats/commit/4cb35b16da30cbf150047e94f2d0da4265cba941))
+* **container:** update image golang (fa3d596 → eb61c38) ([#588](https://github.com/bpg-dev/swimstats/issues/588)) ([53a1526](https://github.com/bpg-dev/swimstats/commit/53a15263c2142f462e9c48a8e76b53d1ff3ad8b4))
+* **container:** update image node (8996bb5 → 6bd9ab4) ([#589](https://github.com/bpg-dev/swimstats/issues/589)) ([dbd5fa9](https://github.com/bpg-dev/swimstats/commit/dbd5fa9fd726db55172f7603a13d93a53fbcd0b1))
+* **container:** update image node (c6ad9e9 → 8996bb5) ([#585](https://github.com/bpg-dev/swimstats/issues/585)) ([872ddca](https://github.com/bpg-dev/swimstats/commit/872ddca8fca18eb59ea78bc3c366c896c2500024))
+* **deps:** update module github.com/go-jose/go-jose/v4 (v4.1.4 → v4.1.6) [security] ([#572](https://github.com/bpg-dev/swimstats/issues/572)) ([69d1373](https://github.com/bpg-dev/swimstats/commit/69d137339cb3a0bb3b375128ad96cdb19f1a6caa))
+
 ## [11.0.0](https://github.com/bpg-dev/swimstats/compare/v10.0.0...v11.0.0) (2026-10-31)
 
 
